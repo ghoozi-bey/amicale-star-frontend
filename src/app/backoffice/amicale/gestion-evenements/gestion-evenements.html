@@ -1,0 +1,53 @@
+<h2>Créer un événement</h2>
+
+<div class="form">
+
+<input
+placeholder="Titre"
+[(ngModel)]="event.titre"
+class="form-control"
+/>
+
+<input
+placeholder="Lieu"
+[(ngModel)]="event.lieu"
+class="form-control"
+/>
+
+<input
+type="date"
+[(ngModel)]="event.date_debut"
+class="form-control"
+/>
+
+<input
+type="date"
+[(ngModel)]="event.date_fin"
+class="form-control"
+/>
+
+<input
+type="number"
+placeholder="Nombre de places"
+[(ngModel)]="event.nb_places"
+class="form-control"
+/>
+
+<input
+type="number"
+placeholder="Prix"
+[(ngModel)]="event.prix"
+class="form-control"
+/>
+
+<textarea
+placeholder="Description"
+[(ngModel)]="event.description"
+class="form-control"
+></textarea>
+
+<button class="btn btn-success" (click)="createEvent()">
+Créer événement
+</button>
+
+</div>

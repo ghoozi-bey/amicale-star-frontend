@@ -1,0 +1,16 @@
+<div class="sidebar">
+
+  <a routerLink="/">Dashboard</a>
+
+  <a routerLink="/evenements">Mes événements</a>
+
+  <a routerLink="/sondages">Sondages</a>
+
+  <a routerLink="/elections">Elections</a>
+
+  <!-- visible seulement pour membre amicale -->
+  <a routerLink="/gestion-evenements" *ngIf="isAmicale">
+    Gestion événements
+  </a>
+
+</div>

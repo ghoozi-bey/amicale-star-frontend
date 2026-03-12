@@ -1,0 +1,37 @@
+<h2>Dashboard</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Evenements</h3>
+<p>{{evenements.length}}</p>
+</div>
+
+<div class="card">
+<h3>Sondages</h3>
+<p>3</p>
+</div>
+
+<div class="card">
+<h3>Elections</h3>
+<p>1</p>
+</div>
+
+</div>
+
+
+<h2>Evenements récents</h2>
+
+<div class="events">
+
+<div class="event-card" *ngFor="let e of evenements" (click)="openDetails(e)">
+
+<img src="assets/event.jpg">
+
+<h3>{{e.titre}}</h3>
+
+<p>{{e.dateDebut}}</p>
+
+</div>
+
+</div>
