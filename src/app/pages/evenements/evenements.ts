@@ -1,25 +1,26 @@
-import { Component } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-@Component({
-  selector: 'app-evenements',
-  standalone: true,
-  templateUrl: './evenements.html',
-  styleUrl: './evenements.css'
+@Injectable({
+  providedIn: 'root'
 })
-export class EvenementsComponent {
+export class EventService {
 
-  // simulation pour le moment
-  mesEvenements = [
-    {
-      titre: 'Sortie plage',
-      lieu: 'Hammamet',
-      date: '2026-06-10'
-    },
-    {
-      titre: 'Tournoi football',
-      lieu: 'Tunis',
-      date: '2026-07-01'
-    }
-  ];
+  private apiUrl = 'http://localhost:8080/api/evenements';
+
+  constructor(private http: HttpClient) {}
+
+  getEvenements(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
+  }
+
+  createEvenement(event: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, event);
+  }
+
+  deleteEvenement(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  }
 
 }

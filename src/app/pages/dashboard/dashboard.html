@@ -26,7 +26,9 @@
 
 <div class="event-card" *ngFor="let e of evenements" (click)="openDetails(e)">
 
-<img src="assets/event.jpg">
+<img 
+  [src]="e.photo ? 'http://localhost:8080/uploads/events/' + e.photo : 'imagepardefaut.jpg'"
+>
 
 <h3>{{e.titre}}</h3>
 
