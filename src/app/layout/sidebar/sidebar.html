@@ -1,16 +1,43 @@
 <div class="sidebar">
 
-  <a routerLink="/">Dashboard</a>
-
-  <a routerLink="/evenements">Mes événements</a>
-
-  <a routerLink="/sondages">Sondages</a>
-
-  <a routerLink="/elections">Elections</a>
-
-  <!-- visible seulement pour membre amicale -->
-  <a routerLink="/gestion-evenements" *ngIf="isAmicale">
-    Gestion événements
+  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+    Dashboard
   </a>
+
+  <a routerLink="/evenements" routerLinkActive="active">
+    Mes événements
+  </a>
+
+  <a routerLink="/sondages" routerLinkActive="active">
+    Sondages
+  </a>
+
+  <a routerLink="/elections" routerLinkActive="active">
+    Elections
+  </a>
+
+  <div *ngIf="isAmicale">
+
+    <button (click)="toggleEvents()" class="menu-button">
+      Gestion événements
+    </button>
+
+    <ul *ngIf="showEventsMenu" class="submenu">
+
+      <li>
+        <a routerLink="/gestion-evenements" routerLinkActive="active">
+          Ajouter événement
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/mes-evenements" routerLinkActive="active">
+          Lister mes événements
+        </a>
+      </li>
+
+    </ul>
+
+  </div>
 
 </div>

@@ -12,16 +12,22 @@ import { UserService } from '../../services/user.service';
 })
 export class SidebarComponent {
 
-  isAmicale = false;
+isAmicale = false;
+showEventsMenu = false;   // menu fermé par défaut
 
-  constructor(private userService: UserService) {}
+constructor(private userService: UserService) {}
 
-  ngOnInit() {
-    const role = this.userService.getRole();
+ngOnInit() {
+  const role = this.userService.getRole();
 
-    if (role === 'amicale') {
-      this.isAmicale = true;
-    }
+  if (role === 'amicale') {
+    this.isAmicale = true;
   }
+}
+
+toggleEvents() {
+  this.showEventsMenu = !this.showEventsMenu;
+}
+
 
 }

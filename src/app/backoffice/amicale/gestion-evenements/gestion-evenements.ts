@@ -8,25 +8,30 @@ import { EvenementService } from '../../../services/evenement';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './gestion-evenements.html',
-  styleUrl: './gestion-evenements.css'
+  styleUrls: ['./gestion-evenements.css']
 })
 export class GestionEvenementsComponent {
 
   event = {
-    titre: '',
-    lieu: '',
-    dateDebut: '',
-    dateFin: '',
-    nbPlaces: 0,
-    prix: 0,
-    description: ''
-  };
+  typeEvenement: "",
+  societe: "",
+  titre: "",
+  lieu: "",
+  dateDebut: "",
+  dateFin: "",
+  nbPlaces: 0,
+  prix: 0,
+  description: ""
+}
 
   selectedFile!: File;
 
-  constructor(private eventService: EvenementService, private router: Router) {}
+  constructor(
+    private eventService: EvenementService,
+    private router: Router
+  ) {}
 
-  // récupération du fichier choisi
+  // récupération du fichier
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
   }
@@ -35,6 +40,8 @@ export class GestionEvenementsComponent {
 
     const formData = new FormData();
 
+    formData.append('typeEvenement', this.event.typeEvenement);
+    formData.append('societe', this.event.societe);
     formData.append('titre', this.event.titre);
     formData.append('lieu', this.event.lieu);
     formData.append('description', this.event.description);

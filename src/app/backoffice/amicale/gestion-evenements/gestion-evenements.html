@@ -1,52 +1,83 @@
-<div class="form">
+<div class="form-container">
 
-<input
-placeholder="Titre"
-[(ngModel)]="event.titre"
-class="form-control"
-/>
+<h2 class="form-title">Créer un événement</h2>
 
-<input
-placeholder="Lieu"
-[(ngModel)]="event.lieu"
-class="form-control"
-/>
+<div class="form-group">
 
-<input
-type="date"
-[(ngModel)]="event.dateDebut"
-class="form-control"
-/>
+<label>Type d'événement</label>
 
-<input
-type="date"
-[(ngModel)]="event.dateFin"
-class="form-control"
-/>
+<select [(ngModel)]="event.typeEvenement" name="typeEvenement">
 
-<input
-type="number"
-placeholder="Nombre de places"
-[(ngModel)]="event.nbPlaces"
-class="form-control"
-/>
+<option value="">Choisir un type</option>
+<option value="OMRA">Omra</option>
+<option value="HAJJ">Hajj</option>
+<option value="VOYAGE">Voyage</option>
+<option value="CONVENTION">Convention</option>
 
-<input
-type="number"
-placeholder="Prix"
-[(ngModel)]="event.prix"
-class="form-control"
-/>
+</select>
 
-<textarea
-placeholder="Description"
-[(ngModel)]="event.description"
-class="form-control"
-></textarea>
+</div>
 
-<input type="file" (change)="onFileSelected($event)" />
 
-<button class="btn btn-success" (click)="createEvent()">
+<!-- Champ visible seulement pour convention -->
+
+<div *ngIf="event.typeEvenement === 'CONVENTION'" class="form-group">
+
+<label>Société partenaire</label>
+
+<select [(ngModel)]="event.societe" name="societe">
+
+<option value="Ooredoo">Ooredoo</option>
+<option value="Orange">Orange</option>
+<option value="Telecom">Telecom</option>
+<option value="Autre">Autre</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+<label>Titre de l'événement</label>
+<input type="text" [(ngModel)]="event.titre" name="titre">
+</div>
+
+<div class="form-group">
+<label>Lieu</label>
+<input type="text" [(ngModel)]="event.lieu" name="lieu">
+</div>
+
+<div class="form-group">
+<label>Date de début</label>
+<input type="date" [(ngModel)]="event.dateDebut" name="dateDebut">
+</div>
+
+<div class="form-group">
+<label>Date de fin</label>
+<input type="date" [(ngModel)]="event.dateFin" name="dateFin">
+</div>
+
+<div class="form-group">
+<label>Nombre maximum de participants</label>
+<input type="number" [(ngModel)]="event.nbPlaces" name="nbPlaces">
+</div>
+
+<div class="form-group">
+<label>Prix</label>
+<input type="number" [(ngModel)]="event.prix" name="prix">
+</div>
+
+<div class="form-group">
+<label>Description</label>
+<textarea rows="4" [(ngModel)]="event.description" name="description"></textarea>
+</div>
+
+<div class="form-group">
+<label>Image de l'événement</label>
+<input type="file" (change)="onFileSelected($event)">
+</div>
+
+<button class="submit-btn" (click)="createEvent()">
 Créer événement
 </button>
 

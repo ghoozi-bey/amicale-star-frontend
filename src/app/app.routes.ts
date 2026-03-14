@@ -18,7 +18,9 @@ export const routes: Routes = [
     { path: 'evenements', component: EventService },
 
     // backoffice membre amicale
-    { path: 'gestion-evenements', component: GestionEvenementsComponent }
+    { path: 'gestion-evenements', component: GestionEvenementsComponent },
+
+    { path: 'mes-evenements', component: EventService }
 
   ]
 }
