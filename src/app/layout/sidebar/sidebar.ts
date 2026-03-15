@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
@@ -10,24 +10,29 @@ import { UserService } from '../../services/user.service';
   templateUrl: './sidebar.html',
   styleUrls: ['./sidebar.css']
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
 
-isAmicale = false;
-showEventsMenu = false;   // menu fermé par défaut
+  isAmicale = false;
+  showEventsMenu = false;
 
-constructor(private userService: UserService) {}
+  user: any = {};
 
-ngOnInit() {
-  const role = this.userService.getRole();
+  constructor(private userService: UserService) {}
 
-  if (role === 'amicale') {
-    this.isAmicale = true;
+  ngOnInit() {
+
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    const role = this.user.typeAdherent;
+
+    if (role === 'AMICALE') {
+      this.isAmicale = true;
+    }
+
   }
-}
 
-toggleEvents() {
-  this.showEventsMenu = !this.showEventsMenu;
-}
-
+  toggleEvents() {
+    this.showEventsMenu = !this.showEventsMenu;
+  }
 
 }

@@ -2,27 +2,58 @@ import { Routes } from '@angular/router';
 
 import { LayoutComponent } from './layout/layout';
 import { DashboardComponent } from './pages/dashboard/dashboard';
-import { EventService } from './pages/evenements/evenements';
+import { EventsComponent } from './pages/evenements/evenements';
 import { GestionEvenementsComponent } from './backoffice/amicale/gestion-evenements/gestion-evenements';
 
 export const routes: Routes = [
 
-{
-  path: '',
-  component: LayoutComponent,
-  children: [
+  // PAGE LOGIN
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./pages/login/login').then(m => m.LoginComponent)
+  },
 
-    { path: '', component: DashboardComponent },
+  // REDIRECTION PAR DEFAUT
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
 
-    // page événements pour tous les adhérents
-    { path: 'evenements', component: EventService },
+  // APPLICATION
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
 
-    // backoffice membre amicale
-    { path: 'gestion-evenements', component: GestionEvenementsComponent },
+      {
+        path: 'dashboard',
+        component: DashboardComponent
+      },
 
-    { path: 'mes-evenements', component: EventService }
+      {
+        path: 'evenements',
+        component: EventsComponent
+      },
 
-  ]
-}
+      {
+        path: 'gestion-evenements',
+        component: GestionEvenementsComponent
+      },
+
+      {
+        path: 'mes-evenements',
+        component: EventsComponent
+      },
+
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./pages/profile/profile').then(m => m.ProfileComponent)
+      }
+
+    ]
+  }
 
 ];

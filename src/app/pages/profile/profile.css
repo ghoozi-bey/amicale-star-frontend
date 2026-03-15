@@ -1,0 +1,29 @@
+.profile-container{
+max-width:500px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:12px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+.form{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+input{
+padding:8px;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+button{
+background:#19785a;
+color:white;
+border:none;
+padding:10px;
+border-radius:8px;
+cursor:pointer;
+}

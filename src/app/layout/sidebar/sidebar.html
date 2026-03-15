@@ -1,20 +1,33 @@
 <div class="sidebar">
+  <div class="sidebar">
 
-  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
-    Dashboard
-  </a>
+  <!-- PROFIL UTILISATEUR -->
+  <div class="user-profile" routerLink="/profile">
 
-  <a routerLink="/evenements" routerLinkActive="active">
-    Mes événements
-  </a>
+  <img [src]="'assets/' + (user.photoProfil || 'imagepardefaut.jpg')" class="avatar">
 
-  <a routerLink="/sondages" routerLinkActive="active">
-    Sondages
-  </a>
+  <span class="name">
+    {{user.prenom}} {{user.nom}}
+  </span>
 
-  <a routerLink="/elections" routerLinkActive="active">
-    Elections
-  </a>
+</div>
+
+
+<a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+  Dashboard
+</a>
+
+<a routerLink="/evenements" routerLinkActive="active">
+  Mes événements
+</a>
+
+<a routerLink="/sondages" routerLinkActive="active">
+  Sondages
+</a>
+
+<a routerLink="/elections" routerLinkActive="active">
+  Elections
+</a>
 
   <div *ngIf="isAmicale">
 
