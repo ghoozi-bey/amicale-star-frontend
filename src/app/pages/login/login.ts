@@ -30,12 +30,11 @@ export class LoginComponent {
         localStorage.setItem("user", JSON.stringify(data));
 
         // redirection selon role
-        if (data.typeAdherent === "AMICALE") {
+        if (data.typeAdherent === "MEMBRE_AMICALE") {
           this.router.navigate(['/gestion-evenements']);
         } else {
           this.router.navigate(['/dashboard']);
         }
-
       },
 
       error: () => {

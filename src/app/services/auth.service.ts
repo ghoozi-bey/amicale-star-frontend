@@ -14,4 +14,9 @@ export class AuthService {
     return this.http.post(`${this.api}/login`,data);
   }
 
+  getUser() {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+  }
+
 }
