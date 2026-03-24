@@ -1,34 +1,30 @@
 <div class="sidebar">
-  <div class="sidebar">
 
-  <!-- PROFIL UTILISATEUR -->
+  <!-- PROFIL -->
   <div class="user-profile" routerLink="/profile">
+    <img [src]="'assets/' + (user.photoProfil || 'imagepardefaut.jpg')" class="avatar">
+    <span class="name">
+      {{user.prenom}} {{user.nom}}
+    </span>
+  </div>
 
-  <img [src]="'assets/' + (user.photoProfil || 'imagepardefaut.jpg')" class="avatar">
+  <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+    Dashboard
+  </a>
 
-  <span class="name">
-    {{user.prenom}} {{user.nom}}
-  </span>
+  <a routerLink="/evenements" routerLinkActive="active">
+    Mes événements
+  </a>
 
-</div>
+  <a routerLink="/sondages" routerLinkActive="active">
+    Sondages
+  </a>
 
+  <a routerLink="/elections" routerLinkActive="active">
+    Elections
+  </a>
 
-<a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
-  Dashboard
-</a>
-
-<a routerLink="/evenements" routerLinkActive="active">
-  Mes événements
-</a>
-
-<a routerLink="/sondages" routerLinkActive="active">
-  Sondages
-</a>
-
-<a routerLink="/elections" routerLinkActive="active">
-  Elections
-</a>
-
+  <!-- ✅ SEULEMENT AMICALE -->
   <div *ngIf="isAmicale">
 
     <button (click)="toggleEvents()" class="menu-button">

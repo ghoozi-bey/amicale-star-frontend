@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common'; // ✅ IMPORTANT pour *ngIf
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EvenementService } from '../../../services/evenement';
@@ -6,23 +7,23 @@ import { EvenementService } from '../../../services/evenement';
 @Component({
   selector: 'app-gestion-evenements',
   standalone: true,
-  imports: [FormsModule],
+  imports: [CommonModule, FormsModule], // ✅ AJOUT ICI
   templateUrl: './gestion-evenements.html',
   styleUrls: ['./gestion-evenements.css']
 })
 export class GestionEvenementsComponent {
 
   event = {
-  typeEvenement: "",
-  societe: "",
-  titre: "",
-  lieu: "",
-  dateDebut: "",
-  dateFin: "",
-  nbPlaces: 0,
-  prix: 0,
-  description: ""
-}
+    typeEvenement: "",
+    societe: "",
+    titre: "",
+    lieu: "",
+    dateDebut: "",
+    dateFin: "",
+    nbPlaces: 0,
+    prix: 0,
+    description: ""
+  };
 
   selectedFile!: File;
 

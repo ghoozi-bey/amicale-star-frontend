@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -17,18 +16,14 @@ export class SidebarComponent implements OnInit {
 
   user: any = {};
 
-  constructor(private userService: UserService) {}
-
   ngOnInit() {
 
     this.user = JSON.parse(localStorage.getItem('user') || '{}');
 
-    const role = this.user.typeAdherent;
+    const role = this.user?.typeAdherent;
 
-    if (role === 'AMICALE') {
-      this.isAmicale = true;
-    }
-
+    // ✅ IMPORTANT : accepte MEMBRE_AMICALE ou AMICALE
+    this.isAmicale = role === 'MEMBRE_AMICALE' || role === 'AMICALE';
   }
 
   toggleEvents() {

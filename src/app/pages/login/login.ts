@@ -22,27 +22,22 @@ export class LoginComponent {
 
   login() {
 
-    this.auth.login(this.user).subscribe({
+  this.auth.login(this.user).subscribe({
 
-      next: (data: any) => {
+    next: (data: any) => {
 
-        // sauvegarder utilisateur connecté
-        localStorage.setItem("user", JSON.stringify(data));
+      localStorage.setItem("user", JSON.stringify(data));
 
-        // redirection selon role
-        if (data.typeAdherent === "MEMBRE_AMICALE") {
-          this.router.navigate(['/gestion-evenements']);
-        } else {
-          this.router.navigate(['/dashboard']);
-        }
-      },
+      // ✅ TOUJOURS dashboard
+      this.router.navigate(['/dashboard']);
+    },
 
-      error: () => {
-        alert("Email ou mot de passe incorrect");
-      }
+    error: () => {
+      alert("Email ou mot de passe incorrect");
+    }
 
-    });
+  });
 
-  }
+}
 
 }
