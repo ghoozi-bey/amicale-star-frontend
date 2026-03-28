@@ -1,84 +1,83 @@
 <div class="form-container">
 
-<h2 class="form-title">Créer un événement</h2>
-
-<div class="form-group">
-
-<label>Type d'événement</label>
-
-<select [(ngModel)]="event.typeEvenement" name="typeEvenement">
-
-<option value="">Choisir un type</option>
-<option value="OMRA">Omra</option>
-<option value="HAJJ">Hajj</option>
-<option value="VOYAGE">Voyage</option>
-<option value="CONVENTION">Convention</option>
-
-</select>
-
-</div>
+<h1 class="page-title">
+  🎯 Ajouter un événement {{ event.typeEvenement ? '(' + event.typeEvenement + ')' : '' }}
+</h1>
 
 
-<!-- Champ visible seulement pour convention -->
+  <!-- TYPE -->
+  <div class="form-group">
+    <label>Type d'événement</label>
+    <select [(ngModel)]="event.typeEvenement" name="typeEvenement">
+      <option value="">Choisir un type</option>
+      <option value="OMRA">Omra</option>
+      <option value="HAJJ">Hajj</option>
+      <option value="VOYAGE">Voyage</option>
+      <option value="CONVENTION">Convention</option>
+    </select>
+  </div>
 
-<div *ngIf="event.typeEvenement === 'CONVENTION'" class="form-group">
+  <!-- TITRE -->
+  <div class="form-group">
+    <label>Titre</label>
+    <input type="text" [(ngModel)]="event.titre" name="titre" placeholder="Ex: Voyage à Djerba">
+  </div>
 
-<label>Société partenaire</label>
+  <!-- LIEU -->
+  <div class="form-group">
+    <label>Lieu</label>
+    <input type="text" [(ngModel)]="event.lieu" name="lieu" placeholder="Ex: Tunis">
+  </div>
 
-<select [(ngModel)]="event.societe" name="societe">
+  <!-- SOCIETE (CONDITIONNEL) -->
+  <div *ngIf="event.typeEvenement === 'CONVENTION'" class="form-group">
+    <label>Société partenaire</label>
+    <select [(ngModel)]="event.societe" name="societe">
+      <option value="Ooredoo">Ooredoo</option>
+      <option value="Orange">Orange</option>
+      <option value="Telecom">Telecom</option>
+      <option value="Autre">Autre</option>
+    </select>
+  </div>
 
-<option value="Ooredoo">Ooredoo</option>
-<option value="Orange">Orange</option>
-<option value="Telecom">Telecom</option>
-<option value="Autre">Autre</option>
+  <!-- DATES -->
+  <div class="form-group">
+    <label>Date de début</label>
+    <input type="date" [(ngModel)]="event.dateDebut" name="dateDebut">
+  </div>
 
-</select>
+  <div class="form-group">
+    <label>Date de fin</label>
+    <input type="date" [(ngModel)]="event.dateFin" name="dateFin">
+  </div>
 
-</div>
+  <!-- PLACES -->
+  <div class="form-group">
+    <label>Nombre maximum</label>
+    <input type="number" [(ngModel)]="event.nbPlaces" name="nbPlaces">
+  </div>
 
+  <!-- PRIX -->
+  <div class="form-group">
+    <label>Prix</label>
+    <input type="number" [(ngModel)]="event.prix" name="prix">
+  </div>
 
-<div class="form-group">
-<label>Titre de l'événement</label>
-<input type="text" [(ngModel)]="event.titre" name="titre">
-</div>
+  <!-- DESCRIPTION -->
+  <div class="form-group">
+    <label>Description</label>
+    <textarea rows="4" [(ngModel)]="event.description" name="description"></textarea>
+  </div>
 
-<div class="form-group">
-<label>Lieu</label>
-<input type="text" [(ngModel)]="event.lieu" name="lieu">
-</div>
+  <!-- IMAGE -->
+  <div class="form-group">
+    <label>Image</label>
+    <input type="file" (change)="onFileSelected($event)">
+  </div>
 
-<div class="form-group">
-<label>Date de début</label>
-<input type="date" [(ngModel)]="event.dateDebut" name="dateDebut">
-</div>
-
-<div class="form-group">
-<label>Date de fin</label>
-<input type="date" [(ngModel)]="event.dateFin" name="dateFin">
-</div>
-
-<div class="form-group">
-<label>Nombre maximum de participants</label>
-<input type="number" [(ngModel)]="event.nbPlaces" name="nbPlaces">
-</div>
-
-<div class="form-group">
-<label>Prix</label>
-<input type="number" [(ngModel)]="event.prix" name="prix">
-</div>
-
-<div class="form-group">
-<label>Description</label>
-<textarea rows="4" [(ngModel)]="event.description" name="description"></textarea>
-</div>
-
-<div class="form-group">
-<label>Image de l'événement</label>
-<input type="file" (change)="onFileSelected($event)">
-</div>
-
-<button class="submit-btn" (click)="createEvent()">
-Créer événement
-</button>
+  <!-- BUTTON -->
+  <button class="btn-modern" (click)="createEvent()">
+    Créer l’événement
+  </button>
 
 </div>
