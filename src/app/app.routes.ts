@@ -5,52 +5,51 @@ import { DashboardComponent } from './pages/dashboard/dashboard';
 import { EventsComponent } from './pages/evenements/evenements';
 import { GestionEvenementsComponent } from './backoffice/amicale/gestion-evenements/gestion-evenements';
 
+import { authGuard } from './services/auth.guard';
+
 export const routes: Routes = [
 
-  // PAGE LOGIN
   {
     path: 'login',
     loadComponent: () =>
       import('./pages/login/login').then(m => m.LoginComponent)
   },
 
-  // REDIRECTION PAR DEFAUT
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
   },
 
-  // APPLICATION
   {
     path: '',
     component: LayoutComponent,
+    canActivate: [authGuard],
     children: [
 
-      {
-        path: 'dashboard',
-        component: DashboardComponent
-      },
-
-      {
-        path: 'evenements',
-        component: EventsComponent
-      },
-
-      {
-        path: 'gestion-evenements',
-        component: GestionEvenementsComponent
-      },
-
-      {
-        path: 'mes-evenements',
-        component: EventsComponent
-      },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'evenements', component: EventsComponent },
+      { path: 'gestion-evenements', component: GestionEvenementsComponent },
+      { path: 'mes-evenements', component: EventsComponent },
 
       {
         path: 'profile',
         loadComponent: () =>
           import('./pages/profile/profile').then(m => m.ProfileComponent)
+      },
+
+      // ✅ ADMIN
+      {
+        path: 'admin-users',
+        loadComponent: () =>
+          import('./backoffice/amicale/admin/users/admin-users')
+            .then(m => m.AdminUsersComponent)
+      },
+      {
+        path: 'admin-create-user',
+        loadComponent: () =>
+          import('./backoffice/amicale/admin/users/admin-users')
+            .then(m => m.AdminUsersComponent)
       }
 
     ]

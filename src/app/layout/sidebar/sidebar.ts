@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,23 +12,30 @@ import { RouterModule } from '@angular/router';
 })
 export class SidebarComponent implements OnInit {
 
-  isAmicale = false;
-  showEventsMenu = false;
-
   user: any = {};
+  isAdmin = false;
+  isAmicale = false;
+
+  showEventsMenu = false;
+  showUsersMenu = false;
+
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
+    this.user = this.authService.getUser();
 
-    this.user = JSON.parse(localStorage.getItem('user') || '{}');
+    const role = this.user?.role;
 
-    const role = this.user?.typeAdherent;
-
-    // ✅ IMPORTANT : accepte MEMBRE_AMICALE ou AMICALE
-    this.isAmicale = role === 'MEMBRE_AMICALE' || role === 'AMICALE';
+    // ✅ FIX ROLE
+    this.isAdmin = role?.includes('ADMIN');
+    this.isAmicale = role?.includes('MEMBRE_AMICALE');
   }
 
   toggleEvents() {
     this.showEventsMenu = !this.showEventsMenu;
   }
 
+  toggleUsers() {
+    this.showUsersMenu = !this.showUsersMenu;
+  }
 }

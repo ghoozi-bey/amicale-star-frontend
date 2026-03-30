@@ -15,29 +15,29 @@ export class LoginComponent {
 
   user = {
     email: '',
-    motdepasse: ''
+    password: '' // ✅ FIX
   };
 
   constructor(private auth: AuthService, private router: Router) {}
 
   login() {
 
-  this.auth.login(this.user).subscribe({
+    this.auth.login(this.user).subscribe({
 
-    next: (data: any) => {
+      next: (token: string) => {
 
-      localStorage.setItem("user", JSON.stringify(data));
+        // ✅ STOCKER TOKEN
+        this.auth.saveToken(token);
 
-      // ✅ TOUJOURS dashboard
-      this.router.navigate(['/dashboard']);
-    },
+        // ✅ REDIRECTION
+        this.router.navigate(['/dashboard']);
+      },
 
-    error: () => {
-      alert("Email ou mot de passe incorrect");
-    }
+      error: () => {
+        alert("Email ou mot de passe incorrect");
+      }
 
-  });
+    });
 
-}
-
+  }
 }

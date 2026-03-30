@@ -1,52 +1,51 @@
 <div class="sidebar">
 
-  <!-- PROFIL -->
+  <!-- Profil -->
   <div class="user-profile" routerLink="/profile">
-    <img [src]="'assets/' + (user.photoProfil || 'imagepardefaut.jpg')" class="avatar">
+    <img [src]="'assets/imagepardefaut.jpg'" class="avatar">
     <span class="name">
-      {{user.prenom}} {{user.nom}}
+      {{user?.sub}}
     </span>
   </div>
 
-  <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
-    Dashboard
-  </a>
+  <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+  <a routerLink="/evenements" routerLinkActive="active">Mes événements</a>
 
-  <a routerLink="/evenements" routerLinkActive="active">
-    Mes événements
-  </a>
+  <!-- ❌ supprimer si pas de route -->
+  <!-- <a routerLink="/sondages">Sondages</a> -->
 
-  <a routerLink="/sondages" routerLinkActive="active">
-    Sondages
-  </a>
+  <a routerLink="/elections" routerLinkActive="active">Elections</a>
 
-  <a routerLink="/elections" routerLinkActive="active">
-    Elections
-  </a>
-
-  <!-- ✅ SEULEMENT AMICALE -->
+  <!-- AMICALE -->
   <div *ngIf="isAmicale">
-
     <button (click)="toggleEvents()" class="menu-button">
       Gestion événements
     </button>
 
     <ul *ngIf="showEventsMenu" class="submenu">
-
       <li>
-        <a routerLink="/gestion-evenements" routerLinkActive="active">
-          Ajouter événement
-        </a>
+        <a routerLink="/gestion-evenements">Ajouter événement</a>
       </li>
-
       <li>
-        <a routerLink="/mes-evenements" routerLinkActive="active">
-          Lister mes événements
-        </a>
+        <a routerLink="/mes-evenements">Lister mes événements</a>
       </li>
-
     </ul>
+  </div>
 
+  <!-- ADMIN -->
+  <div *ngIf="isAdmin">
+    <button (click)="toggleUsers()" class="menu-button">
+      Gestion utilisateurs
+    </button>
+
+    <ul *ngIf="showUsersMenu" class="submenu">
+      <li>
+        <a routerLink="/admin-create-user">Créer utilisateur</a>
+      </li>
+      <li>
+        <a routerLink="/admin-users">Liste utilisateurs</a>
+      </li>
+    </ul>
   </div>
 
 </div>

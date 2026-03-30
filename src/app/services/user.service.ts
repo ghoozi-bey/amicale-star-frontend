@@ -1,32 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class UserService {
 
-  apiUrl = 'http://localhost:8080/api/adherents';
-
-  getUser(){
- return JSON.parse(localStorage.getItem("user") || "{}");
-}
+  api = "http://localhost:8080/api/admin/users";
 
   constructor(private http: HttpClient) {}
 
-  getRole() {
-    const user = this.getUser();
-    return user.role;
+  getAll() {
+    return this.http.get(this.api);
   }
 
-  getProfile(){
- const user=this.getUser();
- return this.http.get(`${this.apiUrl}/profile/${user.matricule}`);
-}
-
-  updateProfile(data:any){
-    const user=this.getUser();
-    return this.http.put(`${this.apiUrl}/profile/${user.matricule}`, data);
+  create(data: any) {
+    return this.http.post(this.api, data);
   }
 
+  delete(matricule: string) {
+    return this.http.delete(`${this.api}/${matricule}`);
+  }
+
+  updateProfile(data: any) {
+    return this.http.put('http://localhost:8080/api/user/profile', data);
+  }
+
+  // ✅ AJOUT
+  getProfile() {
+    return this.http.get('http://localhost:8080/api/user/profile');
+  }
 }
