@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../../services/auth.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-admin-users',
@@ -24,16 +25,27 @@ export class AdminUsersComponent {
     cin: '',
     telephone: '',
     dateNaissance: '',
-    departement: '',
-    typeAdherent: 'ADHERENT',
-    typeEvenement: null
+    departement: null,
+    typeAdherent: null,
+    typeEvenementId: null
   };
 
   users: any[] = [];
+  
+  typesEvenement = [
+    { id: 1, nom: 'OMRA & HAJ' },
+    { id: 2, nom: 'VOYAGE' },
+    { id: 3, nom: 'CONVENTION' }
+  ];
+
+  errorMessage: string = '';
+  successMessage: string = '';
+  validationErrors: any = {};
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef    
   ) {}
 
   ngOnInit() {
@@ -59,28 +71,57 @@ export class AdminUsersComponent {
   }
 
   createUser() {
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-  this.http.post(
-    "http://localhost:8080/api/admin/create-user",
-    this.newUser,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
+    // reset messages
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.validationErrors = {};
+
+    this.http.post(
+      "http://localhost:8080/api/admin/create-user",
+      this.newUser,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       }
-    }
-  ).subscribe({
-    next: () => {
-      alert("✅ Utilisateur créé");
-    },
-    error: (err) => {
-      console.error("Erreur création user", err);
-    }
-  });
-}
+    ).subscribe({
+      next: () => {
+        this.successMessage = "✅ Utilisateur créé avec succès";
+        this.validationErrors = {}; // clear errors
+
+        this.newUser = {
+          matricule: '',
+          nom: '',
+          prenom: '',
+          email: '',
+          password: '',
+          cin: '',
+          telephone: '',
+          dateNaissance: '',
+          departement: '',
+          typeAdherent: 'ADHERENT',
+          typeEvenementId: null
+        };
+
+        this.loadUsers();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.log("ERROR BODY:", err.error);
+
+        this.validationErrors = { ...(err.error || {}) };
+        this.errorMessage = '';
+        this.successMessage = '';
+
+        this.cdr.detectChanges();
+      }
+    });
+  }
   onRoleChange() {
     if (this.newUser.typeAdherent !== 'MEMBRE_AMICALE') {
-      this.newUser.typeEvenement = null;
+      this.newUser.typeEvenementId = null;
     }
   }
 }

@@ -103,3 +103,15 @@ th, td {
   border-color: #2e7d32;
   outline: none;
 }
+
+.success {
+  color: green;
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+  margin: 10px 0;
+  font-weight: bold;
+}

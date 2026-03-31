@@ -1,70 +1,130 @@
+<div *ngIf="successMessage.length > 0" class="success">
+  {{ successMessage }}
+</div>
+
+<div *ngIf="errorMessage.length > 0" class="error">
+  {{ errorMessage }}
+</div>
+
 <div class="card">
 
   <h3>Créer un utilisateur</h3>
 
-  <div class="form">
+  <form (ngSubmit)="createUser()" #form="ngForm" class="form">
 
     <div class="form-group">
       <label>Matricule</label>
-      <input [(ngModel)]="newUser.matricule" placeholder="Ex: STAR123456">
+      <input name="matricule" [(ngModel)]="newUser.matricule" placeholder="Ex: STAR123456" required>
+      <div *ngIf="validationErrors?.matricule" class="error">
+        {{ validationErrors.matricule }}
+      </div>
     </div>
 
     <div class="form-group">
       <label>Nom</label>
-      <input [(ngModel)]="newUser.nom">
+      <input name="nom" [(ngModel)]="newUser.nom" required>
+      <div *ngIf="validationErrors?.nom" class="error">
+        {{ validationErrors.nom }}
+      </div>
     </div>
 
     <div class="form-group">
       <label>Prénom</label>
-      <input [(ngModel)]="newUser.prenom">
+      <input name="prenom" [(ngModel)]="newUser.prenom" required>
+      <div *ngIf="validationErrors?.prenom" class="error">
+        {{ validationErrors.prenom }}
+      </div>
     </div>
 
     <div class="form-group">
       <label>Email</label>
-      <input [(ngModel)]="newUser.email">
+      <input name="email" [(ngModel)]="newUser.email" required>
+      <div *ngIf="validationErrors?.email" class="error">
+        {{ validationErrors.email }}
+      </div>
     </div>
 
     <div class="form-group">
       <label>Mot de passe</label>
-      <input type="password" [(ngModel)]="newUser.password">
+      <input name="password" type="password" [(ngModel)]="newUser.password" required>
+      <div *ngIf="validationErrors?.password" class="error">
+        {{ validationErrors.password }}
+      </div>
     </div>
 
     <div class="form-group">
       <label>CIN</label>
-      <input [(ngModel)]="newUser.cin">
+      <input name="cin" [(ngModel)]="newUser.cin" required>
+      <div *ngIf="validationErrors?.cin" class="error">
+        {{ validationErrors.cin }}
+      </div>
     </div>
 
     <div class="form-group">
       <label>Téléphone</label>
-      <input [(ngModel)]="newUser.telephone">
+      <input name="telephone" [(ngModel)]="newUser.telephone" required>
+      <div *ngIf="validationErrors?.telephone" class="error">
+        {{ validationErrors.telephone }}
+      </div>
     </div>
 
     <div class="form-group">
       <label>Date de naissance</label>
-      <input type="date" [(ngModel)]="newUser.dateNaissance">
+      <input name="dateNaissance" type="date" [(ngModel)]="newUser.dateNaissance" required>
+      <div *ngIf="validationErrors?.dateNaissance" class="error">
+        {{ validationErrors.dateNaissance }}
+      </div>
     </div>
 
     <div class="form-group">
       <label>Département</label>
-      <select [(ngModel)]="newUser.departement">
-        <option value="">Choisir département</option>
-        <option value="IT">IT</option>
-        <option value="RH">RH</option>
-        <option value="FINANCE">FINANCE</option>
+      <select name="departement" [(ngModel)]="newUser.departement">
+        <option value="" disabled>Choisir département</option>
+        <option value="INFORMATIQUE">Informatique</option>
+        <option value="RESSOURCES_HUMAINES">Ressouces Humaines</option>
+        <option value="FINANCE">Finance</option>
+        <option value="MARKETING">Marketing</option>
+        <option value="ADMINISTRATION">Administration</option>
       </select>
+      <div *ngIf="validationErrors?.departement" class="error">
+        {{ validationErrors.departement }}
+      </div>
     </div>
 
     <div class="form-group">
       <label>Rôle</label>
-      <select [(ngModel)]="newUser.typeAdherent" (change)="onRoleChange()">
+      <select name="typeAdherent" [(ngModel)]="newUser.typeAdherent" (change)="onRoleChange()">
+        <option value="" disabled>Choisir rôle</option>
         <option value="ADHERENT">Adhérent</option>
         <option value="MEMBRE_AMICALE">Membre Amicale</option>
-        <option value="ADMIN">Admin</option>
+        <option value="RESPONSABLE_ELECTION">Responsable Élections</option>
       </select>
+      <div *ngIf="validationErrors?.typeAdherent" class="error">
+        {{ validationErrors.typeAdherent }}
+      </div>
     </div>
 
-  </div>
+    <div class="form-group" *ngIf="newUser.typeAdherent === 'MEMBRE_AMICALE'">
+      <label>Type Événement</label>
 
-  <button class="btn" (click)="createUser()">Créer utilisateur</button>
+      <select
+        name="typeEvenementId"
+        [(ngModel)]="newUser.typeEvenementId"
+        [required]="newUser.typeAdherent === 'MEMBRE_AMICALE'"
+      >
+        <option [ngValue]="null" disabled>Choisir un type d'événement</option>
+
+        <option *ngFor="let t of typesEvenement" [ngValue]="t.id">
+          {{ t.nom }}
+        </option>
+      </select>
+
+      <div *ngIf="validationErrors?.typeEvenementId" class="error">
+        {{ validationErrors.typeEvenementId }}
+      </div>
+    </div>
+
+    <button class="btn" type="submit">Créer utilisateur</button>
+  </form>
 
 </div>
