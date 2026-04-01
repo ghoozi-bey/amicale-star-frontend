@@ -1,17 +1,19 @@
 <nav class="navbar">
 
-<div class="left">
+  <div class="left">
+    <img src="assets/logo-color.svg" class="logo-star">
 
-<img src="assets/logo-color.svg" class="logo-star">
+    <div class="divider"></div>
 
-</div>
+    <span class="user">
+      Bonjour, {{ userName }}
+    </span>
+  </div>
 
-<div class="right">
-
-<span class="user">
-Bonjour {{ userName }}
-</span>
-
-</div>
+  <div class="right">
+    <button class="logout-btn" (click)="logout()">
+      Déconnexion
+    </button>
+  </div>
 
 </nav>

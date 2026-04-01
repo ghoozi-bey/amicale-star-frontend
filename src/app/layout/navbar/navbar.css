@@ -1,35 +1,72 @@
-.navbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:#19785a;
-padding:12px 25px;
-border-radius:12px;
-margin:10px;
-color:white;
-box-shadow:0 2px 8px rgba(0,0,0,0.1);
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #19785a;
+  padding: 14px 30px; /* un peu plus comme STAR */
+  border-radius: 12px;
+  margin: 10px;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.left{
-display:flex;
-align-items:center;
-gap:12px;
+/* LEFT */
+.left {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* espace plus réaliste */
 }
 
-.logo-star{
-height:45px;
-width:auto;
+/* LOGO */
+.logo-star {
+  height: 50px; /* un peu plus grand comme STAR */
+  width: auto;
 }
 
-.logo-star .s1{
-fill:white;
+/* 🔥 LIGNE VERTICALE */
+.divider {
+  width: 2px;
+  height: 35px;
+  background: rgba(255,255,255,0.4);
 }
 
-.title{
-font-weight:600;
-font-size:18px;
+/* USER TEXT */
+.user {
+  font-weight: 600;
+  font-size: 16px;
+  color: #e8f5e9;
+  white-space: nowrap;
 }
 
-.user{
-font-weight:500;
+/* RIGHT */
+.right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* LOGOUT BUTTON */
+.logout-btn {
+  background: white;
+  color: #19785a;
+  border: none;
+  padding: 8px 18px; /* plus large comme STAR */
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.logout-btn:hover {
+  background: #e6e6e6;
+}
+
+.logout-btn:active {
+  transform: scale(0.95);
+}
+
+/* ALIGNEMENT */
+.left,
+.right {
+  height: 100%;
 }

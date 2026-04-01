@@ -13,6 +13,8 @@ import { AuthService } from '../../services/auth.service';
 export class SidebarComponent implements OnInit {
 
   user: any = {};
+  userName: string = ''; // ✅ ajout
+
   isAdmin = false;
   isAmicale = false;
 
@@ -26,9 +28,18 @@ export class SidebarComponent implements OnInit {
 
     const role = this.user?.role;
 
-    // ✅ FIX ROLE
+    // ✅ FIX ROLE (safe)
     this.isAdmin = role?.includes('ADMIN');
     this.isAmicale = role?.includes('MEMBRE_AMICALE');
+
+    // ✅ NOM + PRENOM (SAFE)
+    if (this.user) {
+      if (this.user.prenom && this.user.nom) {
+        this.userName = this.user.prenom + ' ' + this.user.nom;
+      } else {
+        this.userName = this.user.email || '';
+      }
+    }
   }
 
   toggleEvents() {

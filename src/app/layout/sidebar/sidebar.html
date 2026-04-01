@@ -3,16 +3,14 @@
   <!-- Profil -->
   <div class="user-profile" routerLink="/profile">
     <img [src]="'assets/imagepardefaut.jpg'" class="avatar">
+
     <span class="name">
-      {{user?.sub}}
+      {{ userName }}
     </span>
   </div>
 
   <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
   <a routerLink="/evenements" routerLinkActive="active">Mes événements</a>
-
-  <!-- ❌ supprimer si pas de route -->
-  <!-- <a routerLink="/sondages">Sondages</a> -->
 
   <a routerLink="/elections" routerLinkActive="active">Elections</a>
 

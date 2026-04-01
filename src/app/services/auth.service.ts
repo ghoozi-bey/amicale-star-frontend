@@ -32,16 +32,23 @@ export class AuthService {
 
   // ✅ GET USER (decode JWT)
   getUser() {
-    const token = this.getToken();
-    if (!token) return null;
+  const token = this.getToken();
+  if (!token) return null;
 
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload;
-    } catch {
-      return null;
-    }
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+
+    return {
+      ...payload, // ⚠️ IMPORTANT → ne casse rien
+      prenom: payload.prenom || payload.firstName || null,
+      nom: payload.nom || payload.lastName || null,
+      email: payload.sub || payload.email || null
+    };
+
+  } catch {
+    return null;
   }
+}
 
   // ✅ CHECK LOGIN
   isLoggedIn(): boolean {
