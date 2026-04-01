@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../../services/auth.service';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
     selector: 'app-admin-users',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, RouterModule],
     templateUrl: './admin-users.html',
     styleUrls: ['./admin-users.css']
 })
@@ -18,7 +20,8 @@ export class AdminUsersComponent {
 
     constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
     ) {}
 
     ngOnInit() {
@@ -29,7 +32,10 @@ export class AdminUsersComponent {
     this.http.get<any[]>(this.api, {
         headers: { Authorization: 'Bearer ' + this.authService.getToken() }
     }).subscribe({
-        next: (data) => this.users = data,
+        next: (data) => {
+            this.users = data;
+            this.cdr.detectChanges(); // forces UI update
+        },
         error: (err) => console.error('Erreur chargement users', err)
     });
     }

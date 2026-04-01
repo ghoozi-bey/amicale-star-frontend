@@ -50,6 +50,12 @@ export const routes: Routes = [
           loadComponent: () =>
             import('./backoffice/amicale/admin/admin-create-user/admin-create-user')
               .then(m => m.AdminCreateUserComponent)
+        },
+        {
+          path: 'admin-edit-user/:matricule',
+          loadComponent: () =>
+            import('./backoffice/amicale/admin/admin-edit-user/admin-edit-user')
+              .then(m => m.AdminEditUserComponent)
         }
     ]
   }
