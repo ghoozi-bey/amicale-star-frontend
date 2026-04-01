@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
 export class SidebarComponent implements OnInit {
 
   user: any = {};
-  userName: string = ''; // ✅ ajout
+  userName: string = '';
 
   isAdmin = false;
   isAmicale = false;
@@ -26,16 +26,16 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
     this.user = this.authService.getUser();
 
-    const role = this.user?.role;
+    const role = this.user?.role || '';
 
-    // ✅ FIX ROLE (safe)
-    this.isAdmin = role?.includes('ADMIN');
-    this.isAmicale = role?.includes('MEMBRE_AMICALE');
+    // 🔥 FIX SAFE ROLE
+    this.isAdmin = role.includes('ADMIN');
+    this.isAmicale = role.includes('MEMBRE_AMICALE');
 
-    // ✅ NOM + PRENOM (SAFE)
+    // 🔥 NOM PROPRE
     if (this.user) {
       if (this.user.prenom && this.user.nom) {
-        this.userName = this.user.prenom + ' ' + this.user.nom;
+        this.userName = `${this.user.prenom} ${this.user.nom}`;
       } else {
         this.userName = this.user.email || '';
       }

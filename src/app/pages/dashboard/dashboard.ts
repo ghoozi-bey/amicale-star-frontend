@@ -28,7 +28,7 @@ this.loadEvenements();
 
 loadEvenements(){
 
-this.evenementService.getEvenements().subscribe(data=>{
+this.evenementService.getAllEvenements().subscribe((data: any[]) => {
 
 this.evenements = data;
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,56 +11,34 @@ export class EvenementService {
 
   constructor(private http: HttpClient) {}
 
-  // 🔐 récupérer headers avec token
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
+  // 🔥 récupérer tous les événements (adhérent)
+  getAllEvenements(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
   }
 
-  // récupérer tous les événements
-  getEvenements(): Observable<any[]> {
-    return this.http.get<any[]>(
-      this.apiUrl + "?ts=" + new Date().getTime(),
-      { headers: this.getAuthHeaders() }
-    );
+  // 🔥 récupérer les événements du membre amicale
+  getMesEvenements(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/mine`);
   }
 
-  // créer un événement
+  // 🔥 créer un événement
   createEvenement(evenement: any): Observable<any> {
-    return this.http.post<any>(
-      this.apiUrl,
-      evenement,
-      { headers: this.getAuthHeaders() }
-    );
+    return this.http.post<any>(this.apiUrl, evenement);
   }
 
-  // modifier un événement
+  // 🔥 modifier un événement
   updateEvenement(id: number, evenement: any): Observable<any> {
-    return this.http.patch<any>(
-      `${this.apiUrl}/${id}`,
-      evenement,
-      { headers: this.getAuthHeaders() }
-    );
+    return this.http.patch<any>(`${this.apiUrl}/${id}`, evenement);
   }
 
-  // supprimer un événement
+  // 🔥 supprimer un événement
   deleteEvenement(id: number): Observable<any> {
-    return this.http.delete<any>(
-      `${this.apiUrl}/${id}`,
-      { headers: this.getAuthHeaders() }
-    );
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 
-  // archiver un événement
+  // 🔥 archiver un événement
   archiverEvenement(id: number): Observable<any> {
-    return this.http.patch<any>(
-      `${this.apiUrl}/${id}/archiver`,
-      {},
-      { headers: this.getAuthHeaders() }
-    );
+    return this.http.patch<any>(`${this.apiUrl}/${id}/archiver`, {});
   }
 
 }

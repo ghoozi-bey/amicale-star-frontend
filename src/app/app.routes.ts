@@ -9,6 +9,7 @@ import { authGuard } from './services/auth.guard';
 
 export const routes: Routes = [
 
+  // 🔐 LOGIN
   {
     path: 'login',
     loadComponent: () =>
@@ -21,17 +22,39 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
 
+  // 🔐 APP PROTECTED
   {
     path: '',
     component: LayoutComponent,
     canActivate: [authGuard],
     children: [
 
+      // 📊 DASHBOARD
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'evenements', component: EventsComponent },
-      { path: 'gestion-evenements', component: GestionEvenementsComponent },
-      { path: 'mes-evenements', component: EventsComponent },
 
+      // 📅 TOUS LES EVENEMENTS (adhérent)
+      { path: 'evenements', component: EventsComponent },
+
+      // ➕ CREATION EVENEMENT (amicale)
+      { path: 'gestion-evenements', component: GestionEvenementsComponent },
+
+      // 👤 MES EVENEMENTS (adhérent)
+      {
+        path: 'mes-evenements',
+        loadComponent: () =>
+          import('./backoffice/amicale/evenements/mes-evenements/mes-evenements')
+            .then(m => m.MesEvenementsComponent)
+      },
+
+      // 🟢 MES EVENEMENTS (membre amicale)
+      {
+        path: 'mes-evenements-amicale',
+        loadComponent: () =>
+          import('./backoffice/amicale/evenements/mes-evenements-membre-amicale/mes-evenements-membre-amicale')
+            .then(m => m.MesEvenementsMembreAmicaleComponent)
+      },
+
+      // 👤 PROFILE
       {
         path: 'profile',
         loadComponent: () =>

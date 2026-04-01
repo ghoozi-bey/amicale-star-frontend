@@ -10,11 +10,15 @@
   </div>
 
   <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-  <a routerLink="/evenements" routerLinkActive="active">Mes événements</a>
+
+  <!-- 👤 ADHERENT -->
+  <a routerLink="/mes-evenements" routerLinkActive="active">
+    Mes événements
+  </a>
 
   <a routerLink="/elections" routerLinkActive="active">Elections</a>
 
-  <!-- AMICALE -->
+  <!-- 🟢 AMICALE -->
   <div *ngIf="isAmicale">
     <button (click)="toggleEvents()" class="menu-button">
       Gestion événements
@@ -25,12 +29,13 @@
         <a routerLink="/gestion-evenements">Ajouter événement</a>
       </li>
       <li>
-        <a routerLink="/mes-evenements">Lister mes événements</a>
+        <!-- 🔥 CORRECTION ICI -->
+        <a routerLink="/mes-evenements-amicale">Lister mes événements</a>
       </li>
     </ul>
   </div>
 
-  <!-- ADMIN -->
+  <!-- 🔴 ADMIN -->
   <div *ngIf="isAdmin">
     <button (click)="toggleUsers()" class="menu-button">
       Gestion utilisateurs

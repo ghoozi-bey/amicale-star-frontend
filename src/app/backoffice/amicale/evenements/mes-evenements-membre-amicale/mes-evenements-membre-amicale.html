@@ -1,0 +1,29 @@
+<div class="container">
+
+  <h2>Mes événements (Membre Amicale)</h2>
+
+  <div class="cards">
+    <div *ngFor="let e of events" class="card">
+
+      <img *ngIf="e.photo" [src]="'http://localhost:8080/uploads/events/' + e.photo">
+      <img *ngIf="!e.photo" src="assets/imagepardefaut.jpg">
+
+      <div class="content">
+        <h3>{{e.titre}}</h3>
+        <p>📍 {{e.lieu}}</p>
+        <p>📅 {{e.dateDebut}} → {{e.dateFin}}</p>
+        <p>💰 {{e.prix}} DT</p>
+
+        <span class="badge">{{e.typeEvenement?.nom}}</span>
+
+        <div class="actions">
+          <button class="edit">Modifier</button>
+          <button class="delete" (click)="deleteEvent(e.id)">Supprimer</button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
