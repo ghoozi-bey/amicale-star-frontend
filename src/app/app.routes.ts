@@ -39,19 +39,18 @@ export const routes: Routes = [
       },
 
       // ✅ ADMIN
-      {
-        path: 'admin-users',
-        loadComponent: () =>
-          import('./backoffice/amicale/admin/users/admin-users')
-            .then(m => m.AdminUsersComponent)
-      },
-      {
-        path: 'admin-create-user',
-        loadComponent: () =>
-          import('./backoffice/amicale/admin/users/admin-users')
-            .then(m => m.AdminUsersComponent)
-      }
-
+        {
+          path: 'admin-users',
+          loadComponent: () =>
+            import('./backoffice/amicale/admin/users/admin-users')
+              .then(m => m.AdminUsersComponent)
+        },
+        {
+          path: 'admin-create-user',
+          loadComponent: () =>
+            import('./backoffice/amicale/admin/admin-create-user/admin-create-user')
+              .then(m => m.AdminCreateUserComponent)
+        }
     ]
   }
 
