@@ -1,7 +1,8 @@
 <div class="container" *ngIf="user">
     <h2>Modifier Utilisateur</h2>
-    
+
     <div class="form">
+
         <div class="form-group">
         <label>Nom</label>
         <input [(ngModel)]="user.nom" />
@@ -19,15 +20,76 @@
 
         <div class="form-group">
         <label>Mot de passe</label>
-        <input type="password" [(ngModel)]="user.password" placeholder="laisser vide si pas changé" />
+        <input type="password"
+                [(ngModel)]="user.password"
+                placeholder="laisser vide si pas changé" />
         </div>
 
-        <!-- add other fields like CIN, Téléphone, etc. -->
+        <div class="form-group">
+        <label>CIN</label>
+        <input [(ngModel)]="user.cin" />
+        </div>
+
+        <div class="form-group">
+        <label>Téléphone</label>
+        <input [(ngModel)]="user.telephone" />
+        </div>
+
+        <div class="form-group">
+        <label>Département</label>
+        <select [(ngModel)]="user.departement">
+            <option *ngFor="let d of departements" [value]="d">
+            {{ d }}
+            </option>
+        </select>
+        </div>
+
+        <div class="form-group">
+        <label>Date de naissance</label>
+        <input type="date" [(ngModel)]="user.date_naissance" />
+        </div>
+
+        <div class="form-group">
+        <label>Photo de profil</label>
+        <input [(ngModel)]="user.photo_profil" />
+        </div>
+
+        <div class="form-group">
+        <label>Type Adhérent</label>
+        <select [(ngModel)]="user.type_adherent">
+            <option *ngFor="let t of typesAdherent" [value]="t">
+            {{ t }}
+            </option>
+        </select>
+        </div>
+
+        <div *ngIf="user.type_adherent === 'MEMBRE_AMICALE'">
+            <div *ngIf="typeEvenements.length === 0">
+                Chargement des types...
+            </div>
+            <div *ngIf="typeEvenements.length > 0">
+                <label>Type Événement</label>
+                <select [(ngModel)]="user.type_evenement_id">
+                    <option *ngFor="let t of typeEvenements" [value]="t.id">
+                        {{ t.nom }}
+                    </option>
+                </select>
+        </div>
+
+</div>
+
+        <div class="form-group">
+        <label>
+            <input type="checkbox" [(ngModel)]="user.actif" />
+            Actif
+        </label>
+        </div>
 
         <button (click)="updateUser()">Enregistrer</button>
         <button (click)="router.navigate(['/admin-users'])">Annuler</button>
 
         <div *ngIf="successMessage" class="success">{{successMessage}}</div>
         <div *ngIf="errorMessage" class="error">{{errorMessage}}</div>
+
     </div>
 </div>

@@ -22,6 +22,10 @@ export class AdminEditUserComponent {
   successMessage: string = '';
   validationErrors: any = {};
 
+  departements: string[] = [];
+  typesAdherent: string[] = [];
+  typeEvenements: any[] = [];
+
   constructor(
     private http: HttpClient,
     private authService: AuthService,
@@ -35,15 +39,65 @@ export class AdminEditUserComponent {
     if (matricule) {
       this.loadUser(matricule);
     }
+    this.loadEnums();
   }
 
+  loadEnums() {
+    const token = this.authService.getToken();
+
+    this.http.get<string[]>('http://localhost:8080/api/admin/departements', {
+      headers: { Authorization: 'Bearer ' + token }
+    }).subscribe(data => this.departements = data);
+
+    this.http.get<string[]>('http://localhost:8080/api/admin/types-adherent', {
+      headers: { Authorization: 'Bearer ' + token }
+    }).subscribe(data => this.typesAdherent = data);
+  }
+
+  loadTypes() {
+    const token = this.authService.getToken();
+    console.log("Loading types...");
+
+    this.http.get<any[]>('http://localhost:8080/api/admin/type-evenements', {
+      headers: { Authorization: 'Bearer ' + token }
+    }).subscribe({
+      next: (data) => {
+        console.log("Types loaded:", data);
+        this.typeEvenements = data;
+
+        // force UI refresh after async load
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error("Error loading types:", err);
+      }
+    });
+  }
+
+
   loadUser(matricule: string) {
-    this.http.get(`${this.api}/${matricule}`, {
+    this.http.get<any>(`${this.api}/${matricule}`, {
       headers: { Authorization: 'Bearer ' + this.authService.getToken() }
     }).subscribe({
       next: (data) => {
-        this.user = data;
-        this.cdr.detectChanges(); // forces UI update
+        this.user = { ...data };
+
+        // never show encoded password
+        this.user.password = '';
+
+        // 🔥 mapping
+        this.user.date_naissance = data.dateNaissance;
+        this.user.type_adherent = data.typeAdherent;
+
+        // 🔥 IMPORTANT (this was missing)
+        this.user.type_evenement_id = data.typeEvenement?.id;
+
+        // 🔥 ONLY load types if needed
+        if (this.user.type_adherent === 'MEMBRE_AMICALE') {
+          this.loadTypes();
+        }
+
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Erreur chargement user', err);
@@ -55,24 +109,44 @@ export class AdminEditUserComponent {
   updateUser() {
     const token = localStorage.getItem('token');
 
-    // patch only modified fields
     const updatedFields: any = {};
+
     for (const key in this.user) {
       if (this.user[key] !== null && this.user[key] !== undefined) {
         updatedFields[key] = this.user[key];
       }
     }
 
+    // don't send empty password
+    if (!this.user.password) {
+      delete updatedFields.password;
+    }
+
+    // FIX field mappings
+    updatedFields.typeAdherent = this.user.type_adherent;
+    updatedFields.typeEvenementId = this.user.type_evenement_id;
+    updatedFields.departement = this.user.departement;
+    updatedFields.dateNaissance = this.user.date_naissance;
+
+    delete updatedFields.type_adherent;
+    delete updatedFields.type_evenement_id;
+    delete updatedFields.date_naissance;
+
     this.http.patch(`${this.api}/${this.user.matricule}`, updatedFields, {
       headers: { Authorization: 'Bearer ' + token }
     }).subscribe({
       next: () => {
-        this.successMessage = '✅ Utilisateur mis à jour';
-        this.router.navigate(['/admin-users']); // go back to list
+        this.successMessage = '✅ Utilisateur mis à jour. Redirection dans 3 secondes...';
+        this.cdr.detectChanges();
+
+        setTimeout(() => {
+          this.router.navigate(['/admin-users']);
+        }, 3000);
       },
       error: (err) => {
         console.error('Erreur mise à jour', err);
         this.errorMessage = 'Erreur lors de la mise à jour';
+        this.cdr.detectChanges();
       }
     });
   }
