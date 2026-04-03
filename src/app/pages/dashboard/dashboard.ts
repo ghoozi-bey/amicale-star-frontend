@@ -1,50 +1,42 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EvenementService } from '../../services/evenement';
 
 @Component({
-selector: 'app-dashboard',
-standalone: true,
-imports: [CommonModule],
-templateUrl: './dashboard.html',
-styleUrls: ['./dashboard.css']
+  selector: 'app-dashboard',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './dashboard.html',
+  styleUrls: ['./dashboard.css']
 })
-
-
 export class DashboardComponent implements OnInit {
 
-evenements:any=[];
+  evenements: any[] = [];
+  selectedEvent: any = null;
 
-constructor(
-private evenementService:EvenementService,
-private cd:ChangeDetectorRef
-){}
+  constructor(private evenementService: EvenementService) {}
 
-ngOnInit(){
+  ngOnInit(): void {
+    this.loadEvenements();
+  }
 
-this.loadEvenements();
+  // 🔥 IMPORTANT : utiliser ACTIFS uniquement
+  loadEvenements(): void {
+    this.evenementService.getEvenementsActifs().subscribe({
+      next: (data) => {
+        this.evenements = data;
+      },
+      error: (err) => {
+        console.error('Erreur chargement événements:', err);
+      }
+    });
+  }
 
-}
+  openDetails(e: any): void {
+    this.selectedEvent = e;
+  }
 
-loadEvenements(){
-
-this.evenementService.getAllEvenements().subscribe((data: any[]) => {
-
-this.evenements = data;
-
-this.cd.detectChanges();
-
-});
-
-}
-selectedEvent:any=null;
-
-openDetails(e:any){
-this.selectedEvent=e;
-}
-
-closeDetails(){
-this.selectedEvent=null;
-}
-
+  closeDetails(): void {
+    this.selectedEvent = null;
+  }
 }

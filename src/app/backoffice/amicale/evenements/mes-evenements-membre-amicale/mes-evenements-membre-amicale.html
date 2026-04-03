@@ -1,29 +1,39 @@
-<div class="container">
+<div class="events-container">
+  <div class="event-card" *ngFor="let event of events">
 
-  <h2>Mes événements (Membre Amicale)</h2>
+    <!-- 🔥 IMAGE + BADGE -->
+    <div class="event-image-container">
+      <img [src]="event.photo || 'assets/imagepardefaut.jpg'" class="event-image">
 
-  <div class="cards">
-    <div *ngFor="let e of events" class="card">
+      <!-- 🔥 BADGE STATUT -->
+      <span 
+        class="status-badge"
+        [ngClass]="{
+          'active': event.statut !== 'ARCHIVE',
+          'archived': event.statut === 'ARCHIVE'
+        }"
+      >
+        {{ event.statut === 'ARCHIVE' ? 'ARCHIVÉ' : 'ACTIF' }}
+      </span>
+    </div>
 
-      <img *ngIf="e.photo" [src]="'http://localhost:8080/uploads/events/' + e.photo">
-      <img *ngIf="!e.photo" src="assets/imagepardefaut.jpg">
+    <div class="event-content">
 
-      <div class="content">
-        <h3>{{e.titre}}</h3>
-        <p>📍 {{e.lieu}}</p>
-        <p>📅 {{e.dateDebut}} → {{e.dateFin}}</p>
-        <p>💰 {{e.prix}} DT</p>
+      <div class="event-title">{{ event.titre }}</div>
 
-        <span class="badge">{{e.typeEvenement?.nom}}</span>
+      <div class="event-info">📍 {{ event.lieu }}</div>
+      <div class="event-info">📅 {{ event.dateDebut }} → {{ event.dateFin }}</div>
+      <div class="event-info event-price">💰 {{ event.prix }} DT</div>
 
-        <div class="actions">
-          <button class="edit">Modifier</button>
-          <button class="delete" (click)="deleteEvent(e.id)">Supprimer</button>
-        </div>
+      <div class="event-badge">
+        {{ event.typeEvenement?.nom }}
+      </div>
 
+      <div class="event-actions">
+        <button class="btn btn-edit">Modifier</button>
+        <button class="btn btn-delete" (click)="deleteEvent(event.id)">Supprimer</button>
       </div>
 
     </div>
   </div>
-
 </div>
