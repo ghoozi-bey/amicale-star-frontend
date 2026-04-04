@@ -1,22 +1,31 @@
 <div class="container">
 
-  <h2>Tous les événements</h2>
+  <h2>Mes événements</h2>
+
+  <div *ngIf="loading">Chargement...</div>
+  <div *ngIf="errorMessage">{{errorMessage}}</div>
+
+  <div *ngIf="!loading && events.length === 0">
+    Aucun événement participé 
+  </div>
 
   <div class="cards">
     <div *ngFor="let e of events" class="card">
 
-      <img *ngIf="e.photo" [src]="'http://localhost:8080/uploads/events/' + e.photo">
-      <img *ngIf="!e.photo" src="assets/imagepardefaut.jpg">
+      <img 
+        [src]="e.photo 
+          ? 'http://localhost:8080/uploads/events/' + e.photo 
+          : 'assets/imagepardefaut.jpg'">
 
       <div class="content">
         <h3>{{e.titre}}</h3>
         <p>📍 {{e.lieu}}</p>
         <p>📅 {{e.dateDebut}} → {{e.dateFin}}</p>
-        <p>💰 {{e.prix}} DT</p>
+        <p>💰 {{e.prix || 0}} DT</p>
 
         <span class="badge">{{e.typeEvenement?.nom}}</span>
 
-        <button>Participer</button>
+        <button disabled>Déjà inscrit ✔</button>
       </div>
 
     </div>

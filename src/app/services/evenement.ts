@@ -68,4 +68,10 @@ export class EvenementService {
       headers: this.getHeaders()
     });
   }
+  getEvenementsCrees() {
+  return this.http.get<any[]>(`${this.apiUrl}/mes-evenements-crees`, {
+    headers: this.getHeaders()
+  });
+}
+  
 }

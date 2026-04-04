@@ -1,124 +1,80 @@
-<div class="form-container">
+<form [formGroup]="eventForm" (ngSubmit)="createEvent()" *ngIf="typeEvenementId">
 
-  <!-- ================= VOYAGE ================= -->
-  <div *ngIf="typeEvenementId === 2">
+  <div class="form-container">
 
-    <h1 class="page-title">Créer un événement VOYAGE </h1>
+    <h1 class="page-title">
+      <span *ngIf="typeEvenementId === 2">Créer un VOYAGE</span>
+      <span *ngIf="typeEvenementId === 1">OMRA & HAJ</span>
+      <span *ngIf="typeEvenementId === 3">Créer une CONVENTION</span>
+    </h1>
 
     <div class="form-group">
       <label>Titre</label>
-      <input type="text" [(ngModel)]="event.titre">
+      <input formControlName="titre">
+      <div class="error" *ngIf="f['titre'].touched && f['titre'].invalid">Obligatoire</div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" *ngIf="typeEvenementId !== 3">
       <label>Lieu</label>
-      <input type="text" [(ngModel)]="event.lieu">
+      <input formControlName="lieu">
     </div>
 
-    <div class="form-group">
+    <div class="form-group" *ngIf="typeEvenementId === 2">
       <label>Destination</label>
-      <input type="text" [(ngModel)]="event.destination">
+      <input formControlName="destination">
+      <div class="error" *ngIf="f['destination'].invalid && f['destination'].touched">Obligatoire</div>
     </div>
 
-    <div class="form-group">
-      <label>Date début</label>
-      <input type="date" [(ngModel)]="event.dateDebut">
-    </div>
-
-    <div class="form-group">
-      <label>Date fin</label>
-      <input type="date" [(ngModel)]="event.dateFin">
-    </div>
-
-    <div class="form-group">
-      <label>Nombre de places</label>
-      <input type="number" [(ngModel)]="event.nbPlaces">
-    </div>
-
-    <div class="form-group">
-      <label>Prix</label>
-      <input type="number" [(ngModel)]="event.prix">
-    </div>
-
-  </div>
-
-  <!-- ================= OMRA & HAJ ================= -->
-  <div *ngIf="typeEvenementId === 1">
-
-    <h1 class="page-title">OMRA & HAJ</h1>
-
-    <div class="form-group">
-      <label>Titre</label>
-      <input type="text" [(ngModel)]="event.titre">
-    </div>
-
-    <div class="form-group">
-      <label>Lieu</label>
-      <input type="text" [(ngModel)]="event.lieu">
-    </div>
-
-    <div class="form-group">
+    <div class="form-group" *ngIf="typeEvenementId === 1">
       <label>Agence</label>
-      <input type="text" [(ngModel)]="event.agence">
+      <input formControlName="agence">
+      <div class="error" *ngIf="f['agence'].invalid && f['agence'].touched">Obligatoire</div>
     </div>
 
-    <div class="form-group">
-      <label>Date début</label>
-      <input type="date" [(ngModel)]="event.dateDebut">
-    </div>
-
-    <div class="form-group">
-      <label>Date fin</label>
-      <input type="date" [(ngModel)]="event.dateFin">
-    </div>
-
-    <div class="form-group">
-      <label>Nombre de places</label>
-      <input type="number" [(ngModel)]="event.nbPlaces">
-    </div>
-
-    <div class="form-group">
-      <label>Prix</label>
-      <input type="number" [(ngModel)]="event.prix">
-    </div>
-
-  </div>
-
-  <!-- ================= CONVENTION ================= -->
-  <div *ngIf="typeEvenementId === 3">
-
-    <h1 class="page-title">Créer une CONVENTION </h1>
-
-    <div class="form-group">
-      <label>Titre</label>
-      <input type="text" [(ngModel)]="event.titre">
-    </div>
-
-    <div class="form-group">
-      <label>Lieu</label>
-      <input type="text" [(ngModel)]="event.lieu">
-    </div>
-
-    <div class="form-group">
+    <div class="form-group" *ngIf="typeEvenementId === 3">
       <label>Société</label>
-      <input type="text" [(ngModel)]="event.societe">
+      <input formControlName="societe">
+      <div class="error" *ngIf="f['societe'].invalid && f['societe'].touched">Obligatoire</div>
     </div>
 
+    <div *ngIf="typeEvenementId !== 3">
+
+      <div class="form-group">
+        <label>Date début</label>
+        <input type="date" formControlName="dateDebut">
+      </div>
+
+      <div class="form-group">
+        <label>Date fin</label>
+        <input type="date" formControlName="dateFin">
+      </div>
+
+      <div class="form-group">
+        <label>Places</label>
+        <input type="number" formControlName="nbPlaces">
+      </div>
+
+      <div class="form-group">
+        <label>Prix</label>
+        <input type="number" formControlName="prix">
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea formControlName="description"></textarea>
+      <div class="error" *ngIf="f['description'].invalid && f['description'].touched">Obligatoire</div>
+    </div>
+
+    <div class="form-group">
+      <input type="file" (change)="onFileSelected($event)">
+    </div>
+
+    <button class="btn-modern" type="submit" [disabled]="eventForm.invalid">
+      Créer l’événement
+    </button>
+
   </div>
 
-  <!-- ================= COMMUN ================= -->
-  <div class="form-group">
-    <label>Description</label>
-    <textarea [(ngModel)]="event.description"></textarea>
-  </div>
-
-  <div class="form-group">
-    <label>Image</label>
-    <input type="file" (change)="onFileSelected($event)">
-  </div>
-
-  <button class="btn-modern" (click)="createEvent()">
-    Créer l’événement
-  </button>
-
-</div>
+</form>

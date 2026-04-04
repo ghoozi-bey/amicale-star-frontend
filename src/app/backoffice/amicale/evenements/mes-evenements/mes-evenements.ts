@@ -21,15 +21,16 @@ export class MesEvenementsComponent implements OnInit {
     this.loadEvents();
   }
 
+  // 🔥 🔥 CORRECTION ICI
   loadEvents() {
-    this.eventService.getAllEvenements().subscribe({
+    this.eventService.getMesEvenements().subscribe({
       next: (data) => {
         this.events = data;
         this.loading = false;
       },
       error: (err) => {
         console.error(err);
-        this.errorMessage = "Erreur lors du chargement des événements";
+        this.errorMessage = "Erreur lors du chargement";
         this.loading = false;
       }
     });

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EvenementService } from '../../../../services/evenement';
 
@@ -13,24 +13,22 @@ export class MesEvenementsMembreAmicaleComponent implements OnInit {
 
   events: any[] = [];
 
-  constructor(
-    private eventService: EvenementService,
-    private cdr: ChangeDetectorRef // 🔥 IMPORTANT
-  ) {}
+  constructor(private eventService: EvenementService) {}
 
   ngOnInit(): void {
+    console.log("Component chargé 🚀");
     this.loadEvents();
   }
 
   loadEvents() {
-    this.eventService.getMesEvenements().subscribe({
+    this.eventService.getEvenementsCrees().subscribe({
       next: (data) => {
+        console.log("EVENTS CREES =", data);
         this.events = data;
-
-        // 🔥 FORCER REFRESH UI
-        this.cdr.detectChanges();
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error("ERREUR =", err);
+      }
     });
   }
 
@@ -38,7 +36,6 @@ export class MesEvenementsMembreAmicaleComponent implements OnInit {
     if (confirm("Supprimer cet événement ?")) {
       this.eventService.deleteEvenement(id).subscribe(() => {
         this.events = this.events.filter(e => e.id !== id);
-        this.cdr.detectChanges(); // 🔥 important aussi
       });
     }
   }
