@@ -78,13 +78,11 @@
 
     <div class="form-group">
       <label>Département</label>
-      <select name="departement" [(ngModel)]="newUser.departement">
-        <option value="" disabled>Choisir département</option>
-        <option value="INFORMATIQUE">Informatique</option>
-        <option value="RESSOURCES_HUMAINES">Ressouces Humaines</option>
-        <option value="FINANCE">Finance</option>
-        <option value="MARKETING">Marketing</option>
-        <option value="ADMINISTRATION">Administration</option>
+      <select name="departement" [(ngModel)]="newUser.departement" required>
+        <option [ngValue]="null" disabled>-- Sélectionner un département --</option>
+        <option *ngFor="let d of departements" [ngValue]="d">
+          {{ d }}
+        </option>
       </select>
       <div *ngIf="validationErrors?.departement" class="error">
         {{ validationErrors.departement }}
@@ -93,11 +91,11 @@
 
     <div class="form-group">
       <label>Rôle</label>
-      <select name="typeAdherent" [(ngModel)]="newUser.typeAdherent" (change)="onRoleChange()">
-        <option value="" disabled>Choisir rôle</option>
-        <option value="ADHERENT">Adhérent</option>
-        <option value="MEMBRE_AMICALE">Membre Amicale</option>
-        <option value="RESPONSABLE_ELECTION">Responsable Élections</option>
+      <select name="typeAdherent" [(ngModel)]="newUser.typeAdherent" (change)="onRoleChange()" required>
+        <option [ngValue]="null" disabled>-- Sélectionner un rôle --</option>
+        <option *ngFor="let t of typesAdherent" [ngValue]="t">
+          {{ t }}
+        </option>
       </select>
       <div *ngIf="validationErrors?.typeAdherent" class="error">
         {{ validationErrors.typeAdherent }}
@@ -107,14 +105,9 @@
     <div class="form-group" *ngIf="newUser.typeAdherent === 'MEMBRE_AMICALE'">
       <label>Type Événement</label>
 
-      <select
-        name="typeEvenementId"
-        [(ngModel)]="newUser.typeEvenementId"
-        [required]="newUser.typeAdherent === 'MEMBRE_AMICALE'"
-      >
-        <option [ngValue]="null" disabled>Choisir un type d'événement</option>
-
-        <option *ngFor="let t of typesEvenement" [ngValue]="t.id">
+      <select name="typeEvenementId" [(ngModel)]="newUser.typeEvenementId">
+        <option [ngValue]="null" disabled>-- Sélectionner un type d'événement --</option>
+        <option *ngFor="let t of typeEvenements" [ngValue]="t.id">
           {{ t.nom }}
         </option>
       </select>
@@ -125,6 +118,7 @@
     </div>
 
     <button class="btn" type="submit">Créer utilisateur</button>
+
   </form>
 
 </div>

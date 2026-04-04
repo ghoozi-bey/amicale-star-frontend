@@ -32,11 +32,9 @@ export class AdminCreateUserComponent {
 
   users: any[] = [];
   
-  typesEvenement = [
-    { id: 1, nom: 'OMRA & HAJ' },
-    { id: 2, nom: 'VOYAGE' },
-    { id: 3, nom: 'CONVENTION' }
-  ];
+  departements: string[] = [];
+  typesAdherent: string[] = [];
+  typeEvenements: any[] = [];
 
   errorMessage: string = '';
   successMessage: string = '';
@@ -50,6 +48,58 @@ export class AdminCreateUserComponent {
 
   ngOnInit() {
     this.loadUsers();
+    this.loadEnums();
+    this.loadTypes();
+  }
+
+  loadUsers() {
+    this.http.get<any[]>(
+      this.api,
+      {
+        headers: {
+          Authorization: 'Bearer ' + this.authService.getToken()
+        }
+      }
+    ).subscribe({
+      next: (data) => {
+        this.users = data;
+      },
+      error: (err) => {
+        console.error("Erreur chargement users", err);
+      }
+    });
+  }
+
+  loadEnums() {
+    const token = this.authService.getToken();
+
+    this.http.get<string[]>('http://localhost:8080/api/admin/departements', {
+      headers: { Authorization: 'Bearer ' + token }
+    }).subscribe(data => {
+      this.departements = data;
+      this.cdr.detectChanges();
+    });
+
+    this.http.get<string[]>('http://localhost:8080/api/admin/types-adherent', {
+      headers: { Authorization: 'Bearer ' + token }
+    }).subscribe(data => {
+      this.typesAdherent = data;
+      this.cdr.detectChanges();
+    });
+  }
+  
+  loadTypes() {
+    const token = this.authService.getToken();
+
+    this.http.get<any[]>('http://localhost:8080/api/admin/type-evenements', {
+      headers: { Authorization: 'Bearer ' + token }
+    }).subscribe({
+      next: (data) => {
+        this.typeEvenements = data;
+        this.cdr.detectChanges(); // ✅ here
+      },
+      error: (err) => console.error("Erreur chargement types", err)
+    });
   }
 
   createUser() {
@@ -82,8 +132,8 @@ export class AdminCreateUserComponent {
           cin: '',
           telephone: '',
           dateNaissance: '',
-          departement: '',
-          typeAdherent: 'ADHERENT',
+          departement: null,
+          typeAdherent: null,
           typeEvenementId: null
         };
 
@@ -107,23 +157,7 @@ export class AdminCreateUserComponent {
     }
   }
   
-  loadUsers() {
-    this.http.get<any[]>(
-      this.api,
-      {
-        headers: {
-          Authorization: 'Bearer ' + this.authService.getToken()
-        }
-      }
-    ).subscribe({
-      next: (data) => {
-        this.users = data;
-      },
-      error: (err) => {
-        console.error("Erreur chargement users", err);
-      }
-    });
-  }  
+  
   
   deleteUser(matricule: string) {
     if (confirm("Supprimer cet utilisateur ?")) {

@@ -70,6 +70,7 @@ export class AdminEditUserComponent {
       },
       error: (err) => {
         console.error("Error loading types:", err);
+        this.cdr.detectChanges();
       }
     });
   }
@@ -106,10 +107,22 @@ export class AdminEditUserComponent {
     });
   }
 
+  onTypeChange() {
+    if (this.user.type_adherent !== 'MEMBRE_AMICALE') {
+      this.user.type_evenement_id = null;
+    } else {
+      // force reload when switching to MEMBRE
+      this.loadTypes();
+    }
+  }
+
   updateUser() {
     const token = localStorage.getItem('token');
-
     const updatedFields: any = {};
+
+    this.validationErrors = {};
+    this.errorMessage = '';
+    this.successMessage = '';
 
     for (const key in this.user) {
       if (this.user[key] !== null && this.user[key] !== undefined) {
@@ -136,16 +149,26 @@ export class AdminEditUserComponent {
       headers: { Authorization: 'Bearer ' + token }
     }).subscribe({
       next: () => {
-        this.successMessage = '✅ Utilisateur mis à jour. Redirection dans 3 secondes...';
+        this.successMessage = '✅ Utilisateur mis à jour';
         this.cdr.detectChanges();
 
         setTimeout(() => {
-          this.router.navigate(['/admin-users']);
+          this.successMessage = '🔄 Redirection...';
+          this.cdr.detectChanges();
+
+          setTimeout(() => {
+            this.router.navigate(['/admin-users']);
+          }, 2000); // give time to display message
+
         }, 3000);
       },
       error: (err) => {
-        console.error('Erreur mise à jour', err);
-        this.errorMessage = 'Erreur lors de la mise à jour';
+        console.log("ERROR BODY:", err.error);
+
+        this.validationErrors = { ...(err.error || {}) };
+        this.errorMessage = '';
+        this.successMessage = '';
+
         this.cdr.detectChanges();
       }
     });

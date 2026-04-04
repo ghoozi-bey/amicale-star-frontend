@@ -1,0 +1,113 @@
+/* Container */
+.container {
+  padding: 30px;
+  max-width: 800px;
+  margin: auto;
+}
+
+/* Title */
+h2 {
+  margin-bottom: 25px;
+  font-size: 22px;
+  color: #2e7d32;
+}
+
+/* Form wrapper */
+.form {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Form group */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels */
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #444;
+}
+
+/* Inputs & selects */
+.form input,
+.form select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+/* Focus state */
+.form input:focus,
+.form select:focus {
+  border-color: #2e7d32;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.15);
+}
+
+/* Checkbox styling */
+.form-group input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+}
+
+/* Buttons */
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* Save button */
+button:first-of-type {
+  background: #2e7d32;
+  color: white;
+}
+
+button:first-of-type:hover {
+  background: #1b5e20;
+}
+
+/* Cancel button */
+button:last-of-type {
+  background: #e0e0e0;
+  color: #333;
+}
+
+button:last-of-type:hover {
+  background: #c2c2c2;
+}
+
+/* Success & error messages */
+.success {
+  color: #2e7d32;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.error {
+  color: #f10000;
+  margin: 10px 0;
+  font-weight: bold;
+  font-size: 90%;
+}
+
+/* Loading text */
+.form .loading {
+  font-size: 13px;
+  color: #777;
+}

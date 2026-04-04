@@ -5,37 +5,21 @@
         <th>Nom</th>
         <th>Prénom</th>
         <th>Email</th>
+        <th>Département</th>
+        <th>Type Adhérent</th>
         <th>Actions</th>
     </tr>
+
     <tr *ngFor="let user of users">
         <td>{{ user.matricule }}</td>
         <td>{{ user.nom }}</td>
         <td>{{ user.prenom }}</td>
         <td>{{ user.email }}</td>
+        <td>{{ user.departement }}</td>
+        <td>{{ user.typeAdherent }}</td>
         <td>
             <button class="edit" [routerLink]="['/admin-edit-user', user.matricule]">Modifier</button>
             <button class="delete" (click)="deleteUser(user.matricule)">Supprimer</button>
         </td>
     </tr>
 </table>
-
-<div *ngIf="selectedUser" class="card">
-    <h3>Modifier Utilisateur</h3>
-    <div class="form">
-        <div class="form-group">
-        <label>Nom</label>
-        <input [(ngModel)]="selectedUser.nom" />
-        </div>
-        <div class="form-group">
-        <label>Prénom</label>
-        <input [(ngModel)]="selectedUser.prenom" />
-        </div>
-        <div class="form-group">
-        <label>Email</label>
-        <input [(ngModel)]="selectedUser.email" />
-        </div>
-        <!-- Add other fields if needed -->
-        <button (click)="updateUser()">Enregistrer</button>
-        <button (click)="selectedUser = null">Annuler</button>
-    </div>
-</div>

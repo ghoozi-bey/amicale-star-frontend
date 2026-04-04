@@ -4,67 +4,89 @@
     <div class="form">
 
         <div class="form-group">
-        <label>Nom</label>
-        <input [(ngModel)]="user.nom" />
+            <label>Nom</label>
+            <input [(ngModel)]="user.nom" />
+
+            <div *ngIf="validationErrors.nom" class="error">
+                {{ validationErrors.nom }}
+            </div>
         </div>
 
         <div class="form-group">
-        <label>Prénom</label>
-        <input [(ngModel)]="user.prenom" />
+            <label>Prénom</label>
+            <input [(ngModel)]="user.prenom" />
+            
+            <div *ngIf="validationErrors.prenom" class="error">
+                {{ validationErrors.prenom }}
+            </div>
         </div>
 
         <div class="form-group">
-        <label>Email</label>
-        <input [(ngModel)]="user.email" />
+            <label>Email</label>
+            <input [(ngModel)]="user.email" />
+            <div *ngIf="validationErrors.email" class="error">
+                {{ validationErrors.email }}
+            </div>
         </div>
 
         <div class="form-group">
-        <label>Mot de passe</label>
-        <input type="password"
-                [(ngModel)]="user.password"
+            <label>Mot de passe</label>
+            <input type="password" [(ngModel)]="user.password"
                 placeholder="laisser vide si pas changé" />
+            <div *ngIf="validationErrors.password" class="error">
+                {{ validationErrors.password }}
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label>CIN</label>
+            <input [(ngModel)]="user.cin" />
+            <div *ngIf="validationErrors.cin" class="error">
+                {{ validationErrors.cin }}
+            </div>
         </div>
 
         <div class="form-group">
-        <label>CIN</label>
-        <input [(ngModel)]="user.cin" />
+            <label>Téléphone</label>
+            <input [(ngModel)]="user.telephone" />
+            <div *ngIf="validationErrors.telephone" class="error">
+                {{ validationErrors.telephone }}    
+            </div>
+        </div>
+        
+
+
+        <div class="form-group">
+            <label>Département</label>
+            <select [(ngModel)]="user.departement">
+                <option *ngFor="let d of departements" [value]="d">
+                {{ d }}
+                </option>
+            </select>
         </div>
 
         <div class="form-group">
-        <label>Téléphone</label>
-        <input [(ngModel)]="user.telephone" />
+            <label>Date de naissance</label>
+            <input type="date" [(ngModel)]="user.date_naissance" />
         </div>
 
         <div class="form-group">
-        <label>Département</label>
-        <select [(ngModel)]="user.departement">
-            <option *ngFor="let d of departements" [value]="d">
-            {{ d }}
-            </option>
-        </select>
+            <label>Photo de profil</label>
+            <input [(ngModel)]="user.photo_profil" />
         </div>
 
         <div class="form-group">
-        <label>Date de naissance</label>
-        <input type="date" [(ngModel)]="user.date_naissance" />
-        </div>
-
-        <div class="form-group">
-        <label>Photo de profil</label>
-        <input [(ngModel)]="user.photo_profil" />
-        </div>
-
-        <div class="form-group">
-        <label>Type Adhérent</label>
-        <select [(ngModel)]="user.type_adherent">
-            <option *ngFor="let t of typesAdherent" [value]="t">
-            {{ t }}
-            </option>
-        </select>
+            <label>Type Adhérent</label>
+            <select [(ngModel)]="user.type_adherent" (change)="onTypeChange()">
+                <option *ngFor="let t of typesAdherent" [value]="t">
+                {{ t }}
+                </option>
+            </select>
         </div>
 
         <div *ngIf="user.type_adherent === 'MEMBRE_AMICALE'">
-            <div *ngIf="typeEvenements.length === 0">
+            <div *ngIf="typeEvenements.length === 0" class="loading">
                 Chargement des types...
             </div>
             <div *ngIf="typeEvenements.length > 0">
@@ -74,15 +96,14 @@
                         {{ t.nom }}
                     </option>
                 </select>
+            </div>
         </div>
 
-</div>
-
         <div class="form-group">
-        <label>
-            <input type="checkbox" [(ngModel)]="user.actif" />
-            Actif
-        </label>
+            <label>
+                <input type="checkbox" [(ngModel)]="user.actif" />
+                Actif
+            </label>
         </div>
 
         <button (click)="updateUser()">Enregistrer</button>
