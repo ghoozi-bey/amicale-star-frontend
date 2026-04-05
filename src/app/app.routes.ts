@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout';
 import { DashboardComponent } from './pages/dashboard/dashboard';
 import { EventsComponent } from './pages/evenements/evenements';
-import { GestionEvenementsComponent } from './backoffice/amicale/gestion-evenements/gestion-evenements';
+import { GestionEvenementsComponent } from './backoffice/amicale/membre-amicale/gestion-evenements/gestion-evenements';
 
 import { authGuard } from './services/auth.guard';
 
@@ -42,7 +42,7 @@ export const routes: Routes = [
       {
         path: 'mes-evenements',
         loadComponent: () =>
-          import('./backoffice/amicale/evenements/mes-evenements/mes-evenements')
+          import('./backoffice/amicale/adherent/mes-evenements/mes-evenements')
             .then(m => m.MesEvenementsComponent)
       },
 
@@ -50,7 +50,7 @@ export const routes: Routes = [
       {
         path: 'mes-evenements-amicale',
         loadComponent: () =>
-          import('./backoffice/amicale/evenements/mes-evenements-membre-amicale/mes-evenements-membre-amicale')
+          import('./backoffice/amicale/membre-amicale/mes-evenements-membre-amicale/mes-evenements-membre-amicale')
             .then(m => m.MesEvenementsMembreAmicaleComponent)
       },
 

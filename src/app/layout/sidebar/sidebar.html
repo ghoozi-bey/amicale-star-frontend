@@ -3,23 +3,27 @@
   <!-- Profil -->
   <div class="user-profile" routerLink="/profile">
     <img [src]="'assets/imagepardefaut.jpg'" class="avatar">
-
-    <span class="name">
-      {{ userName }}
-    </span>
+    <span class="name">{{ userName }}</span>
   </div>
 
+  <!-- 🌍 PUBLIC -->
   <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
 
-  <!-- 👤 ADHERENT -->
-  <a routerLink="/mes-evenements" routerLinkActive="active">
-    Mes événements
+  <a routerLink="/evenements" routerLinkActive="active">
+    Événements
   </a>
 
-  <a routerLink="/elections" routerLinkActive="active">Elections</a>
+  <a routerLink="/sondages" routerLinkActive="active">
+    Sondages
+  </a>
 
-  <!-- 🟢 AMICALE -->
-  <div *ngIf="isAmicale">
+  <a routerLink="/elections" routerLinkActive="active">
+    Élections
+  </a>
+
+  <!-- 🟢 MEMBRE AMICALE -->
+  <div *ngIf="hasRole('MEMBRE_AMICALE')">
+
     <button (click)="toggleEvents()" class="menu-button">
       Gestion événements
     </button>
@@ -29,14 +33,46 @@
         <a routerLink="/gestion-evenements">Ajouter événement</a>
       </li>
       <li>
-        <!-- 🔥 CORRECTION ICI -->
-        <a routerLink="/mes-evenements-amicale">Lister mes événements</a>
+        <a routerLink="/mes-evenements-amicale">Mes événements</a>
       </li>
     </ul>
+
+    <button (click)="toggleSondages()" class="menu-button">
+      Gestion sondages
+    </button>
+
+    <ul *ngIf="showSondagesMenu" class="submenu">
+      <li>
+        <a routerLink="/admin/sondages/create">Créer sondage</a>
+      </li>
+      <li>
+        <a routerLink="/admin/sondages">Liste sondages</a>
+      </li>
+    </ul>
+
+  </div>
+
+  <!-- 🟣 RESPONSABLE ELECTION -->
+  <div *ngIf="hasRole('RESPONSABLE_ELECTION')">
+
+    <button (click)="toggleElections()" class="menu-button">
+      Gestion élections
+    </button>
+
+    <ul *ngIf="showElectionsMenu" class="submenu">
+      <li>
+        <a routerLink="/admin/elections/create">Créer élection</a>
+      </li>
+      <li>
+        <a routerLink="/admin/elections">Liste élections</a>
+      </li>
+    </ul>
+
   </div>
 
   <!-- 🔴 ADMIN -->
-  <div *ngIf="isAdmin">
+  <div *ngIf="hasRole('ADMIN')">
+
     <button (click)="toggleUsers()" class="menu-button">
       Gestion utilisateurs
     </button>
@@ -49,6 +85,7 @@
         <a routerLink="/admin-users">Liste utilisateurs</a>
       </li>
     </ul>
+
   </div>
 
 </div>

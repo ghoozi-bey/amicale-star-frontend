@@ -15,24 +15,18 @@ export class SidebarComponent implements OnInit {
   user: any = {};
   userName: string = '';
 
-  isAdmin = false;
-  isAmicale = false;
-
+  // Menu states
   showEventsMenu = false;
+  showSondagesMenu = false;
+  showElectionsMenu = false;
   showUsersMenu = false;
 
   constructor(private authService: AuthService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.user = this.authService.getUser();
 
-    const role = this.user?.role || '';
-
-    // 🔥 FIX SAFE ROLE
-    this.isAdmin = role.includes('ADMIN');
-    this.isAmicale = role.includes('MEMBRE_AMICALE');
-
-    // 🔥 NOM PROPRE
+    // Clean display name
     if (this.user) {
       if (this.user.prenom && this.user.nom) {
         this.userName = `${this.user.prenom} ${this.user.nom}`;
@@ -42,11 +36,26 @@ export class SidebarComponent implements OnInit {
     }
   }
 
-  toggleEvents() {
+  // Role check (single role only)
+  hasRole(role: string): boolean {
+    if (!this.user || !this.user.role) return false;
+    return this.user.role.includes(role);
+  }
+
+  // Toggles
+  toggleEvents(): void {
     this.showEventsMenu = !this.showEventsMenu;
   }
 
-  toggleUsers() {
+  toggleSondages(): void {
+    this.showSondagesMenu = !this.showSondagesMenu;
+  }
+
+  toggleElections(): void {
+    this.showElectionsMenu = !this.showElectionsMenu;
+  }
+
+  toggleUsers(): void {
     this.showUsersMenu = !this.showUsersMenu;
   }
 }
