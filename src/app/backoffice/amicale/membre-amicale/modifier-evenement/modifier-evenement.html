@@ -1,0 +1,41 @@
+<div *ngIf="loading" style="text-align:center; margin-top:50px;">
+  Chargement...
+</div>
+
+<div *ngIf="!loading && evenement" class="container">
+
+  <div class="form-card">
+
+    <h2>Modifier événement</h2>
+
+    <form (ngSubmit)="updateEvent()">
+
+      <div class="form-group">
+        <input [(ngModel)]="evenement.titre" name="titre" placeholder="Titre">
+      </div>
+
+      <div class="form-group">
+        <input [(ngModel)]="evenement.lieu" name="lieu" placeholder="Lieu">
+      </div>
+
+      <div class="form-group">
+        <input [(ngModel)]="evenement.prix" name="prix" placeholder="Prix">
+      </div>
+
+      <div class="form-group">
+        <input [(ngModel)]="evenement.dateDebut" name="dateDebut" type="date">
+      </div>
+
+      <div class="form-group">
+        <input [(ngModel)]="evenement.dateFin" name="dateFin" type="date">
+      </div>
+
+      <button class="submit-btn" type="submit">
+        Enregistrer
+      </button>
+
+    </form>
+
+  </div>
+
+</div>

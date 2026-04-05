@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EvenementService } from '../../../../services/evenement';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mes-evenements-membre-amicale',
@@ -9,34 +11,31 @@ import { EvenementService } from '../../../../services/evenement';
   templateUrl: './mes-evenements-membre-amicale.html',
   styleUrls: ['./mes-evenements-membre-amicale.css']
 })
-export class MesEvenementsMembreAmicaleComponent implements OnInit {
+export class MesEvenementsMembreAmicaleComponent {
 
-  events: any[] = [];
+  events$!: Observable<any[]>;
 
-  constructor(private eventService: EvenementService) {}
-
-  ngOnInit(): void {
-    console.log("Component chargé 🚀");
+  constructor(
+    private eventService: EvenementService,
+    private router: Router
+  ) {
     this.loadEvents();
   }
 
   loadEvents() {
-    this.eventService.getEvenementsCrees().subscribe({
-      next: (data) => {
-        console.log("EVENTS CREES =", data);
-        this.events = data;
-      },
-      error: (err) => {
-        console.error("ERREUR =", err);
-      }
-    });
+    this.events$ = this.eventService.getEvenementsCrees();
   }
 
   deleteEvent(id: number) {
     if (confirm("Supprimer cet événement ?")) {
       this.eventService.deleteEvenement(id).subscribe(() => {
-        this.events = this.events.filter(e => e.id !== id);
+        this.loadEvents();
       });
     }
+  }
+
+  // 🔥 AJOUT IMPORTANT
+  editEvent(id: number) {
+    this.router.navigate(['/modifier-evenement', id]);
   }
 }

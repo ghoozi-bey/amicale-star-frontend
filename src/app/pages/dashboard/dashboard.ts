@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EvenementService } from '../../services/evenement';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,27 +10,18 @@ import { EvenementService } from '../../services/evenement';
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
 
-  evenements: any[] = [];
+  evenements$!: Observable<any[]>; // 🔥 Observable
+
   selectedEvent: any = null;
 
-  constructor(private evenementService: EvenementService) {}
-
-  ngOnInit(): void {
+  constructor(private evenementService: EvenementService) {
     this.loadEvenements();
   }
 
-  // 🔥 IMPORTANT : utiliser ACTIFS uniquement
   loadEvenements(): void {
-    this.evenementService.getEvenementsActifs().subscribe({
-      next: (data) => {
-        this.evenements = data;
-      },
-      error: (err) => {
-        console.error('Erreur chargement événements:', err);
-      }
-    });
+    this.evenements$ = this.evenementService.getEvenementsActifs();
   }
 
   openDetails(e: any): void {

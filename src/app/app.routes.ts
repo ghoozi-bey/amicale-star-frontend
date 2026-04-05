@@ -28,8 +28,14 @@ export const routes: Routes = [
     component: LayoutComponent,
     canActivate: [authGuard],
     children: [
+{
+  path: 'modifier-evenement/:id',
+  loadComponent: () =>
+    import('./backoffice/amicale/membre-amicale/modifier-evenement/modifier-evenement')
+      .then(m => m.ModifierEvenementComponent)
+},
 
-      // 📊 DASHBOARD
+// 📊 DASHBOARD
       { path: 'dashboard', component: DashboardComponent },
 
       // 📅 TOUS LES EVENEMENTS (adhérent)
