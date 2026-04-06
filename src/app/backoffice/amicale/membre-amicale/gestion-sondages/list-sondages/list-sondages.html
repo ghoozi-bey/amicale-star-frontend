@@ -1,0 +1,16 @@
+<h2>Liste des sondages</h2>
+
+<button routerLink="membre-amicale/sondages/create">+ Créer</button>
+
+<hr>
+
+<div *ngFor="let s of sondages">
+    <h3>{{ s.question }}</h3>
+    <p>Statut: {{ s.statut }}</p>
+
+    <button [routerLink]="['gestion-sondages/edit', s.id]">Modifier</button>
+    <button (click)="publish(s.id)">Publier</button>
+    <button (click)="delete(s.id)">Supprimer</button>
+
+    <hr>
+</div>
