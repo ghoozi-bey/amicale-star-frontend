@@ -5,6 +5,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard';
 import { EventsComponent } from './pages/evenements/evenements';
 import { GestionEvenementsComponent } from './backoffice/amicale/membre-amicale/gestion-evenements/gestion-evenements';
 
+
 import { authGuard } from './services/auth.guard';
 
 export const routes: Routes = [
@@ -84,7 +85,7 @@ export const routes: Routes = [
       {
         path: 'admin-users',
         loadComponent: () =>
-          import('./backoffice/amicale/admin/users/admin-users')
+          import('./backoffice/amicale/admin/admin-users/admin-users')
             .then(m => m.AdminUsersComponent)
       },
       {
@@ -98,8 +99,26 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./backoffice/amicale/admin/admin-edit-user/admin-edit-user')
             .then(m => m.AdminEditUserComponent)
+      },
+      // 🗳️ GESTION SONDAGES (membre amicale)
+      {
+        path: 'gestion-sondages',
+        loadComponent: () =>
+          import('./backoffice/amicale/membre-amicale/gestion-sondages/list-sondages/list-sondages')
+            .then(m => m.ListSondagesComponent)
+      },
+      {
+        path: 'gestion-sondages/create',
+        loadComponent: () =>
+          import('./backoffice/amicale/membre-amicale/gestion-sondages/create-sondage/create-sondage')
+            .then(m => m.CreateSondageComponent)
+      },
+      {
+        path: 'gestion-sondages/edit/:id',
+        loadComponent: () =>
+          import('./backoffice/amicale/membre-amicale/gestion-sondages/edit-sondage/edit-sondage')
+            .then(m => m.EditSondageComponent)
       }
-
     ]
   }
 
