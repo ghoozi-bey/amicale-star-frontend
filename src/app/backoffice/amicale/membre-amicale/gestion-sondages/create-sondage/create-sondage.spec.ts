@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateSondage } from './create-sondage';
+import { CreateSondageComponent } from './create-sondage';
 
 describe('CreateSondage', () => {
-  let component: CreateSondage;
-  let fixture: ComponentFixture<CreateSondage>;
+  let component: CreateSondageComponent;
+  let fixture: ComponentFixture<CreateSondageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CreateSondage],
+      imports: [CreateSondageComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CreateSondage);
+    fixture = TestBed.createComponent(CreateSondageComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

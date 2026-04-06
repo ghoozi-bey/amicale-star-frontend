@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ListSondages } from './list-sondages';
+import { ListSondagesComponent } from './list-sondages';
 
 describe('ListSondages', () => {
-  let component: ListSondages;
-  let fixture: ComponentFixture<ListSondages>;
+  let component: ListSondagesComponent;
+  let fixture: ComponentFixture<ListSondagesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ListSondages],
+      imports: [ListSondagesComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ListSondages);
+    fixture = TestBed.createComponent(ListSondagesComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
