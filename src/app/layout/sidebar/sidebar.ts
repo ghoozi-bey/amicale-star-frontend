@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,47 +11,63 @@ import { AuthService } from '../../services/auth.service';
 })
 export class SidebarComponent implements OnInit {
 
-  user: any = {};
-  userName: string = '';
+  userName: string = 'Utilisateur';
+  userRole: string = '';
 
-  // Menu states
   showEventsMenu = false;
   showSondagesMenu = false;
   showElectionsMenu = false;
   showUsersMenu = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private router: Router) {}
 
-  ngOnInit(): void {
-    this.user = this.authService.getUser();
+  ngOnInit() {
 
-    if (this.user) {
-      if (this.user.prenom && this.user.nom) {
-        this.userName = `${this.user.prenom} ${this.user.nom}`;
-      } else {
-        this.userName = this.user.email || '';
-      }
+    // 🔥 récupérer user depuis localStorage
+    const userData = localStorage.getItem('user');
+
+    if (userData) {
+      const user = JSON.parse(userData);
+
+      console.log("USER:", user);
+
+      // 🔥 ROLE CORRECT
+      this.userRole = user.typeAdherent;
+
+      // 🔥 NOM (optionnel)
+      this.userName = (user.prenom && user.nom)
+  ? user.prenom + ' ' + user.nom
+  : user.nom || 'Utilisateur';
     }
+
+    console.log("ROLE FINAL:", this.userRole);
   }
 
-  hasRole(role: string): boolean {
-    if (!this.user || !this.user.role) return false;
-    return this.user.role.includes(role);
+  // ✅ NAVIGATION PROFILE
+  goToProfile() {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/profile']);
+    });
   }
 
-  toggleEvents(): void {
+  toggleEvents() {
     this.showEventsMenu = !this.showEventsMenu;
   }
 
-  toggleSondages(): void {
+  toggleSondages() {
     this.showSondagesMenu = !this.showSondagesMenu;
   }
 
-  toggleElections(): void {
+  toggleElections() {
     this.showElectionsMenu = !this.showElectionsMenu;
   }
 
-  toggleUsers(): void {
+  toggleUsers() {
     this.showUsersMenu = !this.showUsersMenu;
+  }
+
+  // ✅ FIX FINAL ROLE
+  hasRole(role: string): boolean {
+    return this.userRole === role;
   }
 }

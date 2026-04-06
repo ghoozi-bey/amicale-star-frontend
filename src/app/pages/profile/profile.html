@@ -1,20 +1,56 @@
-<div class="profile-container">
+<div *ngIf="!loading" class="profile-container">
 
-<h2>Modifier mon profil</h2>
+  <h2>Modifier mon profil</h2>
 
-<div class="form">
+  <form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 
-<label>Email</label>
-<input type="text" [(ngModel)]="profile.email">
+    <!-- EMAIL -->
+    <label>Email</label>
+    <input 
+      type="email" 
+      formControlName="email"
+      placeholder="Entrez votre email"
+    >
 
-<label>Téléphone</label>
-<input type="text" [(ngModel)]="profile.telephone">
+    <!-- TELEPHONE -->
+    <label>Téléphone</label>
+    <input 
+      type="text" 
+      formControlName="telephone"
+      placeholder="Entrez votre numéro"
+    >
 
-<label>Nouveau mot de passe</label>
-<input type="password" [(ngModel)]="profile.motdepasse">
+    <!-- PASSWORD ACTUEL -->
+    <label>Mot de passe actuel</label>
+    <div class="password-field">
+      <input 
+        [type]="showCurrent ? 'text' : 'password'" 
+        formControlName="currentPassword"
+        placeholder="Entrez votre mot de passe actuel"
+      >
+      <span (click)="toggleCurrent()" class="eye">👁</span>
+    </div>
 
-<!-- <button (click)="update()">Modifier</button> -->
+    <!-- NEW PASSWORD -->
+    <label>Nouveau mot de passe</label>
+    <div class="password-field">
+      <input 
+        [type]="showNew ? 'text' : 'password'" 
+        formControlName="newPassword"
+        placeholder="Entrez un nouveau mot de passe"
+      >
+      <span (click)="toggleNew()" class="eye">👁</span>
+    </div>
 
-</div>
+    <!-- PHOTO -->
+    <label>Photo de profil</label>
+    <input type="file" (change)="onFileSelected($event)">
+
+    <!-- PREVIEW -->
+    <img *ngIf="preview" [src]="preview" class="preview">
+
+    <button type="submit">Modifier</button>
+
+  </form>
 
 </div>

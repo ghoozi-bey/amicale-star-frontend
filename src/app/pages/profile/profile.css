@@ -1,29 +1,99 @@
-.profile-container{
-max-width:500px;
-margin:auto;
-background:white;
-padding:30px;
-border-radius:12px;
-box-shadow:0 3px 10px rgba(0,0,0,0.1);
+/* CONTAINER */
+.profile-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
-.form{
-display:flex;
-flex-direction:column;
-gap:10px;
+/* TITLE */
+.profile-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #2c3e50;
 }
 
-input{
-padding:8px;
-border:1px solid #ccc;
-border-radius:6px;
+/* LABEL */
+label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #333;
 }
 
-button{
-background:#19785a;
-color:white;
-border:none;
-padding:10px;
-border-radius:8px;
-cursor:pointer;
+/* INPUT */
+input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+/* INPUT FOCUS */
+input:focus {
+  border-color: #2e7d32;
+  outline: none;
+  box-shadow: 0 0 5px rgba(46,125,50,0.2);
+}
+
+/* PASSWORD FIELD */
+.password-field {
+  position: relative;
+}
+
+/* EYE ICON */
+.eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* BUTTON */
+button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #256628;
+}
+
+/* IMAGE PREVIEW */
+.preview {
+  display: block;
+  margin-top: 10px;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* LOADING */
+.loading {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 18px;
+}
+
+/* ERROR */
+.error {
+  text-align: center;
+  color: red;
+  margin-top: 50px;
 }

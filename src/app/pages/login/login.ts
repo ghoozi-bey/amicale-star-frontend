@@ -15,7 +15,7 @@ export class LoginComponent {
 
   user = {
     email: '',
-    password: '' // ✅ FIX
+    password: ''
   };
 
   constructor(private auth: AuthService, private router: Router) {}
@@ -24,10 +24,9 @@ export class LoginComponent {
 
     this.auth.login(this.user).subscribe({
 
-      next: (token: string) => {
+      next: () => {
 
-        // ✅ STOCKER TOKEN
-        this.auth.saveToken(token);
+        // ❌ PLUS BESOIN DE saveToken()
 
         // ✅ REDIRECTION
         this.router.navigate(['/dashboard']);

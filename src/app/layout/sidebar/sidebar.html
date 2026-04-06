@@ -1,7 +1,7 @@
 <div class="sidebar">
 
   <!-- Profil -->
-  <div class="user-profile" routerLink="/profile">
+  <div class="user-profile" (click)="goToProfile()">
     <img [src]="'assets/imagepardefaut.jpg'" class="avatar">
     <span class="name">{{ userName }}</span>
   </div>
@@ -14,7 +14,7 @@
 
   <a routerLink="/evenements" routerLinkActive="active" class="sidebar-item">
     <span class="material-icons">event</span>
-    Événements
+    Mes Inscriptions
   </a>
 
   <a routerLink="/sondages" routerLinkActive="active" class="sidebar-item">

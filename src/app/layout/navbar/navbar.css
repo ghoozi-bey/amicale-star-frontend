@@ -94,3 +94,30 @@
 .right {
   height: 100%;
 }
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* TRAIT */
+.divider {
+  width: 2px;
+  height: 30px;
+  background: rgba(255,255,255,0.4);
+}
+
+/* NOM */
+.user {
+  font-weight: 600;
+  color: #e8f5e9;
+}
+
+/* CENTRE */
+.nav-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 600;
+  direction: rtl;
+}

@@ -1,23 +1,26 @@
 import { ApplicationConfig } from '@angular/core';
-import { provideRouter, withRouterConfig } from '@angular/router';
+import { provideRouter, withRouterConfig, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { routes } from './app.routes';
-import { authInterceptor } from './services/auth.interceptor'; // 🔥 utiliser le vrai fichier
+import { authInterceptor } from './services/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
 
-    // 🔥 HTTP + INTERCEPTOR GLOBAL (FIX FINAL)
+    // 🔥 HTTP + INTERCEPTOR
     provideHttpClient(
       withInterceptors([authInterceptor])
     ),
 
-    // Router
+    // 🔥 ROUTER PRO CONFIG
     provideRouter(
       routes,
       withRouterConfig({
         onSameUrlNavigation: 'reload'
+      }),
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'enabled'
       })
     )
 

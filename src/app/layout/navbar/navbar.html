@@ -1,17 +1,22 @@
-
 <div class="navbar">
 
+  <!-- LEFT -->
   <div class="nav-left">
-    <!-- logo -->
     <img src="assets/logo-color.svg" class="logo-star">
+
+    <div class="divider"></div>
+
+    <span class="user">Bonjour, {{ userName }}</span>
   </div>
 
+  <!-- CENTER -->
   <div class="nav-center">
     ودادية الشركة تونسية للتأمين وإعادة التأمين
   </div>
 
+  <!-- RIGHT -->
   <div class="nav-right">
-    <button class="logout-btn">
+    <button class="logout-btn" (click)="logout()">
       <span class="material-icons">logout</span>
     </button>
   </div>
