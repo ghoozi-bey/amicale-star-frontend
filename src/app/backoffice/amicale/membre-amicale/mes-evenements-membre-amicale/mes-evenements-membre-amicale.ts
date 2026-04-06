@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EvenementService } from '../../../../services/evenement';
 import { Observable } from 'rxjs';
@@ -11,30 +11,40 @@ import { Router } from '@angular/router';
   templateUrl: './mes-evenements-membre-amicale.html',
   styleUrls: ['./mes-evenements-membre-amicale.css']
 })
-export class MesEvenementsMembreAmicaleComponent {
+export class MesEvenementsMembreAmicaleComponent implements OnInit {
 
   events$!: Observable<any[]>;
+  loading = true; // 🔥 ajout
 
   constructor(
     private eventService: EvenementService,
     private router: Router
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.loadEvents();
   }
 
   loadEvents() {
+    this.loading = true;
+
     this.events$ = this.eventService.getEvenementsCrees();
+
+    // 🔥 on déclenche loading OFF
+    this.events$.subscribe({
+      next: () => this.loading = false,
+      error: () => this.loading = false
+    });
   }
 
   deleteEvent(id: number) {
     if (confirm("Supprimer cet événement ?")) {
       this.eventService.deleteEvenement(id).subscribe(() => {
-        this.loadEvents();
+        this.loadEvents(); // 🔥 refresh
       });
     }
   }
 
-  // 🔥 AJOUT IMPORTANT
   editEvent(id: number) {
     this.router.navigate(['/modifier-evenement', id]);
   }

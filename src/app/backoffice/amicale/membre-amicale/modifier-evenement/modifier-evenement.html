@@ -1,33 +1,33 @@
-<div *ngIf="loading" style="text-align:center; margin-top:50px;">
-  Chargement...
+<div *ngIf="loading" class="loading-container">
+  <div class="spinner"></div>
 </div>
 
-<div *ngIf="!loading && evenement" class="container">
+<div *ngIf="!loading" class="container">
 
-  <div class="form-card">
+  <div class="form-card" *ngIf="evenement; else errorBlock">
 
     <h2>Modifier événement</h2>
 
     <form (ngSubmit)="updateEvent()">
 
       <div class="form-group">
-        <input [(ngModel)]="evenement.titre" name="titre" placeholder="Titre">
+        <input [(ngModel)]="evenement.titre" name="titre" placeholder="Titre" required>
       </div>
 
       <div class="form-group">
-        <input [(ngModel)]="evenement.lieu" name="lieu" placeholder="Lieu">
+        <input [(ngModel)]="evenement.lieu" name="lieu" placeholder="Lieu" required>
       </div>
 
       <div class="form-group">
-        <input [(ngModel)]="evenement.prix" name="prix" placeholder="Prix">
+        <input [(ngModel)]="evenement.prix" name="prix" type="number" placeholder="Prix" required>
       </div>
 
       <div class="form-group">
-        <input [(ngModel)]="evenement.dateDebut" name="dateDebut" type="date">
+        <input [(ngModel)]="evenement.dateDebut" name="dateDebut" type="date" required>
       </div>
 
       <div class="form-group">
-        <input [(ngModel)]="evenement.dateFin" name="dateFin" type="date">
+        <input [(ngModel)]="evenement.dateFin" name="dateFin" type="date" required>
       </div>
 
       <button class="submit-btn" type="submit">
@@ -37,5 +37,11 @@
     </form>
 
   </div>
+
+  <ng-template #errorBlock>
+    <div style="text-align:center; color:red;">
+      ❌ Impossible de charger les données
+    </div>
+  </ng-template>
 
 </div>

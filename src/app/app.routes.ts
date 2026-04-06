@@ -16,33 +16,38 @@ export const routes: Routes = [
       import('./pages/login/login').then(m => m.LoginComponent)
   },
 
+  // 🔁 REDIRECTION
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
   },
 
-  // 🔐 APP PROTECTED
+  // 🔐 ZONE PROTÉGÉE
   {
     path: '',
     component: LayoutComponent,
     canActivate: [authGuard],
     children: [
-{
-  path: 'modifier-evenement/:id',
-  loadComponent: () =>
-    import('./backoffice/amicale/membre-amicale/modifier-evenement/modifier-evenement')
-      .then(m => m.ModifierEvenementComponent)
-},
 
-// 📊 DASHBOARD
-      { path: 'dashboard', component: DashboardComponent },
+      // 📊 DASHBOARD
+      {
+        path: 'dashboard',
+        component: DashboardComponent
+      },
 
-      // 📅 TOUS LES EVENEMENTS (adhérent)
-      { path: 'evenements', component: EventsComponent },
+      // 📅 EVENEMENTS (🔥 FIX ICI)
+      {
+        path: 'evenements',
+        component: EventsComponent,
+        runGuardsAndResolvers: 'always' // 🔥 important
+      },
 
-      // ➕ CREATION EVENEMENT (amicale)
-      { path: 'gestion-evenements', component: GestionEvenementsComponent },
+      // ➕ GESTION EVENEMENTS
+      {
+        path: 'gestion-evenements',
+        component: GestionEvenementsComponent
+      },
 
       // 👤 MES EVENEMENTS (adhérent)
       {
@@ -52,12 +57,20 @@ export const routes: Routes = [
             .then(m => m.MesEvenementsComponent)
       },
 
-      // 🟢 MES EVENEMENTS (membre amicale)
+      // 🟢 MES EVENEMENTS (amicale)
       {
         path: 'mes-evenements-amicale',
         loadComponent: () =>
           import('./backoffice/amicale/membre-amicale/mes-evenements-membre-amicale/mes-evenements-membre-amicale')
             .then(m => m.MesEvenementsMembreAmicaleComponent)
+      },
+
+      // ✏️ MODIFIER EVENEMENT
+      {
+        path: 'modifier-evenement/:id',
+        loadComponent: () =>
+          import('./backoffice/amicale/membre-amicale/modifier-evenement/modifier-evenement')
+            .then(m => m.ModifierEvenementComponent)
       },
 
       // 👤 PROFILE
@@ -67,25 +80,26 @@ export const routes: Routes = [
           import('./pages/profile/profile').then(m => m.ProfileComponent)
       },
 
-      // ✅ ADMIN
-        {
-          path: 'admin-users',
-          loadComponent: () =>
-            import('./backoffice/amicale/admin/users/admin-users')
-              .then(m => m.AdminUsersComponent)
-        },
-        {
-          path: 'admin-create-user',
-          loadComponent: () =>
-            import('./backoffice/amicale/admin/admin-create-user/admin-create-user')
-              .then(m => m.AdminCreateUserComponent)
-        },
-        {
-          path: 'admin-edit-user/:matricule',
-          loadComponent: () =>
-            import('./backoffice/amicale/admin/admin-edit-user/admin-edit-user')
-              .then(m => m.AdminEditUserComponent)
-        }
+      // 🔴 ADMIN
+      {
+        path: 'admin-users',
+        loadComponent: () =>
+          import('./backoffice/amicale/admin/users/admin-users')
+            .then(m => m.AdminUsersComponent)
+      },
+      {
+        path: 'admin-create-user',
+        loadComponent: () =>
+          import('./backoffice/amicale/admin/admin-create-user/admin-create-user')
+            .then(m => m.AdminCreateUserComponent)
+      },
+      {
+        path: 'admin-edit-user/:matricule',
+        loadComponent: () =>
+          import('./backoffice/amicale/admin/admin-edit-user/admin-edit-user')
+            .then(m => m.AdminEditUserComponent)
+      }
+
     ]
   }
 

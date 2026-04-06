@@ -1,58 +1,54 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { EvenementService } from '../../services/evenement';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
+@Component({
+  selector: 'app-events',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './evenements.html',
+  styleUrls: ['./evenements.css']
 })
-export class EvenementService { // ✅ corrigé
+export class EventsComponent implements OnInit, OnDestroy {
 
-  private apiUrl = 'http://localhost:8080/api/evenements';
+  events: any[] = [];
+  loading = false;
+  sub!: Subscription;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+  private eventService: EvenementService,
+  private router: Router
+) {
+  this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+}
 
-  // 🔑 headers avec token
-  private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+  ngOnInit(): void {
+    this.loadEvents();
 
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`
+    this.sub = this.router.events
+      .pipe(filter(e => e instanceof NavigationEnd))
+      .subscribe(() => {
+        this.loadEvents();
+      });
+  }
+
+  loadEvents() {
+    this.loading = true;
+
+    this.eventService.getMesInscriptions().subscribe({
+      next: (data: any[]) => {
+        this.events = data || [];
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      }
     });
   }
 
-  // 🔥 GET ALL
-  getEvenements(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl, {
-      headers: this.getHeaders()
-    });
+  ngOnDestroy(): void {
+    if (this.sub) this.sub.unsubscribe();
   }
-
-  // 🔥 GET BY ID
-  getEvenementById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`, {
-      headers: this.getHeaders()
-    });
-  }
-
-  // 🔥 CREATE
-  createEvenement(event: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, event, {
-      headers: this.getHeaders()
-    });
-  }
-
-  // 🔥 DELETE
-  deleteEvenement(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`, {
-      headers: this.getHeaders()
-    });
-  }
-
-  // 🔥 UPDATE (important pour ton modifier)
-  updateEvenement(id: number, event: any): Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/${id}`, event, {
-      headers: this.getHeaders()
-    });
-  }
-
 }

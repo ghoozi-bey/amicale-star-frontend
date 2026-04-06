@@ -1,15 +1,32 @@
-<h2>Mes événements</h2>
+<!-- 🔄 LOADING -->
+<div *ngIf="loading" class="loading-container">
+  <div class="spinner"></div>
+  <p>Chargement des événements...</p>
+</div>
 
-<div class="events-container">
+<!-- 📦 DATA -->
+<div *ngIf="!loading">
 
-  <div class="event-card" *ngFor="let event of mesEvenements">
+  <div class="events-container" *ngIf="events.length > 0; else emptyState">
 
-    <h3>{{event.titre}}</h3>
+    <div class="event-card" *ngFor="let event of events">
 
-    <p><strong>Lieu :</strong> {{event.lieu}}</p>
+      <div class="event-title">{{ event.titre }}</div>
 
-    <p><strong>Date :</strong> {{event.date}}</p>
+      <div class="event-info">📍 {{ event.lieu }}</div>
+      <div class="event-info">📅 {{ event.dateDebut }} → {{ event.dateFin }}</div>
+
+    </div>
 
   </div>
 
 </div>
+
+<!-- ❌ EMPTY STATE -->
+<ng-template #emptyState>
+  <div class="empty-container">
+    <div class="empty-icon">📭</div>
+    <h2>Aucun événement</h2>
+    <p>Vous n'êtes inscrit à aucun événement pour le moment.</p>
+  </div>
+</ng-template>
