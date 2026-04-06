@@ -7,46 +7,66 @@
   </div>
 
   <!-- 🌍 PUBLIC -->
-  <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+  <a routerLink="/dashboard" routerLinkActive="active" class="sidebar-item">
+    <span class="material-icons">dashboard</span>
+    Dashboard
+  </a>
 
-  <a routerLink="/evenements" routerLinkActive="active">
+  <a routerLink="/evenements" routerLinkActive="active" class="sidebar-item">
+    <span class="material-icons">event</span>
     Événements
   </a>
 
-  <a routerLink="/sondages" routerLinkActive="active">
+  <a routerLink="/sondages" routerLinkActive="active" class="sidebar-item">
+    <span class="material-icons">poll</span>
     Sondages
   </a>
 
-  <a routerLink="/elections" routerLinkActive="active">
+  <a routerLink="/elections" routerLinkActive="active" class="sidebar-item">
+    <span class="material-icons">how_to_vote</span>
     Élections
   </a>
 
   <!-- 🟢 MEMBRE AMICALE -->
   <div *ngIf="hasRole('MEMBRE_AMICALE')">
 
-    <button (click)="toggleEvents()" class="menu-button">
+    <button (click)="toggleEvents()" class="menu-button sidebar-item">
+      <span class="material-icons">settings</span>
       Gestion événements
     </button>
 
-    <ul *ngIf="showEventsMenu" class="submenu">
-      <li>
-        <a routerLink="/gestion-evenements">Ajouter événement</a>
+    <ul [hidden]="!showEventsMenu" class="submenu">
+      <li (click)="$event.stopPropagation()">
+        <a routerLink="/gestion-evenements" class="sidebar-item">
+          <span class="material-icons">add_circle</span>
+          Ajouter événement
+        </a>
       </li>
-      <li>
-        <a routerLink="/mes-evenements-amicale">Mes événements</a>
+      <li (click)="$event.stopPropagation()">
+        <a routerLink="/mes-evenements-amicale" class="sidebar-item">
+          <span class="material-icons">folder</span>
+          Mes événements
+        </a>
       </li>
     </ul>
 
-    <button (click)="toggleSondages()" class="menu-button">
+    <button (click)="toggleSondages()" class="menu-button sidebar-item">
+      <span class="material-icons">bar_chart</span>
       Gestion sondages
     </button>
 
-    <ul *ngIf="showSondagesMenu" class="submenu">
-      <li>
-        <a routerLink="gestion-sondages/create">Créer sondage</a>
+    <ul [hidden]="!showSondagesMenu" class="submenu">
+      <li (click)="$event.stopPropagation()">
+        <a routerLink="/gestion-sondages/create" class="sidebar-item">
+          <span class="material-icons">add_circle</span>
+          Créer sondage
+        </a>
       </li>
-      <li>
-        <a routerLink="gestion-sondages">Liste sondages</a>
+      <li (click)="$event.stopPropagation()">
+        <a routerLink="/gestion-sondages" class="sidebar-item">
+          <span class="material-icons">list</span>
+          Liste sondages
+        </a>
       </li>
     </ul>
 
@@ -55,16 +75,23 @@
   <!-- 🟣 RESPONSABLE ELECTION -->
   <div *ngIf="hasRole('RESPONSABLE_ELECTION')">
 
-    <button (click)="toggleElections()" class="menu-button">
+    <button (click)="toggleElections()" class="menu-button sidebar-item">
+      <span class="material-icons">how_to_vote</span>
       Gestion élections
     </button>
 
-    <ul *ngIf="showElectionsMenu" class="submenu">
-      <li>
-        <a routerLink="/elections/create">Créer élection</a>
+    <ul [hidden]="!showElectionsMenu" class="submenu">
+      <li (click)="$event.stopPropagation()">
+        <a routerLink="/elections/create" class="sidebar-item">
+          <span class="material-icons">add_circle</span>
+          Créer élection
+        </a>
       </li>
-      <li>
-        <a routerLink="/elections">Liste élections</a>
+      <li (click)="$event.stopPropagation()">
+        <a routerLink="/elections" class="sidebar-item">
+          <span class="material-icons">list</span>
+          Liste élections
+        </a>
       </li>
     </ul>
 
@@ -73,16 +100,23 @@
   <!-- 🔴 ADMIN -->
   <div *ngIf="hasRole('ADMIN')">
 
-    <button (click)="toggleUsers()" class="menu-button">
+    <button (click)="toggleUsers()" class="menu-button sidebar-item">
+      <span class="material-icons">people</span>
       Gestion utilisateurs
     </button>
 
-    <ul *ngIf="showUsersMenu" class="submenu">
-      <li>
-        <a routerLink="/admin-create-user">Créer utilisateur</a>
+    <ul [hidden]="!showUsersMenu" class="submenu">
+      <li (click)="$event.stopPropagation()">
+        <a routerLink="/admin-create-user" class="sidebar-item">
+          <span class="material-icons">person_add</span>
+          Créer utilisateur
+        </a>
       </li>
-      <li>
-        <a routerLink="/admin-users">Liste utilisateurs</a>
+      <li (click)="$event.stopPropagation()">
+        <a routerLink="/admin-users" class="sidebar-item">
+          <span class="material-icons">group</span>
+          Liste utilisateurs
+        </a>
       </li>
     </ul>
 

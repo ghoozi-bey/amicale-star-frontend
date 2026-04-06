@@ -109,3 +109,12 @@
   color: #1b5e20;
   font-weight: 600;
 }
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-item .material-icons {
+  font-size: 20px;
+}

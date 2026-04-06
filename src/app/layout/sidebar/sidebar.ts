@@ -26,7 +26,6 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
     this.user = this.authService.getUser();
 
-    // Clean display name
     if (this.user) {
       if (this.user.prenom && this.user.nom) {
         this.userName = `${this.user.prenom} ${this.user.nom}`;
@@ -36,13 +35,11 @@ export class SidebarComponent implements OnInit {
     }
   }
 
-  // Role check (single role only)
   hasRole(role: string): boolean {
     if (!this.user || !this.user.role) return false;
     return this.user.role.includes(role);
   }
 
-  // Toggles
   toggleEvents(): void {
     this.showEventsMenu = !this.showEventsMenu;
   }

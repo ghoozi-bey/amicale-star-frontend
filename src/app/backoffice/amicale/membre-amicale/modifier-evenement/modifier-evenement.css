@@ -1,63 +1,17 @@
-/* 🔥 Container global */
-.container {
-  display: flex;
-  justify-content: center;
-  padding: 40px 20px;
-}
-
-/* 🔥 Carte */
-.form-card {
-  width: 100%;
-  max-width: 600px;
-  background: #f9fafb;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-/* 🔥 Titre */
-.form-card h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  font-size: 24px;
-  font-weight: 600;
-  color: #1f2937;
-}
-
-/* 🔥 Group input */
-.form-group {
-  margin-bottom: 15px;
-}
-
-/* 🔥 Inputs */
-.form-group input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #d1d5db;
-  background: #f3f4f6;
-  font-size: 14px;
-  transition: 0.2s;
-}
-
-/* Focus */
-.form-group input:focus {
-  outline: none;
-  border-color: #16a34a;
-  background: #ffffff;
-  box-shadow: 0 0 5px rgba(22, 163, 74, 0.3);
-}
-
-/* 🔥 Bouton */
 .submit-btn {
   width: 100%;
+  margin-top: 15px;
   padding: 14px;
-  border-radius: 12px;
+
   border: none;
+  border-radius: 12px;
+
   background: linear-gradient(135deg, #2e7d32, #4caf50);
   color: white;
+
   font-size: 15px;
   font-weight: 500;
+
   cursor: pointer;
   transition: 0.3s;
 }
@@ -65,25 +19,5 @@
 /* Hover */
 .submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
-}
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 60vh;
-}
-
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid #ddd;
-  border-top: 5px solid #28a745; /* vert */
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
 }

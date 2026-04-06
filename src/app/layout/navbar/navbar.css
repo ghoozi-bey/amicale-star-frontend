@@ -1,36 +1,46 @@
+/* 🔥 NAVBAR */
 .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   background: #19785a;
-  padding: 14px 30px; /* un peu plus comme STAR */
-  border-radius: 12px;
+  padding: 14px 30px;
   margin: 10px;
+  border-radius: 12px;
+
   color: white;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+  z-index: 1000;
 }
 
-/* LEFT */
+/* 🔥 LEFT */
 .left {
   display: flex;
   align-items: center;
-  gap: 20px; /* espace plus réaliste */
+  gap: 20px;
 }
 
-/* LOGO */
+/* 🔥 LOGO */
 .logo-star {
-  height: 50px; /* un peu plus grand comme STAR */
+  height: 50px;
   width: auto;
 }
 
-/* 🔥 LIGNE VERTICALE */
+/* 🔥 DIVIDER */
 .divider {
   width: 2px;
   height: 35px;
   background: rgba(255,255,255,0.4);
 }
 
-/* USER TEXT */
+/* 🔥 USER TEXT */
 .user {
   font-weight: 600;
   font-size: 16px;
@@ -38,34 +48,48 @@
   white-space: nowrap;
 }
 
-/* RIGHT */
+/* 🔥 RIGHT */
 .right {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-/* LOGOUT BUTTON */
+/* 🔥 LOGOUT BUTTON */
 .logout-btn {
-  background: white;
-  color: #19785a;
+  background: #19785a;
   border: none;
-  padding: 8px 18px; /* plus large comme STAR */
-  border-radius: 25px;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   cursor: pointer;
-  font-weight: 600;
-  transition: 0.25s;
+  outline: none;
+
+  transition: transform 0.2s ease;
 }
 
+/* 🔥 ICON */
+.logout-btn .material-icons {
+  color: white;
+  font-size: 22px;
+}
+
+/* 🔥 HOVER */
 .logout-btn:hover {
-  background: #e6e6e6;
+  transform: scale(1.1);
 }
 
+/* 🔥 CLICK */
 .logout-btn:active {
   transform: scale(0.95);
 }
 
-/* ALIGNEMENT */
+/* 🔥 ALIGNEMENT */
 .left,
 .right {
   height: 100%;

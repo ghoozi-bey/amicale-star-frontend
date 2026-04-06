@@ -9,7 +9,10 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './modifier-evenement.html',
-  styleUrls: ['./modifier-evenement.css']
+  styleUrls: [
+  './modifier-evenement.css',
+  '../gestion-evenements/gestion-evenements.css'  // 🔥 IMPORTANT
+]
 })
 export class ModifierEvenementComponent implements OnInit {
 
