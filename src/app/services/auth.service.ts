@@ -11,7 +11,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ LOGIN (FIX COMPLET)
+  // ✅ LOGIN
   login(data: any): Observable<string> {
     return this.http.post(
       `${this.api}/login`,
@@ -20,26 +20,15 @@ export class AuthService {
     ).pipe(
       tap((token: string) => {
 
-        // 🔥 save token
+        // 🔥 STOCKER UNIQUEMENT TOKEN
         localStorage.setItem("token", token);
 
-        // 🔥 decode token
         const payload = JSON.parse(atob(token.split('.')[1]));
-
         console.log("JWT PAYLOAD:", payload);
 
-        // 🔥 EXTRAIRE ROLE
+        // 🔥 STOCKER ROLE SEULEMENT
         if (payload.role) {
           localStorage.setItem("role", payload.role);
-        }
-
-        // 🔥 optionnel (nom affichage)
-        if (payload.nom) {
-          localStorage.setItem("nom", payload.nom);
-        }
-
-        if (payload.prenom) {
-          localStorage.setItem("prenom", payload.prenom);
         }
 
       })
@@ -51,7 +40,7 @@ export class AuthService {
     return localStorage.getItem("token");
   }
 
-  // ✅ GET USER
+  // ✅ GET USER (DEPUIS TOKEN)
   getUser() {
     const token = this.getToken();
     if (!token) return null;
@@ -60,10 +49,9 @@ export class AuthService {
       const payload = JSON.parse(atob(token.split('.')[1]));
 
       return {
-        ...payload,
-        prenom: payload.prenom || null,
-        nom: payload.nom || null,
-        email: payload.sub || null
+        prenom: payload.prenom || "",
+        nom: payload.nom || "",
+        email: payload.sub || ""
       };
 
     } catch {
@@ -78,9 +66,6 @@ export class AuthService {
 
   // ✅ LOGOUT
   logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role"); // 🔥 IMPORTANT
-    localStorage.removeItem("nom");
-    localStorage.removeItem("prenom");
+    localStorage.clear(); // 🔥 CLEAN TOTAL
   }
 }

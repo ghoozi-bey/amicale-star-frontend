@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
 
   userName: string = '';
 
@@ -19,20 +19,24 @@ export class NavbarComponent {
     private router: Router
   ) {}
 
-  ngOnInit() {
-  const user = this.authService.getUser();
+  ngOnInit(): void {
+    const user = this.authService.getUser();
 
-  if (user) {
-    if (user.prenom && user.nom) {
-      this.userName = user.prenom + ' ' + user.nom;
+    if (user) {
+      // ✅ priorité prénom + nom
+      if (user.prenom && user.nom) {
+        this.userName = `${user.prenom} ${user.nom}`;
+      } else {
+        // ✅ fallback propre
+        this.userName = user.email || 'Utilisateur';
+      }
     } else {
-      this.userName = user.email; // fallback
+      this.userName = 'Utilisateur';
     }
   }
-}
 
-  logout() {
-    this.authService.logout(); // si existe
+  logout(): void {
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

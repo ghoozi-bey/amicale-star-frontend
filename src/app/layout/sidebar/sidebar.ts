@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -19,55 +20,53 @@ export class SidebarComponent implements OnInit {
   showElectionsMenu = false;
   showUsersMenu = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
 
-    // 🔥 récupérer user depuis localStorage
-    const userData = localStorage.getItem('user');
+    // ✅ récupérer user depuis token
+    const user = this.authService.getUser();
 
-    if (userData) {
-      const user = JSON.parse(userData);
-
-      console.log("USER:", user);
-
-      // 🔥 ROLE CORRECT
-      this.userRole = user.typeAdherent;
-
-      // 🔥 NOM (optionnel)
-      this.userName = (user.prenom && user.nom)
-  ? user.prenom + ' ' + user.nom
-  : user.nom || 'Utilisateur';
+    if (user) {
+      this.userName = `${user.prenom || ''} ${user.nom || ''}`.trim() || 'Utilisateur';
     }
 
-    console.log("ROLE FINAL:", this.userRole);
+    // ✅ récupérer et corriger le rôle
+    const role = localStorage.getItem('role');
+    this.userRole = role ? role.replace('ROLE_', '') : '';
+
+    console.log('ROLE FINAL:', this.userRole);
   }
 
-  // ✅ NAVIGATION PROFILE
-  goToProfile() {
+  // ✅ navigation profil
+  goToProfile(): void {
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate(['/profile']);
     });
   }
 
-  toggleEvents() {
+  // ✅ menus toggle
+  toggleEvents(): void {
     this.showEventsMenu = !this.showEventsMenu;
   }
 
-  toggleSondages() {
+  toggleSondages(): void {
     this.showSondagesMenu = !this.showSondagesMenu;
   }
 
-  toggleElections() {
+  toggleElections(): void {
     this.showElectionsMenu = !this.showElectionsMenu;
   }
 
-  toggleUsers() {
+  toggleUsers(): void {
     this.showUsersMenu = !this.showUsersMenu;
   }
 
-  // ✅ FIX FINAL ROLE
+  // ✅ vérification rôle (robuste)
   hasRole(role: string): boolean {
-    return this.userRole === role;
+    return this.userRole.toUpperCase() === role.toUpperCase();
   }
 }
