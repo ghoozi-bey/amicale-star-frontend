@@ -49,19 +49,33 @@ export class SidebarComponent implements OnInit {
 
   // 🔥 CHARGER PHOTO
   loadProfilePhoto() {
-    this.http.get<any>('http://localhost:8080/api/user/profile')
-      .subscribe(data => {
 
-        if (data?.photoProfil) {
-          this.userPhoto = 'http://localhost:8080/uploads/' 
-            + encodeURIComponent(data.photoProfil)
-            + '?t=' + new Date().getTime();
-        } else {
-          this.userPhoto = null;
-        }
-        this.cdr.detectChanges(); // forces UI update
-      });
+  // 🔥 CHECK CACHE
+  const cachedPhoto = this.authService.getUserPhoto();
+
+  if (cachedPhoto) {
+    this.userPhoto = cachedPhoto;
+    return;
   }
+
+  // 🔥 SINON API
+  this.http.get<any>('http://localhost:8080/api/user/profile')
+    .subscribe(data => {
+
+      if (data?.photoProfil) {
+        const photo = 'http://localhost:8080/uploads/' 
+          + encodeURIComponent(data.photoProfil);
+
+        this.userPhoto = photo;
+
+        // 🔥 SAVE CACHE
+        this.authService.setUserPhoto(photo);
+
+      } else {
+        this.userPhoto = null;
+      }
+    });
+}
 
   goToProfile(): void {
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {

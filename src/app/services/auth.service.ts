@@ -68,4 +68,13 @@ export class AuthService {
   logout() {
     localStorage.clear(); // 🔥 CLEAN TOTAL
   }
+  private userPhoto: string | null = null;
+
+setUserPhoto(photo: string) {
+  this.userPhoto = photo;
+}
+
+getUserPhoto(): string | null {
+  return this.userPhoto;
+}
 }

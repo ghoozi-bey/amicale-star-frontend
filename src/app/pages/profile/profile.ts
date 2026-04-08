@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
+import heic2any from 'heic2any';
 
 @Component({
   selector: 'app-profile',
@@ -32,7 +34,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -85,35 +88,62 @@ export class ProfileComponent implements OnInit {
   }
 
   // 🔥 PHOTO HANDLER
-  onFileSelected(event: any) {
+  async onFileSelected(event: any) {
 
-    this.photoError = false;
-    this.photoMessage = '';
+  this.photoError = false;
+  this.photoMessage = '';
 
-    const file = event.target.files[0];
-    if (!file) return;
+  const file = event.target.files[0];
+  if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      this.photoError = true;
-      this.photoMessage = "Veuillez choisir une image valide";
-      return;
-    }
-
-    if (file.size > 2 * 1024 * 1024) {
-      this.photoError = true;
-      this.photoMessage = "Image trop grande (max 2MB)";
-      return;
-    }
-
-    this.selectedFile = file;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.preview = reader.result as string;
-      this.cdr.detectChanges();
-    };
-    reader.readAsDataURL(file);
+  if (!file.type.startsWith('image/')) {
+    this.photoError = true;
+    this.photoMessage = "Veuillez choisir une image valide";
+    return;
   }
+
+  if (file.size > 2 * 1024 * 1024) {
+    this.photoError = true;
+    this.photoMessage = "Image trop grande (max 2MB)";
+    return;
+  }
+
+  // 🔥 HEIC → JPG
+  if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
+
+    try {
+      const blob = await heic2any({
+        blob: file,
+        toType: 'image/jpeg',
+        quality: 0.8
+      });
+
+      this.selectedFile = new File([blob as Blob], 'converted.jpg', {
+        type: 'image/jpeg'
+      });
+
+    } catch (e) {
+      this.photoError = true;
+      this.photoMessage = "Erreur conversion HEIC";
+      return;
+    }
+
+  } else {
+    this.selectedFile = file;
+  }
+
+  // 🔥 IMPORTANT (APRÈS CONVERSION)
+  if (!this.selectedFile) return;
+
+  // 🔥 PREVIEW
+  const reader = new FileReader();
+  reader.onload = () => {
+    this.preview = reader.result as string;
+    this.cdr.detectChanges();
+  };
+
+  reader.readAsDataURL(this.selectedFile);
+}
 
   // 🔥 UPDATE
   update() {
@@ -136,6 +166,10 @@ export class ProfileComponent implements OnInit {
         this.passwordMessage = "Minimum 6 caractères";
         return;
       }
+    }
+    
+    if (this.preview) {
+      this.authService.setUserPhoto(this.preview);
     }
 
     const formData = new FormData();
