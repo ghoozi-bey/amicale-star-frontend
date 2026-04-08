@@ -1,6 +1,23 @@
 <div *ngIf="!loading" class="profile-container">
 
   <h2>Modifier mon profil</h2>
+  <!-- 🔥 AVATAR EN HAUT -->
+  <div class="avatar-container">
+    <div 
+      class="avatar"
+      [ngStyle]="{
+        'background-image': preview ? 'url(' + preview + ')' : 'none'
+      }"
+    >
+      <span class="camera">📷</span>
+
+      <input 
+        type="file"
+        (change)="onFileSelected($event)"
+        class="file-input"
+      >
+    </div>
+  </div>
 
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 
@@ -64,13 +81,6 @@
     <p *ngIf="passwordError" class="error-text">
       {{ passwordMessage }}
     </p>
-
-    <!-- PHOTO -->
-    <label>Photo de profil</label>
-    <input type="file" (change)="onFileSelected($event)">
-
-    <!-- PREVIEW -->
-    <img *ngIf="preview" [src]="preview" class="preview">
 
     <!-- BUTTON -->
     <button type="submit">Modifier</button>

@@ -2,7 +2,25 @@
 
   <!-- Profil -->
   <div class="user-profile" (click)="goToProfile()">
-    <img [src]="'assets/imagepardefaut.jpg'" class="avatar">
+
+    <div class="avatar-sidebar">
+
+      <!-- 🔥 PHOTO BACKEND -->
+      <img 
+        *ngIf="userPhoto"
+        [src]="userPhoto"
+        class="avatar"
+      >
+
+      <!-- 🔥 IMAGE PAR DÉFAUT -->
+      <img 
+        *ngIf="!userPhoto"
+        src="assets/imagepardefaut.jpg"
+        class="avatar"
+      >
+
+    </div>
+
     <span class="name">{{ userName }}</span>
   </div>
 
