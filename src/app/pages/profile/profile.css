@@ -1,4 +1,4 @@
-/* CONTAINER */
+/* ================= CONTAINER ================= */
 .profile-container {
   max-width: 500px;
   margin: 40px auto;
@@ -8,14 +8,14 @@
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
-/* TITLE */
+/* ================= TITLE ================= */
 .profile-container h2 {
   text-align: center;
   margin-bottom: 25px;
   color: #2c3e50;
 }
 
-/* LABEL */
+/* ================= LABEL ================= */
 label {
   display: block;
   margin-top: 15px;
@@ -24,39 +24,48 @@ label {
   color: #333;
 }
 
-/* INPUT */
+/* ================= INPUT GLOBAL ================= */
 input {
   width: 100%;
+  height: 42px; /* 🔥 FIX HAUTEUR UNIFIÉE */
   padding: 10px 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 14px;
-  transition: 0.3s;
+  box-sizing: border-box;
+  transition: 0.2s;
 }
 
-/* INPUT FOCUS */
+/* ================= INPUT FOCUS ================= */
 input:focus {
   border-color: #2e7d32;
   outline: none;
   box-shadow: 0 0 5px rgba(46,125,50,0.2);
 }
 
-/* PASSWORD FIELD */
+/* ================= PASSWORD FIELD ================= */
 .password-field {
   position: relative;
 }
 
-/* EYE ICON */
+/* INPUT PASSWORD FIX */
+.password-field input {
+  padding-right: 40px;
+  font-family: Arial, sans-serif; /* 🔥 empêche le shift */
+}
+
+/* ================= EYE ICON ================= */
 .eye {
   position: absolute;
-  right: 10px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
   font-size: 16px;
+  user-select: none;
 }
 
-/* BUTTON */
+/* ================= BUTTON ================= */
 button {
   width: 100%;
   margin-top: 20px;
@@ -74,7 +83,7 @@ button:hover {
   background: #256628;
 }
 
-/* IMAGE PREVIEW */
+/* ================= IMAGE ================= */
 .preview {
   display: block;
   margin-top: 10px;
@@ -84,16 +93,22 @@ button:hover {
   border-radius: 50%;
 }
 
-/* LOADING */
+/* ================= ERROR INPUT ================= */
+input.error {
+  border: 2px solid #ff4d4f !important;
+  background-color: #fff1f0;
+}
+
+/* ================= ERROR TEXT ================= */
+.error-text {
+  color: #ff4d4f;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+/* ================= LOADING ================= */
 .loading {
   text-align: center;
   margin-top: 50px;
   font-size: 18px;
-}
-
-/* ERROR */
-.error {
-  text-align: center;
-  color: red;
-  margin-top: 50px;
 }

@@ -23,6 +23,10 @@ export class ProfileComponent implements OnInit {
   showCurrent = false;
   showNew = false;
 
+  // 🔥 UX PRO
+  passwordError = false;
+  passwordMessage = '';
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -31,9 +35,9 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
 
-    console.log("PROFILE INIT");
-
     this.form = this.fb.group({
+      nom: [''],
+      prenom: [''],
       email: [''],
       telephone: [''],
       currentPassword: [''],
@@ -43,39 +47,28 @@ export class ProfileComponent implements OnInit {
     this.loadProfile();
   }
 
-  // 🔥 LOAD PROFILE
   loadProfile() {
     this.loading = true;
-    this.error = false;
 
     this.http.get<any>('http://localhost:8080/api/user/profile')
-      .subscribe(
-        (data) => {
+      .subscribe(data => {
 
-          console.log("DATA RECEIVED:", data);
+        this.form.patchValue({
+          nom: data?.nom ?? '',
+          prenom: data?.prenom ?? '',
+          email: data?.email ?? '',
+          telephone: data?.telephone ?? ''
+        });
 
-          this.form.patchValue({
-            email: data?.email ?? '',
-            telephone: data?.telephone ?? ''
-          });
-
-          if (data?.photoProfil) {
-            this.preview = 'http://localhost:8080/uploads/' + data.photoProfil;
-          }
-
-          this.loading = false;
-          this.cdr.detectChanges(); // 🔥 FIX AFFICHAGE
-        },
-        (err) => {
-          console.error("ERROR:", err);
-          this.error = true;
-          this.loading = false;
-          this.cdr.detectChanges();
+        if (data?.photoProfil) {
+          this.preview = 'http://localhost:8080/uploads/' + data.photoProfil;
         }
-      );
+
+        this.loading = false;
+        this.cdr.detectChanges();
+      });
   }
 
-  // 👁️ toggle password
   toggleCurrent() {
     this.showCurrent = !this.showCurrent;
   }
@@ -84,7 +77,6 @@ export class ProfileComponent implements OnInit {
     this.showNew = !this.showNew;
   }
 
-  // 📸 IMAGE
   onFileSelected(event: any) {
     const file = event.target.files[0];
 
@@ -99,25 +91,33 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  // 🚀 UPDATE
   update() {
 
     const { currentPassword, newPassword } = this.form.value;
 
+    // reset UI error
+    this.passwordError = false;
+    this.passwordMessage = '';
+
     if (currentPassword || newPassword) {
+
       if (!currentPassword || !newPassword) {
-        alert("Veuillez remplir les deux champs de mot de passe");
+        this.passwordError = true;
+        this.passwordMessage = "Remplissez les deux champs";
         return;
       }
 
       if (newPassword.length < 6) {
-        alert("Mot de passe min 6 caractères");
+        this.passwordError = true;
+        this.passwordMessage = "Minimum 6 caractères";
         return;
       }
     }
 
     const formData = new FormData();
 
+    formData.append('nom', this.form.value.nom);
+    formData.append('prenom', this.form.value.prenom);
     formData.append('email', this.form.value.email);
     formData.append('telephone', this.form.value.telephone);
 
@@ -130,7 +130,7 @@ export class ProfileComponent implements OnInit {
       formData.append('photo', this.selectedFile);
     }
 
-    this.http.put('http://localhost:8080/api/user/update', formData)
+    this.http.put('http://localhost:8080/api/user/profile', formData)
       .subscribe({
         next: () => {
           alert("Profil modifié avec succès");
@@ -140,9 +140,22 @@ export class ProfileComponent implements OnInit {
             newPassword: ''
           });
         },
-        error: () => {
-          alert("Erreur ou mot de passe incorrect");
-        }
+        error: (err) => {
+
+  const message = err?.error;
+
+  if (message && message.includes("Mot de passe actuel incorrect")) {
+    this.passwordError = true;
+    this.passwordMessage = "Mot de passe actuel incorrect ❌";
+
+    // 🔥 FIX IMMÉDIAT (IMPORTANT)
+    this.cdr.detectChanges();
+
+  } else {
+    alert("Erreur serveur");
+  }
+}
+
       });
   }
 }

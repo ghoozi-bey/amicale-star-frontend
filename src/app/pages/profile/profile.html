@@ -4,6 +4,22 @@
 
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 
+    <!-- NOM -->
+    <label>Nom</label>
+    <input 
+      type="text" 
+      formControlName="nom"
+      placeholder="Entrez votre nom"
+    >
+
+    <!-- PRENOM -->
+    <label>Prénom</label>
+    <input 
+      type="text" 
+      formControlName="prenom"
+      placeholder="Entrez votre prénom"
+    >
+
     <!-- EMAIL -->
     <label>Email</label>
     <input 
@@ -27,6 +43,7 @@
         [type]="showCurrent ? 'text' : 'password'" 
         formControlName="currentPassword"
         placeholder="Entrez votre mot de passe actuel"
+        [class.error]="passwordError"
       >
       <span (click)="toggleCurrent()" class="eye">👁</span>
     </div>
@@ -38,9 +55,15 @@
         [type]="showNew ? 'text' : 'password'" 
         formControlName="newPassword"
         placeholder="Entrez un nouveau mot de passe"
+        [class.error]="passwordError"
       >
       <span (click)="toggleNew()" class="eye">👁</span>
     </div>
+
+    <!-- 🔥 MESSAGE ERREUR -->
+    <p *ngIf="passwordError" class="error-text">
+      {{ passwordMessage }}
+    </p>
 
     <!-- PHOTO -->
     <label>Photo de profil</label>
@@ -49,6 +72,7 @@
     <!-- PREVIEW -->
     <img *ngIf="preview" [src]="preview" class="preview">
 
+    <!-- BUTTON -->
     <button type="submit">Modifier</button>
 
   </form>
