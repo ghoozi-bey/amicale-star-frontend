@@ -68,7 +68,7 @@
     </div>
 
     <div class="form-group">
-      <input type="file" (change)="onFileSelected($event)">
+      <input type="file" (change)="onFileSelected($event)" accept="image/*">
     </div>
 
     <button class="btn-modern" type="submit" [disabled]="eventForm.invalid">

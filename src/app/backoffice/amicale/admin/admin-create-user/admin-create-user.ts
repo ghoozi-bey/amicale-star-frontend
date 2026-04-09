@@ -52,15 +52,48 @@ export class AdminCreateUserComponent {
     this.loadTypes();
   }
 
+  // ================= VALIDATION FRONT =================
+  validateForm(): boolean {
+    this.validationErrors = {};
+
+    if (!this.newUser.matricule) {
+      this.validationErrors.matricule = "Matricule obligatoire";
+    }
+
+    if (!this.newUser.nom) {
+      this.validationErrors.nom = "Nom obligatoire";
+    }
+
+    if (!this.newUser.prenom) {
+      this.validationErrors.prenom = "Prénom obligatoire";
+    }
+
+    if (!this.newUser.email || !this.newUser.email.includes("@")) {
+      this.validationErrors.email = "Email invalide";
+    }
+
+    if (!this.newUser.password || this.newUser.password.length < 6) {
+      this.validationErrors.password = "Mot de passe min 6 caractères";
+    }
+
+    if (!this.newUser.cin || !/^\d{8}$/.test(this.newUser.cin)) {
+      this.validationErrors.cin = "CIN doit contenir 8 chiffres";
+    }
+
+    if (!this.newUser.telephone || !/^\d{8}$/.test(this.newUser.telephone)) {
+      this.validationErrors.telephone = "Téléphone invalide";
+    }
+
+    return Object.keys(this.validationErrors).length === 0;
+  }
+
+  // ================= LOAD =================
   loadUsers() {
-    this.http.get<any[]>(
-      this.api,
-      {
-        headers: {
-          Authorization: 'Bearer ' + this.authService.getToken()
-        }
+    this.http.get<any[]>(this.api, {
+      headers: {
+        Authorization: 'Bearer ' + this.authService.getToken()
       }
-    ).subscribe({
+    }).subscribe({
       next: (data) => {
         this.users = data;
       },
@@ -96,16 +129,23 @@ export class AdminCreateUserComponent {
     }).subscribe({
       next: (data) => {
         this.typeEvenements = data;
-        this.cdr.detectChanges(); // ✅ here
+        this.cdr.detectChanges();
       },
       error: (err) => console.error("Erreur chargement types", err)
     });
   }
 
+  // ================= CREATE USER =================
   createUser() {
+
+    // 🔥 validation front
+    if (!this.validateForm()) {
+      this.errorMessage = "⚠️ Corrige les erreurs du formulaire";
+      return;
+    }
+
     const token = localStorage.getItem("token");
 
-    // reset messages
     this.errorMessage = '';
     this.successMessage = '';
     this.validationErrors = {};
@@ -121,7 +161,6 @@ export class AdminCreateUserComponent {
     ).subscribe({
       next: () => {
         this.successMessage = "✅ Utilisateur créé avec succès";
-        this.validationErrors = {}; // clear errors
 
         this.newUser = {
           matricule: '',
@@ -137,28 +176,33 @@ export class AdminCreateUserComponent {
           typeEvenementId: null
         };
 
+        this.validationErrors = {};
         this.loadUsers();
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.log("ERROR BODY:", err.error);
 
-        this.validationErrors = { ...(err.error || {}) };
-        this.errorMessage = '';
-        this.successMessage = '';
+        if (typeof err.error === 'object') {
+          this.validationErrors = err.error; // erreurs backend
+        } else {
+          this.errorMessage = err.error || "Erreur serveur";
+        }
 
+        this.successMessage = '';
         this.cdr.detectChanges();
       }
     });
   }
+
+  // ================= ROLE =================
   onRoleChange() {
     if (this.newUser.typeAdherent !== 'MEMBRE_AMICALE') {
       this.newUser.typeEvenementId = null;
     }
   }
-  
-  
-  
+
+  // ================= DELETE =================
   deleteUser(matricule: string) {
     if (confirm("Supprimer cet utilisateur ?")) {
       this.http.delete(
@@ -170,7 +214,7 @@ export class AdminCreateUserComponent {
         }
       ).subscribe({
         next: () => {
-          this.loadUsers(); // refresh
+          this.loadUsers();
         },
         error: (err) => {
           console.error("Erreur suppression", err);

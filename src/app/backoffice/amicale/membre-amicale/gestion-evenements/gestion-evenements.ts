@@ -66,18 +66,10 @@ export class GestionEvenementsComponent implements OnInit {
 
     if (this.typeEvenementId === 2) {
       this.f['destination'].setValidators([Validators.required]);
-      this.f['dateDebut'].setValidators([Validators.required]);
-      this.f['dateFin'].setValidators([Validators.required]);
-      this.f['nbPlaces'].setValidators([Validators.required, Validators.min(1)]);
-      this.f['prix'].setValidators([Validators.required, Validators.min(0)]);
     }
 
     if (this.typeEvenementId === 1) {
       this.f['agence'].setValidators([Validators.required]);
-      this.f['dateDebut'].setValidators([Validators.required]);
-      this.f['dateFin'].setValidators([Validators.required]);
-      this.f['nbPlaces'].setValidators([Validators.required, Validators.min(1)]);
-      this.f['prix'].setValidators([Validators.required, Validators.min(0)]);
     }
 
     if (this.typeEvenementId === 3) {
@@ -88,12 +80,15 @@ export class GestionEvenementsComponent implements OnInit {
   }
 
   onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
+  const file = event.target.files[0];
+
+  if (file) {
+    this.selectedFile = file;
+    console.log("FILE OK:", file); // 🔥 debug
   }
+}
 
   createEvent() {
-
-    this.applyDynamicValidation();
 
     if (this.eventForm.invalid) {
       this.eventForm.markAllAsTouched();
@@ -102,38 +97,35 @@ export class GestionEvenementsComponent implements OnInit {
     }
 
     if (!this.typeEvenementId) {
-      alert("Type événement introuvable");
+      alert("Type événement invalide ❌");
       return;
     }
 
     const data = this.eventForm.value;
     const formData = new FormData();
 
-    formData.append('typeEvenement', this.typeEvenementId.toString());
+    formData.append('typeEvenement', String(this.typeEvenementId));
     formData.append('titre', data.titre);
     formData.append('description', data.description);
     formData.append('lieu', data.lieu || '');
 
-    if (this.typeEvenementId !== 3) {
-      if (data.dateDebut) formData.append('dateDebut', data.dateDebut);
-      if (data.dateFin) formData.append('dateFin', data.dateFin);
-      formData.append('prix', (data.prix || 0).toString());
-    }
+    if (data.dateDebut) formData.append('dateDebut', data.dateDebut);
+    if (data.dateFin) formData.append('dateFin', data.dateFin);
 
-    if (this.typeEvenementId === 1 || this.typeEvenementId === 2) {
-      formData.append('nbPlaces', (data.nbPlaces || 0).toString());
-    }
+    if (data.nbPlaces) formData.append('nbPlaces', String(data.nbPlaces));
+    if (data.prix) formData.append('prix', String(data.prix));
 
+    // 🔥 CORRECTION IMPORTANTE
     if (this.typeEvenementId === 3) {
-      formData.append('societe', data.societe);
+      formData.append('societe', data.societe || '');
     }
 
     if (this.typeEvenementId === 1) {
-      formData.append('agence', data.agence);
+      formData.append('agence', data.agence || '');
     }
 
     if (this.typeEvenementId === 2) {
-      formData.append('destination', data.destination);
+      formData.append('destination', data.destination || '');
     }
 
     if (this.selectedFile) {
@@ -142,11 +134,12 @@ export class GestionEvenementsComponent implements OnInit {
 
     this.eventService.createEvenement(formData).subscribe({
       next: () => {
-        alert("Evénement ajouté ✔️");
+        alert("✅ Evénement créé");
         this.router.navigate(['/dashboard']);
       },
-      error: () => {
-        alert("Erreur ❌");
+      error: (err) => {
+        console.error("❌ ERROR:", err);
+        alert(err.error || "Erreur création ❌");
       }
     });
   }

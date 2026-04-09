@@ -11,10 +11,18 @@
 
     <div class="event-card" *ngFor="let event of events">
 
+      <!-- 🔥 IMAGE -->
+      <img 
+        class="event-image"
+        [src]="event.imageUrl"
+        (error)="onImageError($event)">
+
       <div class="event-title">{{ event.titre }}</div>
 
       <div class="event-info">📍 {{ event.lieu }}</div>
-      <div class="event-info">📅 {{ event.dateDebut }} → {{ event.dateFin }}</div>
+      <div class="event-info">
+        📅 {{ event.dateDebut || '-' }} → {{ event.dateFin || '-' }}
+      </div>
 
     </div>
 

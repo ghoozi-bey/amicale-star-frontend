@@ -17,7 +17,6 @@ export class ProfileComponent implements OnInit {
   form!: FormGroup;
 
   loading = true;
-  error = false;
 
   selectedFile: File | null = null;
   preview: string | null = null;
@@ -53,31 +52,29 @@ export class ProfileComponent implements OnInit {
   }
 
   loadProfile() {
-  this.loading = true;
+    this.loading = true;
 
-  this.http.get<any>('http://localhost:8080/api/user/profile')
-    .subscribe(data => {
+    this.http.get<any>('http://localhost:8080/api/user/profile')
+      .subscribe(data => {
 
-      this.form.patchValue({
-        nom: data?.nom ?? '',
-        prenom: data?.prenom ?? '',
-        email: data?.email ?? '',
-        telephone: data?.telephone ?? ''
+        this.form.patchValue({
+          nom: data?.nom ?? '',
+          prenom: data?.prenom ?? '',
+          email: data?.email ?? '',
+          telephone: data?.telephone ?? ''
+        });
+
+        // 🔥 FIX BLOB IMAGE
+        if (data?.photoUrl) {
+          this.preview = 'http://localhost:8080' + data.photoUrl + '?t=' + new Date().getTime();
+        } else {
+          this.preview = null;
+        }
+
+        this.loading = false;
+        this.cdr.detectChanges();
       });
-
-      // 🔥 FIX IMAGE + ANTI CACHE
-      if (data?.photoProfil) {
-        this.preview = 'http://localhost:8080/uploads/' 
-  + encodeURIComponent(data.photoProfil)
-  + '?t=' + new Date().getTime();
-      } else {
-        this.preview = null;
-      }
-
-      this.loading = false;
-      this.cdr.detectChanges();
-    });
-}
+  }
 
   toggleCurrent() {
     this.showCurrent = !this.showCurrent;
@@ -87,71 +84,67 @@ export class ProfileComponent implements OnInit {
     this.showNew = !this.showNew;
   }
 
-  // 🔥 PHOTO HANDLER
+  // 🔥 PHOTO
   async onFileSelected(event: any) {
 
-  this.photoError = false;
-  this.photoMessage = '';
+    this.photoError = false;
+    this.photoMessage = '';
 
-  const file = event.target.files[0];
-  if (!file) return;
+    const file = event.target.files[0];
+    if (!file) return;
 
-  if (!file.type.startsWith('image/')) {
-    this.photoError = true;
-    this.photoMessage = "Veuillez choisir une image valide";
-    return;
-  }
-
-  if (file.size > 2 * 1024 * 1024) {
-    this.photoError = true;
-    this.photoMessage = "Image trop grande (max 2MB)";
-    return;
-  }
-
-  // 🔥 HEIC → JPG
-  if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
-
-    try {
-      const blob = await heic2any({
-        blob: file,
-        toType: 'image/jpeg',
-        quality: 0.8
-      });
-
-      this.selectedFile = new File([blob as Blob], 'converted.jpg', {
-        type: 'image/jpeg'
-      });
-
-    } catch (e) {
+    if (!file.type.startsWith('image/')) {
       this.photoError = true;
-      this.photoMessage = "Erreur conversion HEIC";
+      this.photoMessage = "Image invalide";
       return;
     }
 
-  } else {
-    this.selectedFile = file;
+    if (file.size > 2 * 1024 * 1024) {
+      this.photoError = true;
+      this.photoMessage = "Max 2MB";
+      return;
+    }
+
+    // 🔥 HEIC FIX
+    if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
+      try {
+        const blob = await heic2any({
+          blob: file,
+          toType: 'image/jpeg',
+          quality: 0.8
+        });
+
+        this.selectedFile = new File([blob as Blob], 'converted.jpg', {
+          type: 'image/jpeg'
+        });
+
+      } catch {
+        this.photoError = true;
+        this.photoMessage = "Erreur HEIC";
+        return;
+      }
+
+    } else {
+      this.selectedFile = file;
+    }
+
+    if (!this.selectedFile) return;
+
+const reader = new FileReader();
+
+reader.onload = () => {
+  this.preview = reader.result as string;
+  this.cdr.detectChanges();
+};
+
+reader.readAsDataURL(this.selectedFile);
   }
 
-  // 🔥 IMPORTANT (APRÈS CONVERSION)
-  if (!this.selectedFile) return;
-
-  // 🔥 PREVIEW
-  const reader = new FileReader();
-  reader.onload = () => {
-    this.preview = reader.result as string;
-    this.cdr.detectChanges();
-  };
-
-  reader.readAsDataURL(this.selectedFile);
-}
-
-  // 🔥 UPDATE
   update() {
 
     const { currentPassword, newPassword } = this.form.value;
 
     this.passwordError = false;
-    this.passwordMessage = '';
 
     if (currentPassword || newPassword) {
 
@@ -167,10 +160,6 @@ export class ProfileComponent implements OnInit {
         return;
       }
     }
-    
-    if (this.preview) {
-      this.authService.setUserPhoto(this.preview);
-    }
 
     const formData = new FormData();
 
@@ -184,36 +173,32 @@ export class ProfileComponent implements OnInit {
       formData.append('newPassword', newPassword);
     }
 
+    // 🔥 IMPORTANT (nom backend)
     if (this.selectedFile) {
-      formData.append('photo', this.selectedFile);
+      formData.append('photoProfil', this.selectedFile);
     }
 
     this.http.put('http://localhost:8080/api/user/profile', formData)
       .subscribe({
         next: () => {
+          alert("Profil modifié ✅");
 
-          alert("Profil modifié avec succès");
-
-          // 🔥 RESET PASSWORD
           this.form.patchValue({
             currentPassword: '',
             newPassword: ''
           });
 
-          // 🔥 RESET FILE
           this.selectedFile = null;
 
-          // 🔥 RELOAD PROFIL (IMPORTANT)
           this.loadProfile();
         },
-
         error: (err) => {
 
           const message = err?.error;
 
-          if (message && message.includes("Mot de passe actuel incorrect")) {
+          if (message?.includes("Mot de passe actuel incorrect")) {
             this.passwordError = true;
-            this.passwordMessage = "Mot de passe actuel incorrect ❌";
+            this.passwordMessage = "Mot de passe incorrect ❌";
             this.cdr.detectChanges();
           } else {
             alert("Erreur serveur");

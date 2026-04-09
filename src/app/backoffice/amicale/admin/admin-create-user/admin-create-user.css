@@ -2,117 +2,97 @@
   padding: 20px;
 }
 
-h2 {
-  margin-bottom: 20px;
-}
-
+/* Card */
 .card {
   background: #fff;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.form-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-input, select {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  flex: 1;
-}
-
-button {
-  padding: 8px 15px;
-  border: none;
-  background: #2e7d32;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #1b5e20;
-}
-
-table {
+  padding: 30px;
+  border-radius: 14px;
+  max-width: 700px; 
   width: 100%;
-  border-collapse: collapse;
+  margin: 30px auto;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.1);
 }
 
-th, td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+/* Title */
+h3 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.delete {
-  background: red;
-}
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.form input,
-.form select {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  font-size: 14px;
-}
-
-.form input:focus,
-.form select:focus {
-  border-color: #2e7d32;
-  outline: none;
-}
+/* Form */
 .form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
+/* Group */
 .form-group {
   display: flex;
   flex-direction: column;
 }
 
+/* Label */
 .form-group label {
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 5px;
-  color: #333;
 }
 
-.form input,
-.form select {
+/* Inputs */
+input, select {
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   font-size: 14px;
+  transition: 0.2s;
 }
 
-.form input:focus,
-.form select:focus {
+/* Focus */
+input:focus, select:focus {
   border-color: #2e7d32;
   outline: none;
+  box-shadow: 0 0 0 2px rgba(46,125,50,0.15);
+}
+
+/* 🔥 ERROR INPUT */
+.input-error {
+  border: 2px solid #e53935 !important;
+  background-color: #fff5f5;
+}
+
+/* Messages */
+.alert {
+  text-align: center;
+  padding: 10px;
+  margin: 10px auto;
+  max-width: 500px;
+  border-radius: 8px;
 }
 
 .success {
-  color: green;
-  margin: 10px 0;
+  background: #e8f5e9;
+  color: #2e7d32;
   font-weight: bold;
 }
 
 .error {
-  color: #f10000;
-  margin: 10px 0;
+  color: #e53935;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Button */
+.btn {
+  padding: 12px;
+  border: none;
+  background: #2e7d32;
+  color: white;
+  border-radius: 8px;
   font-weight: bold;
-  font-size: 90%;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #1b5e20;
 }

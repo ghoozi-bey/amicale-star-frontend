@@ -17,12 +17,14 @@ export class EventsComponent implements OnInit, OnDestroy {
   loading = false;
   sub!: Subscription;
 
+  private apiUrl = "http://localhost:8080/api/evenements";
+
   constructor(
-  private eventService: EvenementService,
-  private router: Router
-) {
-  this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-}
+    private eventService: EvenementService,
+    private router: Router
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   ngOnInit(): void {
     this.loadEvents();
@@ -39,13 +41,24 @@ export class EventsComponent implements OnInit, OnDestroy {
 
     this.eventService.getMesInscriptions().subscribe({
       next: (data: any[]) => {
-        this.events = data || [];
+        console.log("DATA EVENTS:", data); // 🔥 DEBUG
+
+        this.events = (data || []).map(e => ({
+          ...e,
+          imageUrl: `${this.apiUrl}/photo/${e.id}` // 🔥 IMAGE FIX
+        }));
+
         this.loading = false;
       },
-      error: () => {
+      error: (err) => {
+        console.error("ERREUR EVENTS:", err);
         this.loading = false;
       }
     });
+  }
+
+  onImageError(event: any) {
+    event.target.src = 'assets/default-event.png';
   }
 
   ngOnDestroy(): void {

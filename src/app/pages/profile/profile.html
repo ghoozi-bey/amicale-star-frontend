@@ -1,7 +1,8 @@
 <div *ngIf="!loading" class="profile-container">
 
   <h2>Modifier mon profil</h2>
-  <!-- 🔥 AVATAR EN HAUT -->
+
+  <!-- 🔥 AVATAR -->
   <div class="avatar-container">
     <div 
       class="avatar"
@@ -17,41 +18,26 @@
         class="file-input"
       >
     </div>
+
+    <!-- 🔥 erreur image -->
+    <p *ngIf="photoError" class="error-text">
+      {{ photoMessage }}
+    </p>
   </div>
 
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 
-    <!-- NOM -->
     <label>Nom</label>
-    <input 
-      type="text" 
-      formControlName="nom"
-      placeholder="Entrez votre nom"
-    >
+    <input type="text" formControlName="nom">
 
-    <!-- PRENOM -->
     <label>Prénom</label>
-    <input 
-      type="text" 
-      formControlName="prenom"
-      placeholder="Entrez votre prénom"
-    >
+    <input type="text" formControlName="prenom">
 
-    <!-- EMAIL -->
     <label>Email</label>
-    <input 
-      type="email" 
-      formControlName="email"
-      placeholder="Entrez votre email"
-    >
+    <input type="email" formControlName="email">
 
-    <!-- TELEPHONE -->
     <label>Téléphone</label>
-    <input 
-      type="text" 
-      formControlName="telephone"
-      placeholder="Entrez votre numéro"
-    >
+    <input type="text" formControlName="telephone">
 
     <!-- PASSWORD ACTUEL -->
     <label>Mot de passe actuel</label>
@@ -59,7 +45,6 @@
       <input 
         [type]="showCurrent ? 'text' : 'password'" 
         formControlName="currentPassword"
-        placeholder="Entrez votre mot de passe actuel"
         [class.error]="passwordError"
       >
       <span (click)="toggleCurrent()" class="eye">👁</span>
@@ -71,20 +56,16 @@
       <input 
         [type]="showNew ? 'text' : 'password'" 
         formControlName="newPassword"
-        placeholder="Entrez un nouveau mot de passe"
         [class.error]="passwordError"
       >
       <span (click)="toggleNew()" class="eye">👁</span>
     </div>
 
-    <!-- 🔥 MESSAGE ERREUR -->
     <p *ngIf="passwordError" class="error-text">
       {{ passwordMessage }}
     </p>
 
-    <!-- BUTTON -->
     <button type="submit">Modifier</button>
 
   </form>
-
 </div>
