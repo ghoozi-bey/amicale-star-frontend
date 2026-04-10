@@ -3,23 +3,23 @@
   <!-- Profil -->
   <div class="user-profile" (click)="goToProfile()">
 
-    <div class="avatar-sidebar">
+    <ng-container *ngIf="!loadingPhoto">
 
-      <!-- 🔥 PHOTO BACKEND -->
+      <!-- user photo -->
       <img 
         *ngIf="userPhoto"
         [src]="userPhoto"
         class="avatar"
       >
 
-      <!-- 🔥 IMAGE PAR DÉFAUT -->
+      <!-- default -->
       <img 
         *ngIf="!userPhoto"
         src="assets/imagepardefaut.jpg"
         class="avatar"
       >
 
-    </div>
+    </ng-container>
 
     <span class="name">{{ userName }}</span>
   </div>

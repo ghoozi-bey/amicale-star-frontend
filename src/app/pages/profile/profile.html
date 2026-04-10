@@ -7,10 +7,14 @@
     <div 
       class="avatar"
       [ngStyle]="{
-        'background-image': preview ? 'url(' + preview + ')' : 'none'
+        'background-image': (preview || userPhoto) 
+          ? 'url(' + (preview || userPhoto) + ')' 
+          : 'none'
       }"
     >
-      <span class="camera">📷</span>
+      <span class="camera">
+        {{ (preview || userPhoto) ? '✏️' : '📷' }}
+      </span>
 
       <input 
         type="file"

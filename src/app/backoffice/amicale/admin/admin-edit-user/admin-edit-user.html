@@ -72,11 +72,6 @@
         </div>
 
         <div class="form-group">
-            <label>Photo de profil</label>
-            <input [(ngModel)]="user.photo_profil" />
-        </div>
-
-        <div class="form-group">
             <label>Type Adhérent</label>
             <select [(ngModel)]="user.type_adherent" (change)="onTypeChange()">
                 <option *ngFor="let t of typesAdherent" [value]="t">

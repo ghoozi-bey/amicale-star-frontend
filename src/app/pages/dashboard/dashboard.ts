@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 })
 export class DashboardComponent {
 
-  evenements$!: Observable<any[]>; // 🔥 Observable
+  evenements$!: Observable<any[]>; // Observable
 
   selectedEvent: any = null;
 

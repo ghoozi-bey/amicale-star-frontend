@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit {
 
   loading = true;
 
+  userPhoto: string | null = null;
   selectedFile: File | null = null;
   preview: string | null = null;
 
@@ -66,10 +67,12 @@ export class ProfileComponent implements OnInit {
 
         // 🔥 FIX BLOB IMAGE
         if (data?.photoUrl) {
-          this.preview = 'http://localhost:8080' + data.photoUrl + '?t=' + new Date().getTime();
+          this.userPhoto = data.photoUrl; // ✅ backend image
         } else {
-          this.preview = null;
+          this.userPhoto = null;
         }
+
+        this.preview = null; // 🔥 reset preview when loading profile
 
         this.loading = false;
         this.cdr.detectChanges();

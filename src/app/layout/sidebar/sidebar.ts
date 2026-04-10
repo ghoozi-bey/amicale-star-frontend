@@ -16,6 +16,7 @@ export class SidebarComponent implements OnInit {
 
   userName: string = 'Utilisateur';
   userRole: string = '';
+  loadingPhoto = true;
 
   // 🔥 PHOTO
   userPhoto: string | null = null;
@@ -45,34 +46,35 @@ export class SidebarComponent implements OnInit {
 
     // 🔥 LOAD PHOTO
     this.loadProfilePhoto();
+
+    // 🔥 LISTEN FOR PROFILE UPDATE
+    window.addEventListener('profileUpdated', () => {
+      this.loadProfilePhoto();
+    });
   }
 
   // 🔥 CHARGER PHOTO
   loadProfilePhoto() {
+  this.loadingPhoto = true;
 
-  // 🔥 CHECK CACHE
-  const cachedPhoto = this.authService.getUserPhoto();
-
-  if (cachedPhoto) {
-    this.userPhoto = cachedPhoto;
-    return;
-  }
-
-  // 🔥 SINON API
   this.http.get<any>('http://localhost:8080/api/user/profile')
-    .subscribe(data => {
+    .subscribe({
+      next: (data) => {
 
-      if (data?.photoProfil) {
-        const photo = 'http://localhost:8080/uploads/' 
-          + encodeURIComponent(data.photoProfil);
+        if (data?.photoUrl) {
+          this.userPhoto = data.photoUrl;
+        } else {
+          this.userPhoto = null;
+        }
 
-        this.userPhoto = photo;
+        this.loadingPhoto = false;
+        this.cdr.detectChanges();
+      },
 
-        // 🔥 SAVE CACHE
-        this.authService.setUserPhoto(photo);
-
-      } else {
+      error: () => {
         this.userPhoto = null;
+        this.loadingPhoto = false;
+        this.cdr.detectChanges();
       }
     });
 }
