@@ -31,6 +31,8 @@ export class ProfileComponent implements OnInit {
   photoError = false;
   photoMessage = '';
 
+  photoDeleted: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -181,6 +183,10 @@ reader.readAsDataURL(this.selectedFile);
       formData.append('photoProfil', this.selectedFile);
     }
 
+    if (this.photoDeleted) {
+      formData.append('removePhoto', 'true');
+    }
+
     this.http.put('http://localhost:8080/api/user/profile', formData)
       .subscribe({
         next: () => {
@@ -208,5 +214,21 @@ reader.readAsDataURL(this.selectedFile);
           }
         }
       });
+  }
+
+  removePhoto(event: Event) {
+    event.stopPropagation(); // 🔥 prevent triggering file input
+
+    this.preview = null;
+    this.userPhoto = null;
+
+    // optional: mark that photo should be deleted
+    this.photoDeleted = true;
+
+    console.log("Photo removed");
+  }
+
+  hasRealPhoto(): boolean {
+    return !!this.userPhoto && this.userPhoto !== 'assets/default-pfp.jpg';
   }
 }

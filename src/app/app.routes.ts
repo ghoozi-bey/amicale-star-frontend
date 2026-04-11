@@ -100,6 +100,12 @@ export const routes: Routes = [
           import('./backoffice/amicale/admin/admin-edit-user/admin-edit-user')
             .then(m => m.AdminEditUserComponent)
       },
+      {
+        path: 'admin-user-profile/:matricule',
+        loadComponent: () =>
+          import('./backoffice/amicale/admin/admin-user-profile/admin-user-profile')
+        .then(m => m.AdminUserProfile)
+      },
       // 🗳️ GESTION SONDAGES (membre amicale)
       {
         path: 'gestion-sondages',

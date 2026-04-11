@@ -3,31 +3,42 @@
   <h2>Modifier mon profil</h2>
 
   <!-- 🔥 AVATAR -->
-  <div class="avatar-container">
-    <div 
-      class="avatar"
-      [ngStyle]="{
-        'background-image': (preview || userPhoto) 
-          ? 'url(' + (preview || userPhoto) + ')' 
-          : 'none'
-      }"
+<div class="avatar-container">
+
+  <div 
+    class="avatar"
+    [ngStyle]="{
+      'background-image': (preview || userPhoto) 
+        ? 'url(' + (preview || userPhoto) + ')' 
+        : 'none'
+    }"
+  >
+
+    <!-- 🗑 DELETE (only if real photo) -->
+    <span 
+      class="delete-icon"
+      *ngIf="hasRealPhoto()"
+      (click)="removePhoto($event)">
+      🗑
+    </span>
+
+    <!-- ✏️ EDIT -->
+    <span class="camera">
+      {{ (preview || userPhoto) ? '✏️' : '📷' }}
+    </span>
+
+    <input 
+      type="file"
+      (change)="onFileSelected($event)"
+      class="file-input"
     >
-      <span class="camera">
-        {{ (preview || userPhoto) ? '✏️' : '📷' }}
-      </span>
-
-      <input 
-        type="file"
-        (change)="onFileSelected($event)"
-        class="file-input"
-      >
-    </div>
-
-    <!-- 🔥 erreur image -->
-    <p *ngIf="photoError" class="error-text">
-      {{ photoMessage }}
-    </p>
   </div>
+
+  <p *ngIf="photoError" class="error-text">
+    {{ photoMessage }}
+  </p>
+
+</div>
 
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 

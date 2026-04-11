@@ -1,25 +1,68 @@
-<h2>Liste des utilisateurs</h2>
-<table>
-    <tr>
-        <th>Matricule</th>
-        <th>Nom</th>
-        <th>Prénom</th>
-        <th>Email</th>
-        <th>Département</th>
-        <th>Type Adhérent</th>
-        <th>Actions</th>
-    </tr>
+<div class="container">
 
-    <tr *ngFor="let user of users">
-        <td>{{ user.matricule }}</td>
-        <td>{{ user.nom }}</td>
-        <td>{{ user.prenom }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.departement }}</td>
-        <td>{{ user.typeAdherent }}</td>
-        <td>
-            <button class="edit" [routerLink]="['/admin-edit-user', user.matricule]">Modifier</button>
-            <button class="delete" (click)="deleteUser(user.matricule)">Supprimer</button>
-        </td>
-    </tr>
-</table>
+  <h2>Liste des utilisateurs</h2>
+
+  <div class="toolbar">
+
+    <!-- 🔍 SEARCH -->
+    <input type="text"
+            placeholder="Rechercher..."
+            [(ngModel)]="searchTerm"
+            (input)="applyFilters()" />
+
+    <!-- 🔽 TYPE FILTER -->
+    <select [(ngModel)]="selectedType" (change)="applyFilters()">
+        <option value="">Tous les types</option>
+        <option *ngFor="let t of typesAdherent" [value]="t">
+        {{ t }}
+        </option>
+    </select>
+
+    <!-- 🔽 DEPARTEMENT FILTER -->
+    <select [(ngModel)]="selectedDepartement" (change)="applyFilters()">
+        <option value="">Tous les départements</option>
+        <option *ngFor="let d of departements" [value]="d">
+        {{ d }}
+        </option>
+    </select>
+
+    <!-- 🔃 SORT -->
+    <select [(ngModel)]="sortOrder" (change)="applyFilters()">
+        <option value="">Trier</option>
+        <option value="asc">Nom A → Z</option>
+        <option value="desc">Nom Z → A</option>
+    </select>
+
+    </div>
+  
+  <div class="users-grid">
+
+    <div class="user-card"
+         *ngFor="let user of filteredUsers"
+         (click)="goToUser(user.matricule)">
+
+      <!-- 🔹 Avatar -->
+      <img [src]="user.imageUrl" class="user-avatar">
+
+      <!-- 🔹 Info -->
+      <div class="user-info">
+        <h3>{{ user.nom }} {{ user.prenom }}</h3>
+        <p class="email">{{ user.email }}</p>
+      </div>
+
+      <!-- 🔹 Meta -->
+      <div class="user-meta">
+        <span class="badge departement">
+          {{ user.departement }}
+        </span>
+
+        <span class="badge type">
+          {{ user.typeAdherent }}
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

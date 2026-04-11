@@ -1,88 +1,128 @@
-    .container {
-    padding: 20px;
-    }
+.container {
+  padding: 24px;
+  background: #f6f8fa;
+  min-height: 100vh;
+}
 
-    h2 {
-    margin-bottom: 20px;
-    font-size: 22px;
-    font-weight: 600;
-    color: #333;
-    }
+/* 🔹 Title */
+h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+}
 
-    table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
+/* 🔥 TOOLBAR */
 
-    th, td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-    font-size: 14px;
-    color: #444;
-    }
+.toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
 
-    th {
-    background-color: #f5f5f5;
-    font-weight: 600;
-    }
+.toolbar input,
+.toolbar select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 13px;
+}
 
-    tr:hover {
-    background-color: #f9f9f9;
-    }
+/* 🔥 GRID */
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* force 2 per row */
+  gap: 20px;
+}
 
-    button {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    transition: background 0.2s ease;
-    }
+/* 🔥 CARD */
+.user-card {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
 
-    button.delete {
-    background: #e53935;
-    color: white;
-    }
+/* 🔥 HOVER EFFECT */
+.user-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
 
-    button.delete:hover {
-    background: #b71c1c;
-    }
+/* 🔹 Avatar */
+.user-avatar {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e5e7eb;
+}
 
-    button.edit {
-    background: #2e7d32;
-    color: white;
-    margin-right: 5px;
-    }
+/* 🔹 Info */
+.user-info h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #111827;
+}
 
-    button.edit:hover {
-    background: #1b5e20;
-    }
+.user-info .email {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 2px;
+}
 
-    .success {
-    color: green;
-    margin: 10px 0;
-    font-weight: bold;
-    }
+/* 🔹 Meta (right side) */
+.user-meta {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
-    .error {
-    color: red;
-    margin: 10px 0;
-    font-weight: bold;
-    }
+/* 🔥 BADGES */
+.badge {
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 999px;
+  font-weight: 500;
+  text-align: center;
+}
 
-    /* Optional: responsive */
-    @media (max-width: 768px) {
-    table, th, td {
-        font-size: 12px;
-    }
+/* 🔹 Département */
+.badge.departement {
+  background: #e0f2fe;
+  color: #0369a1;
+}
 
-    button {
-        font-size: 12px;
-        padding: 5px 10px;
-    }
-    }
+/* 🔹 Type Adhérent */
+.badge.type {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+/* 🔹 Responsive */
+@media (max-width: 600px) {
+
+  /* 🔥 1 user per row */
+  .users-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* optional: keep your layout tweaks */
+  .user-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-meta {
+    flex-direction: row;
+    gap: 10px;
+    margin-left: 0;
+  }
+}
