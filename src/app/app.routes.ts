@@ -5,7 +5,6 @@ import { DashboardComponent } from './pages/dashboard/dashboard';
 import { EventsComponent } from './pages/evenements/evenements';
 import { GestionEvenementsComponent } from './backoffice/amicale/membre-amicale/gestion-evenements/gestion-evenements';
 
-
 import { authGuard } from './services/auth.guard';
 
 export const routes: Routes = [
@@ -37,11 +36,19 @@ export const routes: Routes = [
         component: DashboardComponent
       },
 
-      // 📅 EVENEMENTS (🔥 FIX ICI)
+      // 📅 EVENEMENTS
       {
         path: 'evenements',
         component: EventsComponent,
-        runGuardsAndResolvers: 'always' // 🔥 important
+        runGuardsAndResolvers: 'always'
+      },
+
+      // 🔥 NOUVELLE PAGE INSCRIPTION
+      {
+        path: 'inscription/:id',
+        loadComponent: () =>
+          import('./pages/inscription/inscription')
+            .then(m => m.InscriptionComponent)
       },
 
       // ➕ GESTION EVENEMENTS
@@ -104,9 +111,10 @@ export const routes: Routes = [
         path: 'admin-user-profile/:matricule',
         loadComponent: () =>
           import('./backoffice/amicale/admin/admin-user-profile/admin-user-profile')
-        .then(m => m.AdminUserProfile)
+            .then(m => m.AdminUserProfile)
       },
-      // 🗳️ GESTION SONDAGES (membre amicale)
+
+      // 🗳️ SONDAGES
       {
         path: 'gestion-sondages',
         loadComponent: () =>
@@ -125,7 +133,14 @@ export const routes: Routes = [
           import('./backoffice/amicale/membre-amicale/gestion-sondages/edit-sondage/edit-sondage')
             .then(m => m.EditSondageComponent)
       }
+
     ]
+  },
+
+  // 🔥 FALLBACK (important)
+  {
+    path: '**',
+    redirectTo: 'login'
   }
 
 ];

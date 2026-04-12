@@ -86,4 +86,7 @@ export class EvenementService {
     headers: this.getHeaders()
   });
 }
+inscrire(eventId: number) {
+  return this.http.post(`http://localhost:8080/api/inscriptions/${eventId}`, {});
+}
 }

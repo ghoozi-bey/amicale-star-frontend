@@ -21,13 +21,14 @@
 
 <h2>Evenements récents</h2>
 
+<!-- 🔥 SOURCE UNIQUE -->
 <div class="events" *ngIf="evenements$ | async as evenements">
 
   <div class="event-card"
-       *ngFor="let e of evenements"
-       (click)="openDetails(e)">
+       *ngFor="let e of evenements; trackBy: trackById"
+       (click)="goToInscription(e.id)">
 
-    <!-- 🔥 IMAGE AVEC LOADER -->
+    <!-- IMAGE -->
     <img 
       [src]="'http://localhost:8080/api/evenements/photo/' + e.id"
       (load)="onImageLoad()"
@@ -36,7 +37,6 @@
     >
 
     <h3>{{ e.titre }}</h3>
-
     <p>{{ e.dateDebut }}</p>
 
   </div>

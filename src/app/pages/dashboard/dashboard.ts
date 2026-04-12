@@ -4,6 +4,7 @@ import { EvenementService } from '../../services/evenement';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LoadingService } from '../../services/loading.service';
+import { Router } from '@angular/router'; // 🔥 AJOUT
 
 @Component({
   selector: 'app-dashboard',
@@ -23,7 +24,8 @@ export class DashboardComponent {
 
   constructor(
     private evenementService: EvenementService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private router: Router // 🔥 AJOUT
   ) {
     this.loadEvenements();
   }
@@ -46,7 +48,7 @@ export class DashboardComponent {
     );
   }
 
-  // 🔥 appelé quand image chargée
+  // 🔥 IMAGE LOAD
   onImageLoad(): void {
     this.loadedImages++;
 
@@ -55,7 +57,7 @@ export class DashboardComponent {
     }
   }
 
-  // 🔥 si image erreur (important)
+  // 🔥 IMAGE ERROR
   onImageError(): void {
     this.loadedImages++;
 
@@ -64,11 +66,20 @@ export class DashboardComponent {
     }
   }
 
+  // 🔥 NAVIGATION VERS PAGE INSCRIPTION
+  goToInscription(id: number): void {
+    this.router.navigate(['/inscription', id]);
+  }
+
+  // 🔥 (OPTIONNEL) INSCRIPTION DIRECT
+  
+
+  // 🔥 SI TU UTILISE POPUP
   openDetails(e: any): void {
     this.selectedEvent = e;
   }
 
-  closeDetails(): void {
-    this.selectedEvent = null;
-  }
+  trackById(index: number, item: any) {
+  return item.id;
+}
 }
