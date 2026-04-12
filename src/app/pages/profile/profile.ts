@@ -16,7 +16,7 @@ import heic2any from 'heic2any';
 export class ProfileComponent implements OnInit {
 
   form!: FormGroup;
-  loading = true;
+  loading = false; // 🔥 IMPORTANT
 
   userPhoto: string | null = null;
   selectedFile: File | null = null;
@@ -25,14 +25,6 @@ export class ProfileComponent implements OnInit {
   showCurrent = false;
   showNew = false;
 
-  passwordError = false;
-  passwordMessage = '';
-
-  photoError = false;
-  photoMessage = '';
-
-  photoDeleted: boolean = false;
-
   successMessage = '';
 
   constructor(
@@ -40,7 +32,7 @@ export class ProfileComponent implements OnInit {
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
     private authService: AuthService,
-    private loadingService: LoadingService
+    public loadingService: LoadingService
   ) {}
 
   ngOnInit(): void {
@@ -51,17 +43,22 @@ export class ProfileComponent implements OnInit {
       telephone: [''],
       currentPassword: [''],
       newPassword: ['']
+      
     });
 
     this.loadProfile();
   }
 
+  // ✅ LOAD PROFILE SANS BOUCLE
   loadProfile() {
+
+  this.loadingService.show(); // 🔥 loader start
 
   this.http.get<any>('http://localhost:8080/api/user/profile')
     .subscribe({
       next: (data) => {
 
+        // ✅ remplir formulaire
         this.form.patchValue({
           nom: data?.nom ?? '',
           prenom: data?.prenom ?? '',
@@ -69,21 +66,26 @@ export class ProfileComponent implements OnInit {
           telephone: data?.telephone ?? ''
         });
 
-        if (data?.photoUrl) {
-          this.userPhoto = data.photoUrl;
-          this.authService.setUserPhoto(data.photoUrl);
-        } else {
-          this.userPhoto = null;
-          this.authService.setUserPhoto(null);
-        }
+        // 🔥 SYNC SIDEBAR (IMPORTANT)
+        this.authService.setUser({
+          nom: data?.nom ?? '',
+          prenom: data?.prenom ?? '',
+          email: data?.email ?? ''
+        });
+
+        // ✅ PHOTO
+        this.userPhoto = data?.photoUrl || null;
+        this.authService.setUserPhoto(this.userPhoto);
 
         this.preview = null;
 
-        this.loading = false;
+        this.loadingService.hide(); // 🔥 loader stop
+
+        this.cdr.detectChanges(); // 🔥 refresh UI
       },
 
       error: () => {
-        this.loading = false;
+        this.loadingService.hide(); // 🔥 éviter blocage
       }
     });
 }
@@ -96,25 +98,15 @@ export class ProfileComponent implements OnInit {
     this.showNew = !this.showNew;
   }
 
+  // ✅ IMAGE + HEIC FIX
   async onFileSelected(event: any) {
-
-    this.photoError = false;
-    this.photoMessage = '';
 
     const file = event.target.files[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      this.photoError = true;
-      this.photoMessage = "Image invalide";
-      return;
-    }
+    if (!file.type.startsWith('image/')) return;
 
-    if (file.size > 2 * 1024 * 1024) {
-      this.photoError = true;
-      this.photoMessage = "Max 2MB";
-      return;
-    }
+    if (file.size > 2 * 1024 * 1024) return;
 
     if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
       try {
@@ -129,27 +121,23 @@ export class ProfileComponent implements OnInit {
         });
 
       } catch {
-        this.photoError = true;
-        this.photoMessage = "Erreur HEIC";
         return;
       }
-
     } else {
       this.selectedFile = file;
     }
 
-    if (!this.selectedFile) return;
-
     const reader = new FileReader();
-
     reader.onload = () => {
       this.preview = reader.result as string;
       this.cdr.detectChanges();
     };
-
+    if (this.selectedFile) {
     reader.readAsDataURL(this.selectedFile);
+    }
   }
 
+  // ✅ UPDATE FIX (SANS BOUCLE)
   update() {
 
   if (!this.form.valid) return;
@@ -173,69 +161,79 @@ export class ProfileComponent implements OnInit {
     formData.append('photo', this.selectedFile);
   }
 
-  // 🔥 SHOW LOADER
+  // 🔥 START LOADER
   this.loadingService.show();
 
-  // 🔥 IMPORTANT → laisser Angular afficher loader
-  setTimeout(() => {
+  this.http.put('http://localhost:8080/api/user/profile', formData, {
+    observe: 'response'
+  })
+  .subscribe({
 
-    this.http.put('http://localhost:8080/api/user/profile', formData)
-      .subscribe({
+    next: (res) => {
 
-        next: () => {
+      this.loadingService.hide();
 
-          // 🔥 laisser le spinner visible un peu
-          setTimeout(() => {
-            this.loadingService.hide();
-          }, 500);
+      if (res.status === 200) {
 
-          // ✅ MESSAGE PRO
-          this.successMessage = "Profil modifié avec succès ✅";
+        this.successMessage = "Profil modifié avec succès ✅";
 
-          setTimeout(() => {
-            this.successMessage = '';
-          }, 3000);
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
 
-          // 🔄 reset form partiel
-          this.form.patchValue({
-            currentPassword: '',
-            newPassword: ''
-          });
+        // ✅ RESET PASSWORD
+        this.form.patchValue({
+          currentPassword: '',
+          newPassword: ''
+        });
 
-          this.selectedFile = null;
+        this.selectedFile = null;
 
-          // 🔄 reload data
-          setTimeout(() => {
-            this.loadProfile();
-          }, 300);
+        // 🔥 🔥 AJOUT IMPORTANT (SYNC SIDEBAR INSTANT)
+        this.authService.updateUser({
+          nom: this.form.value.nom,
+          prenom: this.form.value.prenom
+        });
 
-          // 🔄 update sidebar
-          window.dispatchEvent(new Event('profileUpdated'));
-        },
+        // 🔄 refresh data
+        this.loadProfile();
 
-        error: (err) => {
+        // (tu peux garder ça même si inutile maintenant)
+        window.dispatchEvent(new Event('profileUpdated'));
+      }
+    },
 
-          this.loadingService.hide();
+    error: (err) => {
 
-          console.log("ERROR:", err);
+      this.loadingService.hide();
 
-          // 🔥 éviter faux erreur si backend OK
-          if (err.status !== 200) {
-            alert("Erreur serveur");
-          }
-        }
+      if (err.status === 200) {
 
-      });
+        // 🔥 sync même en cas bug Angular
+        this.authService.updateUser({
+          nom: this.form.value.nom,
+          prenom: this.form.value.prenom
+        });
 
-  }, 50);
+        this.loadProfile();
+        return;
+      }
+
+      console.log("REAL ERROR:", err);
+      alert("Erreur serveur réelle");
+    },
+
+    complete: () => {
+      this.loadingService.hide();
+    }
+
+  });
 }
 
   removePhoto(event: Event) {
     event.stopPropagation();
-
     this.preview = null;
     this.userPhoto = null;
-    this.photoDeleted = true;
   }
 
   hasRealPhoto(): boolean {

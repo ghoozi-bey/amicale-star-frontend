@@ -27,10 +27,12 @@
        *ngFor="let e of evenements"
        (click)="openDetails(e)">
 
+    <!-- 🔥 IMAGE AVEC LOADER -->
     <img 
-      [src]="e.photo 
-        ? 'http://localhost:8080/uploads/events/' + e.photo 
-        : 'assets/imagepardefaut.jpg'"
+      [src]="'http://localhost:8080/api/evenements/photo/' + e.id"
+      (load)="onImageLoad()"
+      (error)="onImageError()"
+      loading="lazy"
     >
 
     <h3>{{ e.titre }}</h3>

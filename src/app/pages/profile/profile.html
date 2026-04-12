@@ -1,13 +1,18 @@
-<div *ngIf="!loading" class="profile-container">
+<!-- 🔥 LOADER -->
+<div *ngIf="loadingService.loading$ | async" class="loading-overlay">
+  <div class="spinner"></div>
+</div>
+
+<!-- PAGE -->
+<div class="profile-container">
 
   <h2>Modifier mon profil</h2>
 
-  <!-- ✅ SUCCESS MESSAGE -->
   <div *ngIf="successMessage" class="success-box">
     {{ successMessage }}
   </div>
 
-  <!-- 🔥 AVATAR -->
+  <!-- AVATAR -->
   <div class="avatar-container">
 
     <div 
@@ -37,10 +42,6 @@
       >
     </div>
 
-    <p *ngIf="photoError" class="error-text">
-      {{ photoMessage }}
-    </p>
-
   </div>
 
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
@@ -68,10 +69,6 @@
       <input [type]="showNew ? 'text' : 'password'" formControlName="newPassword">
       <span (click)="toggleNew()" class="eye">👁</span>
     </div>
-
-    <p *ngIf="passwordError" class="error-text">
-      {{ passwordMessage }}
-    </p>
 
     <button type="submit">Modifier</button>
 

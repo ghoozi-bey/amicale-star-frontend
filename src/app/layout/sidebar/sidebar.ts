@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -14,10 +15,16 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class SidebarComponent implements OnInit {
 
-  userName: string = 'Utilisateur';
+  // ✅ USER REACTIF (FIX)
+  user$!: Observable<{
+  nom: string;
+  prenom: string;
+  email: string;
+} | null>;
+
+
   userRole: string = '';
   loadingPhoto = true;
-
   userPhoto: string | null = null;
 
   showEventsMenu = false;
@@ -34,27 +41,25 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.http.get<any>('http://localhost:8080/api/user/profile')
-  .subscribe(data => {
-    this.userName = `${data.prenom || ''} ${data.nom || ''}`.trim();
-  });
+  this.user$ = this.authService.user$;
 
-    const role = localStorage.getItem('role');
-    this.userRole = role ? role.replace('ROLE_', '') : '';
+  const role = localStorage.getItem('role');
+  this.userRole = role ? role.replace('ROLE_', '') : '';
 
-    // 🔥 GET FROM SERVICE FIRST
-    this.userPhoto = this.authService.getUserPhoto();
+  // ✅ NE PAS RELOAD SI DÉJÀ EXISTE
+  const existingPhoto = this.authService.getUserPhoto();
 
-    if (!this.userPhoto) {
-      this.loadProfilePhoto();
-    } else {
-      this.loadingPhoto = false;
-    }
-
-    window.addEventListener('profileUpdated', () => {
-      this.loadProfilePhoto();
-    });
+  if (existingPhoto) {
+    this.userPhoto = existingPhoto;
+    this.loadingPhoto = false;
+  } else {
+    this.loadProfilePhoto();
   }
+
+  window.addEventListener('profileUpdated', () => {
+    this.loadProfilePhoto();
+  });
+}
 
   loadProfilePhoto() {
     this.loadingPhoto = true;
@@ -83,7 +88,7 @@ export class SidebarComponent implements OnInit {
   }
 
   goToProfile(): void {
-    this.router.navigate(['/profile']); // 🔥 FIX
+    this.router.navigate(['/profile']);
   }
 
   toggleEvents(): void {

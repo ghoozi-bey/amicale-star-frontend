@@ -41,3 +41,13 @@ cursor:pointer;
 .login-box button:hover{
 background:#155a43;
 }
+.logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.logo img {
+  height: 50px;
+  object-fit: contain;
+}
