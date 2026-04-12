@@ -1,1 +1,75 @@
-<p>create-sondage works!</p>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <!-- ===== SONDAGE INFO ===== -->
+  <div class="sondage-header">
+    <input formControlName="title" placeholder="Titre du sondage" />
+
+    <textarea formControlName="description" placeholder="Description"></textarea>
+  </div>
+
+  <!-- ===== ADD QUESTION BUTTON ===== -->
+  <button type="button" (click)="addQuestion()">➕ Ajouter une question</button>
+
+  <hr />
+
+  <!-- ===== QUESTIONS ===== -->
+  <div formArrayName="questions">
+
+    <div 
+      *ngFor="let q of questions.controls; let i = index" 
+      [formGroupName]="i"
+      class="question-card"
+    >
+
+      <!-- Question header -->
+      <div class="question-header">
+        <h3>Question {{ i + 1 }}</h3>
+        <button type="button" (click)="removeQuestion(i)">❌</button>
+      </div>
+
+      <!-- Question text -->
+      <input 
+        formControlName="text" 
+        placeholder="Écrire la question..." 
+      />
+
+      <!-- Type -->
+      <select formControlName="type" (change)="onTypeChange(i)">
+        <option value="CHOIX_UNIQUE">Choix unique</option>
+        <option value="CHOIX_MULTIPLE">Choix multiple</option>
+        <option value="TEXTE">Texte libre</option>
+      </select>
+
+      <!-- ===== CHOICES (only if not TEXTE) ===== -->
+      <div *ngIf="q.get('type')?.value !== 'TEXTE'" formArrayName="choix">
+
+        <div 
+          *ngFor="let c of getChoix(i).controls; let j = index"
+          class="choice-row"
+        >
+          <input 
+            [formControlName]="j" 
+            placeholder="Choix..." 
+          />
+
+          <button type="button" (click)="removeChoice(i, j)">❌</button>
+        </div>
+
+        <button type="button" (click)="addChoice(i)">
+          ➕ Ajouter un choix
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <hr />
+
+  <!-- ===== SUBMIT ===== -->
+  <button type="submit">
+    ✅ Créer le sondage
+  </button>
+
+</form>
