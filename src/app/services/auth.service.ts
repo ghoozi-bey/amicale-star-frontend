@@ -70,11 +70,20 @@ export class AuthService {
   }
   private userPhoto: string | null = null;
 
-setUserPhoto(photo: string) {
+setUserPhoto(photo: string | null) {
   this.userPhoto = photo;
 }
 
 getUserPhoto(): string | null {
   return this.userPhoto;
+}
+private userName: string = '';
+
+setUserName(name: string) {
+  this.userName = name;
+}
+
+getUserName() {
+  return this.userName;
 }
 }

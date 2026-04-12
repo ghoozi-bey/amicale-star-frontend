@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
+import { LoadingService } from '../../services/loading.service';
 import heic2any from 'heic2any';
 
 @Component({
@@ -15,7 +16,6 @@ import heic2any from 'heic2any';
 export class ProfileComponent implements OnInit {
 
   form!: FormGroup;
-
   loading = true;
 
   userPhoto: string | null = null;
@@ -33,15 +33,17 @@ export class ProfileComponent implements OnInit {
 
   photoDeleted: boolean = false;
 
+  successMessage = '';
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
-    private authService: AuthService
+    private authService: AuthService,
+    private loadingService: LoadingService
   ) {}
 
   ngOnInit(): void {
-
     this.form = this.fb.group({
       nom: [''],
       prenom: [''],
@@ -55,10 +57,10 @@ export class ProfileComponent implements OnInit {
   }
 
   loadProfile() {
-    this.loading = true;
 
-    this.http.get<any>('http://localhost:8080/api/user/profile')
-      .subscribe(data => {
+  this.http.get<any>('http://localhost:8080/api/user/profile')
+    .subscribe({
+      next: (data) => {
 
         this.form.patchValue({
           nom: data?.nom ?? '',
@@ -67,19 +69,24 @@ export class ProfileComponent implements OnInit {
           telephone: data?.telephone ?? ''
         });
 
-        // 🔥 FIX BLOB IMAGE
         if (data?.photoUrl) {
-          this.userPhoto = data.photoUrl; // ✅ backend image
+          this.userPhoto = data.photoUrl;
+          this.authService.setUserPhoto(data.photoUrl);
         } else {
           this.userPhoto = null;
+          this.authService.setUserPhoto(null);
         }
 
-        this.preview = null; // 🔥 reset preview when loading profile
+        this.preview = null;
 
         this.loading = false;
-        this.cdr.detectChanges();
-      });
-  }
+      },
+
+      error: () => {
+        this.loading = false;
+      }
+    });
+}
 
   toggleCurrent() {
     this.showCurrent = !this.showCurrent;
@@ -89,7 +96,6 @@ export class ProfileComponent implements OnInit {
     this.showNew = !this.showNew;
   }
 
-  // 🔥 PHOTO
   async onFileSelected(event: any) {
 
     this.photoError = false;
@@ -110,7 +116,6 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
-    // 🔥 HEIC FIX
     if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
       try {
         const blob = await heic2any({
@@ -135,63 +140,63 @@ export class ProfileComponent implements OnInit {
 
     if (!this.selectedFile) return;
 
-const reader = new FileReader();
+    const reader = new FileReader();
 
-reader.onload = () => {
-  this.preview = reader.result as string;
-  this.cdr.detectChanges();
-};
+    reader.onload = () => {
+      this.preview = reader.result as string;
+      this.cdr.detectChanges();
+    };
 
-reader.readAsDataURL(this.selectedFile);
+    reader.readAsDataURL(this.selectedFile);
   }
 
   update() {
 
-    const { currentPassword, newPassword } = this.form.value;
+  if (!this.form.valid) return;
 
-    this.passwordError = false;
+  const formData = new FormData();
 
-    if (currentPassword || newPassword) {
+  formData.append('nom', this.form.value.nom || '');
+  formData.append('prenom', this.form.value.prenom || '');
+  formData.append('email', this.form.value.email || '');
+  formData.append('telephone', this.form.value.telephone || '');
 
-      if (!currentPassword || !newPassword) {
-        this.passwordError = true;
-        this.passwordMessage = "Remplissez les deux champs";
-        return;
-      }
+  if (this.form.value.currentPassword) {
+    formData.append('currentPassword', this.form.value.currentPassword);
+  }
 
-      if (newPassword.length < 6) {
-        this.passwordError = true;
-        this.passwordMessage = "Minimum 6 caractères";
-        return;
-      }
-    }
+  if (this.form.value.newPassword) {
+    formData.append('newPassword', this.form.value.newPassword);
+  }
 
-    const formData = new FormData();
+  if (this.selectedFile) {
+    formData.append('photo', this.selectedFile);
+  }
 
-    formData.append('nom', this.form.value.nom);
-    formData.append('prenom', this.form.value.prenom);
-    formData.append('email', this.form.value.email);
-    formData.append('telephone', this.form.value.telephone);
+  // 🔥 SHOW LOADER
+  this.loadingService.show();
 
-    if (currentPassword) {
-      formData.append('currentPassword', currentPassword);
-      formData.append('newPassword', newPassword);
-    }
-
-    // 🔥 IMPORTANT (nom backend)
-    if (this.selectedFile) {
-      formData.append('photoProfil', this.selectedFile);
-    }
-
-    if (this.photoDeleted) {
-      formData.append('removePhoto', 'true');
-    }
+  // 🔥 IMPORTANT → laisser Angular afficher loader
+  setTimeout(() => {
 
     this.http.put('http://localhost:8080/api/user/profile', formData)
       .subscribe({
-        next: () => {
-          alert("Profil modifié ✅");
 
+        next: () => {
+
+          // 🔥 laisser le spinner visible un peu
+          setTimeout(() => {
+            this.loadingService.hide();
+          }, 500);
+
+          // ✅ MESSAGE PRO
+          this.successMessage = "Profil modifié avec succès ✅";
+
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 3000);
+
+          // 🔄 reset form partiel
           this.form.patchValue({
             currentPassword: '',
             newPassword: ''
@@ -199,33 +204,38 @@ reader.readAsDataURL(this.selectedFile);
 
           this.selectedFile = null;
 
-          this.loadProfile();
+          // 🔄 reload data
+          setTimeout(() => {
+            this.loadProfile();
+          }, 300);
+
+          // 🔄 update sidebar
+          window.dispatchEvent(new Event('profileUpdated'));
         },
+
         error: (err) => {
 
-          const message = err?.error;
+          this.loadingService.hide();
 
-          if (message?.includes("Mot de passe actuel incorrect")) {
-            this.passwordError = true;
-            this.passwordMessage = "Mot de passe incorrect ❌";
-            this.cdr.detectChanges();
-          } else {
+          console.log("ERROR:", err);
+
+          // 🔥 éviter faux erreur si backend OK
+          if (err.status !== 200) {
             alert("Erreur serveur");
           }
         }
+
       });
-  }
+
+  }, 50);
+}
 
   removePhoto(event: Event) {
-    event.stopPropagation(); // 🔥 prevent triggering file input
+    event.stopPropagation();
 
     this.preview = null;
     this.userPhoto = null;
-
-    // optional: mark that photo should be deleted
     this.photoDeleted = true;
-
-    console.log("Photo removed");
   }
 
   hasRealPhoto(): boolean {

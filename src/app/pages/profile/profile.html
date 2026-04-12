@@ -2,43 +2,46 @@
 
   <h2>Modifier mon profil</h2>
 
-  <!-- 🔥 AVATAR -->
-<div class="avatar-container">
-
-  <div 
-    class="avatar"
-    [ngStyle]="{
-      'background-image': (preview || userPhoto) 
-        ? 'url(' + (preview || userPhoto) + ')' 
-        : 'none'
-    }"
-  >
-
-    <!-- 🗑 DELETE (only if real photo) -->
-    <span 
-      class="delete-icon"
-      *ngIf="hasRealPhoto()"
-      (click)="removePhoto($event)">
-      🗑
-    </span>
-
-    <!-- ✏️ EDIT -->
-    <span class="camera">
-      {{ (preview || userPhoto) ? '✏️' : '📷' }}
-    </span>
-
-    <input 
-      type="file"
-      (change)="onFileSelected($event)"
-      class="file-input"
-    >
+  <!-- ✅ SUCCESS MESSAGE -->
+  <div *ngIf="successMessage" class="success-box">
+    {{ successMessage }}
   </div>
 
-  <p *ngIf="photoError" class="error-text">
-    {{ photoMessage }}
-  </p>
+  <!-- 🔥 AVATAR -->
+  <div class="avatar-container">
 
-</div>
+    <div 
+      class="avatar"
+      [ngStyle]="{
+        'background-image': (preview || userPhoto) 
+          ? 'url(' + (preview || userPhoto) + ')' 
+          : 'url(assets/default-pfp.jpg)'
+      }"
+    >
+
+      <span 
+        class="delete-icon"
+        *ngIf="hasRealPhoto()"
+        (click)="removePhoto($event)">
+        🗑
+      </span>
+
+      <span class="camera">
+        {{ (preview || userPhoto) ? '✏️' : '📷' }}
+      </span>
+
+      <input 
+        type="file"
+        (change)="onFileSelected($event)"
+        class="file-input"
+      >
+    </div>
+
+    <p *ngIf="photoError" class="error-text">
+      {{ photoMessage }}
+    </p>
+
+  </div>
 
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 
@@ -54,25 +57,15 @@
     <label>Téléphone</label>
     <input type="text" formControlName="telephone">
 
-    <!-- PASSWORD ACTUEL -->
     <label>Mot de passe actuel</label>
     <div class="password-field">
-      <input 
-        [type]="showCurrent ? 'text' : 'password'" 
-        formControlName="currentPassword"
-        [class.error]="passwordError"
-      >
+      <input [type]="showCurrent ? 'text' : 'password'" formControlName="currentPassword">
       <span (click)="toggleCurrent()" class="eye">👁</span>
     </div>
 
-    <!-- NEW PASSWORD -->
     <label>Nouveau mot de passe</label>
     <div class="password-field">
-      <input 
-        [type]="showNew ? 'text' : 'password'" 
-        formControlName="newPassword"
-        [class.error]="passwordError"
-      >
+      <input [type]="showNew ? 'text' : 'password'" formControlName="newPassword">
       <span (click)="toggleNew()" class="eye">👁</span>
     </div>
 

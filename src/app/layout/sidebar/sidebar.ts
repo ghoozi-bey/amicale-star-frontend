@@ -18,7 +18,6 @@ export class SidebarComponent implements OnInit {
   userRole: string = '';
   loadingPhoto = true;
 
-  // 🔥 PHOTO
   userPhoto: string | null = null;
 
   showEventsMenu = false;
@@ -35,54 +34,56 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const user = this.authService.getUser();
-
-    if (user) {
-      this.userName = `${user.prenom || ''} ${user.nom || ''}`.trim() || 'Utilisateur';
-    }
+    this.http.get<any>('http://localhost:8080/api/user/profile')
+  .subscribe(data => {
+    this.userName = `${data.prenom || ''} ${data.nom || ''}`.trim();
+  });
 
     const role = localStorage.getItem('role');
     this.userRole = role ? role.replace('ROLE_', '') : '';
 
-    // 🔥 LOAD PHOTO
-    this.loadProfilePhoto();
+    // 🔥 GET FROM SERVICE FIRST
+    this.userPhoto = this.authService.getUserPhoto();
 
-    // 🔥 LISTEN FOR PROFILE UPDATE
+    if (!this.userPhoto) {
+      this.loadProfilePhoto();
+    } else {
+      this.loadingPhoto = false;
+    }
+
     window.addEventListener('profileUpdated', () => {
       this.loadProfilePhoto();
     });
   }
 
-  // 🔥 CHARGER PHOTO
   loadProfilePhoto() {
-  this.loadingPhoto = true;
+    this.loadingPhoto = true;
 
-  this.http.get<any>('http://localhost:8080/api/user/profile')
-    .subscribe({
-      next: (data) => {
+    this.http.get<any>('http://localhost:8080/api/user/profile')
+      .subscribe({
+        next: (data) => {
 
-        if (data?.photoUrl) {
-          this.userPhoto = data.photoUrl;
-        } else {
+          if (data?.photoUrl) {
+            this.userPhoto = data.photoUrl;
+            this.authService.setUserPhoto(data.photoUrl);
+          } else {
+            this.userPhoto = null;
+            this.authService.setUserPhoto(null);
+          }
+
+          this.loadingPhoto = false;
+          this.cdr.detectChanges();
+        },
+        error: () => {
           this.userPhoto = null;
+          this.loadingPhoto = false;
+          this.cdr.detectChanges();
         }
-
-        this.loadingPhoto = false;
-        this.cdr.detectChanges();
-      },
-
-      error: () => {
-        this.userPhoto = null;
-        this.loadingPhoto = false;
-        this.cdr.detectChanges();
-      }
-    });
-}
+      });
+  }
 
   goToProfile(): void {
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/profile']);
-    });
+    this.router.navigate(['/profile']); // 🔥 FIX
   }
 
   toggleEvents(): void {
