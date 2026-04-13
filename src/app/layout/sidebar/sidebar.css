@@ -13,27 +13,56 @@
 
 /* PROFIL */
 
+/* 🔥 PROFIL MODERNE SIDEBAR */
+
 .user-profile {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   margin-bottom: 25px;
+  padding: 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.avatar {
+/* 🔥 AVATAR */
+.user-profile .avatar {
   width: 72px;
   height: 72px;
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 10px;
-  border: 3px solid #e5e7eb;
+
+  border: 3px solid #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+  transition: all 0.3s ease;
 }
 
-.name {
+/* 🔥 HOVER GLOBAL */
+.user-profile:hover {
+  background: #f1f5f9;
+}
+
+/* 🔥 HOVER AVATAR */
+.user-profile:hover .avatar {
+  transform: scale(1.12);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+/* 🔥 NOM */
+.user-profile .name {
   font-weight: 600;
   font-size: 14px;
   color: #2c2c2c;
+  transition: all 0.3s ease;
+}
+
+/* 🔥 HOVER NOM */
+.user-profile:hover .name {
+  color: #2e7d32;
 }
 
 /* LIENS PRINCIPAUX */

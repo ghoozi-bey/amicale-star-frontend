@@ -16,11 +16,14 @@ import heic2any from 'heic2any';
 export class ProfileComponent implements OnInit {
 
   form!: FormGroup;
-  loading = false; // 🔥 IMPORTANT
+  loading = false;
 
   userPhoto: string | null = null;
   selectedFile: File | null = null;
   preview: string | null = null;
+
+  // 🔥 FIX SUPPRESSION
+  removePhotoFlag = false;
 
   showCurrent = false;
   showNew = false;
@@ -43,52 +46,47 @@ export class ProfileComponent implements OnInit {
       telephone: [''],
       currentPassword: [''],
       newPassword: ['']
-      
     });
 
     this.loadProfile();
   }
 
-  // ✅ LOAD PROFILE SANS BOUCLE
   loadProfile() {
 
-  this.loadingService.show(); // 🔥 loader start
+    this.loadingService.show();
 
-  this.http.get<any>('http://localhost:8080/api/user/profile')
-    .subscribe({
-      next: (data) => {
+    this.http.get<any>('http://localhost:8080/api/user/profile')
+      .subscribe({
+        next: (data) => {
 
-        // ✅ remplir formulaire
-        this.form.patchValue({
-          nom: data?.nom ?? '',
-          prenom: data?.prenom ?? '',
-          email: data?.email ?? '',
-          telephone: data?.telephone ?? ''
-        });
+          this.form.patchValue({
+            nom: data?.nom ?? '',
+            prenom: data?.prenom ?? '',
+            email: data?.email ?? '',
+            telephone: data?.telephone ?? ''
+          });
 
-        // 🔥 SYNC SIDEBAR (IMPORTANT)
-        this.authService.setUser({
-          nom: data?.nom ?? '',
-          prenom: data?.prenom ?? '',
-          email: data?.email ?? ''
-        });
+          this.authService.setUser({
+            nom: data?.nom ?? '',
+            prenom: data?.prenom ?? '',
+            email: data?.email ?? ''
+          });
 
-        // ✅ PHOTO
-        this.userPhoto = data?.photoUrl || null;
-        this.authService.setUserPhoto(this.userPhoto);
+          this.userPhoto = data?.photoUrl || null;
+          this.authService.setUserPhoto(this.userPhoto);
 
-        this.preview = null;
+          this.preview = null;
+          this.removePhotoFlag = false; // 🔥 RESET
 
-        this.loadingService.hide(); // 🔥 loader stop
+          this.loadingService.hide();
+          this.cdr.detectChanges();
+        },
 
-        this.cdr.detectChanges(); // 🔥 refresh UI
-      },
-
-      error: () => {
-        this.loadingService.hide(); // 🔥 éviter blocage
-      }
-    });
-}
+        error: () => {
+          this.loadingService.hide();
+        }
+      });
+  }
 
   toggleCurrent() {
     this.showCurrent = !this.showCurrent;
@@ -98,14 +96,12 @@ export class ProfileComponent implements OnInit {
     this.showNew = !this.showNew;
   }
 
-  // ✅ IMAGE + HEIC FIX
   async onFileSelected(event: any) {
 
     const file = event.target.files[0];
     if (!file) return;
 
     if (!file.type.startsWith('image/')) return;
-
     if (file.size > 2 * 1024 * 1024) return;
 
     if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
@@ -127,113 +123,122 @@ export class ProfileComponent implements OnInit {
       this.selectedFile = file;
     }
 
+    // 🔥 si nouvelle image → annule suppression
+    this.removePhotoFlag = false;
+
     const reader = new FileReader();
     reader.onload = () => {
       this.preview = reader.result as string;
       this.cdr.detectChanges();
     };
+
     if (this.selectedFile) {
-    reader.readAsDataURL(this.selectedFile);
+      reader.readAsDataURL(this.selectedFile);
     }
   }
 
-  // ✅ UPDATE FIX (SANS BOUCLE)
   update() {
 
-  if (!this.form.valid) return;
+    if (!this.form.valid) return;
 
-  const formData = new FormData();
+    const formData = new FormData();
 
-  formData.append('nom', this.form.value.nom || '');
-  formData.append('prenom', this.form.value.prenom || '');
-  formData.append('email', this.form.value.email || '');
-  formData.append('telephone', this.form.value.telephone || '');
+    formData.append('nom', this.form.value.nom || '');
+    formData.append('prenom', this.form.value.prenom || '');
+    formData.append('email', this.form.value.email || '');
+    formData.append('telephone', this.form.value.telephone || '');
 
-  if (this.form.value.currentPassword) {
-    formData.append('currentPassword', this.form.value.currentPassword);
-  }
-
-  if (this.form.value.newPassword) {
-    formData.append('newPassword', this.form.value.newPassword);
-  }
-
-  if (this.selectedFile) {
-    formData.append('photo', this.selectedFile);
-  }
-
-  // 🔥 START LOADER
-  this.loadingService.show();
-
-  this.http.put('http://localhost:8080/api/user/profile', formData, {
-    observe: 'response'
-  })
-  .subscribe({
-
-    next: (res) => {
-
-      this.loadingService.hide();
-
-      if (res.status === 200) {
-
-        this.successMessage = "Profil modifié avec succès ✅";
-
-        setTimeout(() => {
-          this.successMessage = '';
-        }, 3000);
-
-        // ✅ RESET PASSWORD
-        this.form.patchValue({
-          currentPassword: '',
-          newPassword: ''
-        });
-
-        this.selectedFile = null;
-
-        // 🔥 🔥 AJOUT IMPORTANT (SYNC SIDEBAR INSTANT)
-        this.authService.updateUser({
-          nom: this.form.value.nom,
-          prenom: this.form.value.prenom
-        });
-
-        // 🔄 refresh data
-        this.loadProfile();
-
-        // (tu peux garder ça même si inutile maintenant)
-        window.dispatchEvent(new Event('profileUpdated'));
-      }
-    },
-
-    error: (err) => {
-
-      this.loadingService.hide();
-
-      if (err.status === 200) {
-
-        // 🔥 sync même en cas bug Angular
-        this.authService.updateUser({
-          nom: this.form.value.nom,
-          prenom: this.form.value.prenom
-        });
-
-        this.loadProfile();
-        return;
-      }
-
-      console.log("REAL ERROR:", err);
-      alert("Erreur serveur réelle");
-    },
-
-    complete: () => {
-      this.loadingService.hide();
+    if (this.form.value.currentPassword) {
+      formData.append('currentPassword', this.form.value.currentPassword);
     }
 
-  });
-}
+    if (this.form.value.newPassword) {
+      formData.append('newPassword', this.form.value.newPassword);
+    }
+
+    // 🔥 PRIORITÉ SUPPRESSION
+    if (this.removePhotoFlag) {
+      formData.append('removePhoto', this.removePhotoFlag ? 'true' : 'false');
+    }
+
+    // 🔥 upload image
+    else if (this.selectedFile) {
+      formData.append('photoProfil', this.selectedFile);
+    }
+
+    this.loadingService.show();
+
+    this.http.put('http://localhost:8080/api/user/profile', formData, {
+      observe: 'response'
+    })
+    .subscribe({
+
+      next: (res) => {
+
+        this.loadingService.hide();
+
+        if (res.status === 200) {
+
+          this.successMessage = "Profil modifié avec succès ✅";
+
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 3000);
+
+          this.form.patchValue({
+            currentPassword: '',
+            newPassword: ''
+          });
+
+          this.selectedFile = null;
+          this.removePhotoFlag = false;
+
+          this.authService.updateUser({
+            nom: this.form.value.nom,
+            prenom: this.form.value.prenom
+          });
+
+          this.loadProfile();
+
+          window.dispatchEvent(new Event('profileUpdated'));
+        }
+      },
+
+      error: (err) => {
+
+        this.loadingService.hide();
+
+        if (err.status === 200) {
+
+          this.authService.updateUser({
+            nom: this.form.value.nom,
+            prenom: this.form.value.prenom
+          });
+
+          this.loadProfile();
+          return;
+        }
+
+        console.log("REAL ERROR:", err);
+        alert("Erreur serveur réelle");
+      },
+
+      complete: () => {
+        this.loadingService.hide();
+      }
+
+    });
+  }
 
   removePhoto(event: Event) {
     event.stopPropagation();
+
     this.preview = null;
     this.userPhoto = null;
+    this.selectedFile = null;
+
+    // 🔥 TRIGGER BACKEND DELETE
+    this.removePhotoFlag = true;
   }
 
   hasRealPhoto(): boolean {

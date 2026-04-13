@@ -32,21 +32,28 @@ export class DashboardComponent {
 
   loadEvenements(): void {
 
-    // 🔥 démarre loading
-    this.loadingService.show();
+  this.loadingService.show();
 
-    this.evenements$ = this.evenementService.getEvenementsActifs().pipe(
-      tap(events => {
-        this.totalImages = events.length;
-        this.loadedImages = 0;
+  this.evenements$ = this.evenementService.getEvenementsActifs().pipe(
 
-        // 🔥 si aucun event → stop loading
-        if (this.totalImages === 0) {
-          this.loadingService.hide();
-        }
-      })
-    );
-  }
+    tap(events => {
+      this.totalImages = events.length;
+      this.loadedImages = 0;
+
+      if (this.totalImages === 0) {
+        this.loadingService.hide();
+      }
+    }),
+
+    // 🔥 FIX CRITIQUE
+    tap({
+      error: () => {
+        this.loadingService.hide();
+      }
+    })
+
+  );
+}
 
   // 🔥 IMAGE LOAD
   onImageLoad(): void {
