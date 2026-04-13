@@ -4,7 +4,7 @@
 
     <h2>Inscription à l'événement</h2>
 
-    <!-- IMAGE EVENT -->
+    <!-- IMAGE -->
     <img 
       class="event-img"
       [src]="'http://localhost:8080/api/evenements/photo/' + eventId"
@@ -16,20 +16,16 @@
     </div>
 
     <!-- FORM -->
-    <form>
+    <div class="form">
 
-      <label>Nom complet</label>
-      <input type="text" placeholder="Votre nom">
+      <button 
+  type="button" 
+  class="btn"
+  (click)="inscrire()">
+  Confirmer inscription
+</button>
 
-      <label>Email</label>
-      <input type="email" placeholder="Votre email">
-
-      <label>Téléphone</label>
-      <input type="text" placeholder="Votre numéro">
-
-      <button type="button" class="btn">Confirmer inscription</button>
-
-    </form>
+    </div>
 
   </div>
 

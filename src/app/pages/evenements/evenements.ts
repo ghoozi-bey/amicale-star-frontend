@@ -1,8 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EvenementService } from '../../services/evenement';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter, Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-events',
@@ -11,57 +10,56 @@ import { filter, Subscription } from 'rxjs';
   templateUrl: './evenements.html',
   styleUrls: ['./evenements.css']
 })
-export class EventsComponent implements OnInit, OnDestroy {
+export class EventsComponent implements OnInit {
 
   events: any[] = [];
   loading = false;
-  sub!: Subscription;
 
   private apiUrl = "http://localhost:8080/api/evenements";
 
   constructor(
     private eventService: EvenementService,
-    private router: Router
-  ) {
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-  }
+    private router: Router,
+    private cdr: ChangeDetectorRef // 🔥 IMPORTANT
+  ) {}
 
   ngOnInit(): void {
     this.loadEvents();
-
-    this.sub = this.router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
-      .subscribe(() => {
-        this.loadEvents();
-      });
   }
 
   loadEvents() {
     this.loading = true;
 
-    this.eventService.getMesInscriptions().subscribe({
-      next: (data: any[]) => {
-        console.log("DATA EVENTS:", data); // 🔥 DEBUG
+    this.eventService.getAllEvenements().subscribe({
+      next: (data: any) => {
 
-        this.events = (data || []).map(e => ({
-          ...e,
-          imageUrl: `${this.apiUrl}/photo/${e.id}` // 🔥 IMAGE FIX
-        }));
+        if (Array.isArray(data)) {
+          this.events = data.map(e => ({
+            ...e,
+            imageUrl: `${this.apiUrl}/photo/${e.id}`
+          }));
+        } else {
+          this.events = [];
+        }
 
         this.loading = false;
+
+        this.cdr.detectChanges(); // 🔥 FIX
       },
-      error: (err) => {
-        console.error("ERREUR EVENTS:", err);
+      error: (err: any) => {
+        console.error(err);
         this.loading = false;
+
+        this.cdr.detectChanges(); // 🔥 FIX
       }
     });
   }
 
-  onImageError(event: any) {
-    event.target.src = 'assets/default-event.png';
+  goToInscription(eventId: number) {
+    this.router.navigate(['/inscription', eventId]);
   }
 
-  ngOnDestroy(): void {
-    if (this.sub) this.sub.unsubscribe();
+  onImageError(event: any) {
+    event.target.src = 'assets/default-event.png';
   }
 }

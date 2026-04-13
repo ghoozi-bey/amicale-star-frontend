@@ -11,28 +11,45 @@ import { EvenementService } from '../../../../services/evenement';
 })
 export class MesEvenementsComponent implements OnInit {
 
-  events: any[] = [];
-  loading: boolean = true;
-  errorMessage: string = '';
+  inscriptions: any[] = [];
+  loading = false;
 
   constructor(private eventService: EvenementService) {}
 
-  ngOnInit() {
-    this.loadEvents();
+  ngOnInit(): void {
+    this.load();
   }
 
-  // 🔥 🔥 CORRECTION ICI
-  loadEvents() {
-    this.eventService.getMesEvenements().subscribe({
-      next: (data) => {
-        this.events = data;
+  load() {
+    this.loading = true;
+
+    this.eventService.getMesInscriptions().subscribe({
+      next: (data: any[]) => {
+        this.inscriptions = data || [];
         this.loading = false;
       },
       error: (err) => {
         console.error(err);
-        this.errorMessage = "Erreur lors du chargement";
         this.loading = false;
       }
     });
+  }
+
+  getStatutClass(statut: string) {
+    switch (statut) {
+      case 'ACCEPTEE': return 'ok';
+      case 'REFUSEE': return 'refuse';
+      case 'EN_ATTENTE': return 'attente';
+      default: return '';
+    }
+  }
+
+  getPaiementClass(p: string) {
+    switch (p) {
+      case 'PAYE': return 'ok';
+      case 'NON_PAYE': return 'refuse';
+      case 'EN_VERIFICATION': return 'attente';
+      default: return '';
+    }
   }
 }

@@ -12,12 +12,12 @@ export class EvenementService {
   constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
 
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-  }
+  return new HttpHeaders({
+    Authorization: `Bearer ${token}` // ✅ propre
+  });
+}
 
   // 🔥 événements actifs
   getEvenementsActifs(): Observable<any[]> {
@@ -35,10 +35,11 @@ export class EvenementService {
 
   // 🔥 événements de l'utilisateur
   getMesEvenements(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/mes-evenements`, {
-      headers: this.getHeaders()
-    });
-  }
+  return this.http.get<any[]>(
+    `${this.apiUrl}/mes-evenements-crees`,
+    { headers: this.getHeaders() }
+  );
+}
 
   // ✅ 🔥 AJOUT IMPORTANT (corrige ton bug)
   getEvenementById(id: number): Observable<any> {
@@ -82,11 +83,28 @@ export class EvenementService {
     });
   }
   getMesInscriptions() {
-  return this.http.get<any[]>(`${this.apiUrl}/mes-inscriptions`, {
-    headers: this.getHeaders()
-  });
+
+  const matricule = localStorage.getItem('matricule');
+
+  console.log("MAT FETCH:", matricule); // 🔥 DEBUG
+
+  if (!matricule) {
+    throw new Error("Matricule null ❌");
+  }
+
+  return this.http.get<any[]>(
+    `http://localhost:8080/api/inscriptions/mes-inscriptions/${matricule}`,
+    { headers: this.getHeaders() }
+  );
 }
 inscrire(eventId: number) {
-  return this.http.post(`http://localhost:8080/api/inscriptions/${eventId}`, {});
+
+  const matricule = localStorage.getItem('matricule'); // ⚠️ important
+
+  return this.http.post(
+    `http://localhost:8080/api/inscriptions/${matricule}/${eventId}`,
+    {},
+    { headers: this.getHeaders() }
+  );
 }
 }

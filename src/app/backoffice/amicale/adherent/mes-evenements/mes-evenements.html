@@ -1,34 +1,53 @@
-<div class="container">
+<div class="page">
 
-  <h2>Mes événements</h2>
+  <h2>Mes Événements</h2>
 
-  <div *ngIf="loading">Chargement...</div>
-  <div *ngIf="errorMessage">{{errorMessage}}</div>
-
-  <div *ngIf="!loading && events.length === 0">
-    Aucun événement participé 
+  <!-- LOADING -->
+  <div *ngIf="loading" class="loading">
+    Chargement...
   </div>
 
-  <div class="cards">
-    <div *ngFor="let e of events" class="card">
+  <!-- LIST -->
+  <div *ngIf="!loading && inscriptions.length > 0" class="cards">
 
+    <div class="card" *ngFor="let ins of inscriptions">
+
+      <!-- IMAGE -->
       <img 
-        [src]="e.photo 
-          ? 'http://localhost:8080/uploads/events/' + e.photo 
-          : 'assets/imagepardefaut.jpg'">
+        [src]="'http://localhost:8080/api/evenements/photo/' + ins.evenement.id"
+        class="img"
+      >
 
-      <div class="content">
-        <h3>{{e.titre}}</h3>
-        <p>📍 {{e.lieu}}</p>
-        <p>📅 {{e.dateDebut}} → {{e.dateFin}}</p>
-        <p>💰 {{e.prix || 0}} DT</p>
+      <!-- INFOS -->
+      <h3>{{ ins.evenement.titre }}</h3>
 
-        <span class="badge">{{e.typeEvenement?.nom}}</span>
+      <p>📍 {{ ins.evenement.lieu }}</p>
 
-        <button disabled>Déjà inscrit ✔</button>
-      </div>
+      <p>📅 {{ ins.evenement.dateDebut || '-' }}</p>
+
+      <!-- STATUT INSCRIPTION -->
+      <p>
+        Statut :
+        <span [ngClass]="getStatutClass(ins.statut)">
+          {{ ins.statut }}
+        </span>
+      </p>
+
+      <!-- STATUT PAIEMENT -->
+      <p>
+        Paiement :
+        <span [ngClass]="getPaiementClass(ins.statutPaiement)">
+          {{ ins.statutPaiement }}
+        </span>
+      </p>
 
     </div>
+
+  </div>
+
+  <!-- EMPTY -->
+  <div *ngIf="!loading && inscriptions.length === 0" class="empty">
+    Aucun événement inscrit
   </div>
 
 </div>

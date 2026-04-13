@@ -9,9 +9,11 @@
 
   <div class="events-container" *ngIf="events.length > 0; else emptyState">
 
-    <div class="event-card" *ngFor="let event of events">
+    <!-- 🔥 CLICK CARD -->
+    <div class="event-card" 
+         *ngFor="let event of events"
+         (click)="goToInscription(event.id)">
 
-      <!-- 🔥 IMAGE -->
       <img 
         class="event-image"
         [src]="event.imageUrl"

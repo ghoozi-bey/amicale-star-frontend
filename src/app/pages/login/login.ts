@@ -22,21 +22,29 @@ export class LoginComponent {
 
   login() {
 
-    this.auth.login(this.user).subscribe({
+  this.auth.login(this.user).subscribe({
 
-      next: () => {
+    next: (res: any) => {
 
-        // ❌ PLUS BESOIN DE saveToken()
-
-        // ✅ REDIRECTION
-        this.router.navigate(['/dashboard']);
-      },
-
-      error: () => {
-        alert("Email ou mot de passe incorrect");
+      // ✅ TOKEN (si existe)
+      if (res?.token) {
+        localStorage.setItem('token', res.token);
       }
 
-    });
+      // 🔥 TEST FORCÉ (IMPORTANT)
+      localStorage.setItem('matricule', 'STAR123455');
 
-  }
+      console.log("MAT TEST:", localStorage.getItem('matricule'));
+
+      // ✅ REDIRECTION
+      this.router.navigate(['/dashboard']);
+    },
+
+    error: () => {
+      alert("Email ou mot de passe incorrect");
+    }
+
+  });
+
+}
 }
