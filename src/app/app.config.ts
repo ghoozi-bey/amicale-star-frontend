@@ -8,16 +8,14 @@ import { authInterceptor } from './services/auth.interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
 
-    // 🔥 HTTP + INTERCEPTOR
     provideHttpClient(
       withInterceptors([authInterceptor])
     ),
 
-    // 🔥 ROUTER PRO CONFIG
     provideRouter(
       routes,
       withRouterConfig({
-        onSameUrlNavigation: 'reload'
+        onSameUrlNavigation: 'reload' // ✅ FIX FINAL
       }),
       withInMemoryScrolling({
         scrollPositionRestoration: 'enabled'

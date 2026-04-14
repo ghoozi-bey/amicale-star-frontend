@@ -5,26 +5,38 @@
 </div>
 
 <!-- 📦 DATA -->
-<div *ngIf="!loading">
+<div *ngIf="!loading && events.length > 0" class="events-container">
 
-  <div class="events-container" *ngIf="events.length > 0; else emptyState">
+  <div class="event-card"
+       *ngFor="let event of events"
+       (click)="goToInscription(event.id)">
 
-    <!-- 🔥 CLICK CARD -->
-    <div class="event-card" 
-         *ngFor="let event of events"
-         (click)="goToInscription(event.id)">
+    <img 
+  class="event-image"
+  [src]="event.imageUrl"
+  (error)="onImageError($event)">
 
-      <img 
-        class="event-image"
-        [src]="event.imageUrl"
-        (error)="onImageError($event)">
+    <div class="event-title">{{ event.titre }}</div>
 
-      <div class="event-title">{{ event.titre }}</div>
+    <div class="event-info">📍 {{ event.lieu }}</div>
 
-      <div class="event-info">📍 {{ event.lieu }}</div>
-      <div class="event-info">
-        📅 {{ event.dateDebut || '-' }} → {{ event.dateFin || '-' }}
-      </div>
+    <div class="event-info">
+      📅 {{ event.dateDebut || '-' }} → {{ event.dateFin || '-' }}
+    </div>
+
+    <div class="event-status">
+
+      <span class="status pending" *ngIf="event.statut === 'EN_ATTENTE'">
+        ⏳ En attente
+      </span>
+
+      <span class="status accepted" *ngIf="event.statut === 'ACCEPTE'">
+        ✅ Accepté
+      </span>
+
+      <span class="status refused" *ngIf="event.statut === 'REFUSE'">
+        ❌ Refusé
+      </span>
 
     </div>
 
@@ -32,11 +44,9 @@
 
 </div>
 
-<!-- ❌ EMPTY STATE -->
-<ng-template #emptyState>
-  <div class="empty-container">
-    <div class="empty-icon">📭</div>
-    <h2>Aucun événement</h2>
-    <p>Vous n'êtes inscrit à aucun événement pour le moment.</p>
-  </div>
-</ng-template>
+<!-- ❌ EMPTY -->
+<div *ngIf="!loading && events.length === 0" class="empty-container">
+  <div class="empty-icon">📭</div>
+  <h2>Aucun événement</h2>
+  <p>Vous n'êtes inscrit à aucun événement.</p>
+</div>

@@ -50,6 +50,13 @@ export const routes: Routes = [
           import('./pages/inscription/inscription')
             .then(m => m.InscriptionComponent)
       },
+      
+  {
+  path: 'evenement',
+  loadComponent: () =>
+    import('./pages/evenement-details/evenement-details')
+      .then(m => m.EvenementDetailsComponent)
+},
 
       // ➕ GESTION EVENEMENTS
       {

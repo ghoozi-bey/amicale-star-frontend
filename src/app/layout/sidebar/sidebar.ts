@@ -61,6 +61,7 @@ export class SidebarComponent implements OnInit {
   });
 }
 
+
   loadProfilePhoto() {
     this.loadingPhoto = true;
 

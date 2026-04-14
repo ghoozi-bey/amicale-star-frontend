@@ -4,7 +4,8 @@ import { EvenementService } from '../../services/evenement';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LoadingService } from '../../services/loading.service';
-import { Router } from '@angular/router'; // 🔥 AJOUT
+import { Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,14 +19,13 @@ export class DashboardComponent {
   evenements$!: Observable<any[]>;
   selectedEvent: any = null;
 
-  // 🔥 gestion images
   totalImages = 0;
   loadedImages = 0;
 
   constructor(
     private evenementService: EvenementService,
     private loadingService: LoadingService,
-    private router: Router // 🔥 AJOUT
+    private router: Router
   ) {
     this.loadEvenements();
   }
@@ -36,26 +36,27 @@ export class DashboardComponent {
 
   this.evenements$ = this.evenementService.getEvenementsActifs().pipe(
 
-    tap(events => {
+    map(events => {
       this.totalImages = events.length;
       this.loadedImages = 0;
 
+      // ✅ si aucun event → stop loader
       if (this.totalImages === 0) {
         this.loadingService.hide();
       }
+
+      return events.map((e: any) => ({
+        ...e,
+        imageUrl: `http://localhost:8080/api/evenements/photo/${e.id}`
+      }));
     }),
 
-    // 🔥 FIX CRITIQUE
     tap({
-      error: () => {
-        this.loadingService.hide();
-      }
+      error: () => this.loadingService.hide()
     })
-
   );
 }
 
-  // 🔥 IMAGE LOAD
   onImageLoad(): void {
     this.loadedImages++;
 
@@ -64,7 +65,6 @@ export class DashboardComponent {
     }
   }
 
-  // 🔥 IMAGE ERROR
   onImageError(): void {
     this.loadedImages++;
 
@@ -73,20 +73,20 @@ export class DashboardComponent {
     }
   }
 
-  // 🔥 NAVIGATION VERS PAGE INSCRIPTION
   goToInscription(id: number): void {
     this.router.navigate(['/inscription', id]);
   }
 
-  // 🔥 (OPTIONNEL) INSCRIPTION DIRECT
-  
-
-  // 🔥 SI TU UTILISE POPUP
   openDetails(e: any): void {
     this.selectedEvent = e;
   }
 
   trackById(index: number, item: any) {
-  return item.id;
+    return item.id;
+  }
+  goToDetails(event: any): void {
+  this.router.navigate(['/evenement'], {
+    state: { event: event }
+  });
 }
 }

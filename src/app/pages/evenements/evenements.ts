@@ -13,14 +13,14 @@ import { Router } from '@angular/router';
 export class EventsComponent implements OnInit {
 
   events: any[] = [];
-  loading = false;
+  loading = true;
 
   private apiUrl = "http://localhost:8080/api/evenements";
 
   constructor(
     private eventService: EvenementService,
     private router: Router,
-    private cdr: ChangeDetectorRef // 🔥 IMPORTANT
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -30,27 +30,36 @@ export class EventsComponent implements OnInit {
   loadEvents() {
     this.loading = true;
 
-    this.eventService.getAllEvenements().subscribe({
+    this.eventService.getMesInscriptions().subscribe({
       next: (data: any) => {
 
-        if (Array.isArray(data)) {
-          this.events = data.map(e => ({
-            ...e,
-            imageUrl: `${this.apiUrl}/photo/${e.id}`
-          }));
-        } else {
-          this.events = [];
-        }
+        this.events = (data || [])
+          .filter((i: any) => i && i.evenement)
+          .map((i: any) => {
+
+            const e = i.evenement;
+
+            return {
+              id: e.id,
+              titre: e.titre,
+              lieu: e.lieu,
+              dateDebut: e.dateDebut,
+              dateFin: e.dateFin,
+              statut: i.statut,
+
+              // 🔥 backend gère tout
+              imageUrl: `${this.apiUrl}/photo/${e.id}`
+            };
+          });
 
         this.loading = false;
-
-        this.cdr.detectChanges(); // 🔥 FIX
+        this.cdr.detectChanges();
       },
-      error: (err: any) => {
+
+      error: (err) => {
         console.error(err);
         this.loading = false;
-
-        this.cdr.detectChanges(); // 🔥 FIX
+        this.cdr.detectChanges();
       }
     });
   }
@@ -59,7 +68,8 @@ export class EventsComponent implements OnInit {
     this.router.navigate(['/inscription', eventId]);
   }
 
+  // 🔥 simple (juste sécurité)
   onImageError(event: any) {
-    event.target.src = 'assets/default-event.png';
+    event.target.src = 'assets/default-event.png'; // optionnel
   }
 }

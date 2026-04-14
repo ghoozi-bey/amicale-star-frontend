@@ -1,43 +1,46 @@
-<h2>Dashboard</h2>
+<h2 class="title">Dashboard</h2>
 
 <div class="cards">
 
-  <div class="card">
-    <h3>Evenements</h3>
-    <p>{{ (evenements$ | async)?.length || 0 }}</p>
+  <div class="card stat">
+  <span class="material-icons icon">event</span>
+  <p>Evenements</p>
+  <p>{{ (evenements$ | async)?.length || 0 }}</p>
   </div>
 
-  <div class="card">
+  <div class="card stat">
+    <span class="material-icons icon">poll</span>
     <h3>Sondages</h3>
     <p>0</p>
   </div>
 
-  <div class="card">
+  <div class="card stat">
+    <span class="material-icons icon">how_to_vote</span>
     <h3>Elections</h3>
     <p>0</p>
   </div>
 
 </div>
 
-<h2>Evenements récents</h2>
+<h2 class="subtitle">Evenements récents</h2>
 
-<!-- 🔥 SOURCE UNIQUE -->
 <div class="events" *ngIf="evenements$ | async as evenements">
 
   <div class="event-card"
        *ngFor="let e of evenements; trackBy: trackById"
        (click)="goToInscription(e.id)">
 
-    <!-- IMAGE -->
-    <img 
-      [src]="'http://localhost:8080/api/evenements/photo/' + e.id"
-      (load)="onImageLoad()"
-      (error)="onImageError()"
-      loading="lazy"
-    >
+    <div class="image-container">
+      <img 
+  [src]="e.imageUrl"
+  (load)="onImageLoad()"
+  (error)="onImageError()">
+    </div>
 
-    <h3>{{ e.titre }}</h3>
-    <p>{{ e.dateDebut }}</p>
+    <div class="content">
+      <h3>{{ e.titre }}</h3>
+      <p>{{ e.dateDebut }}</p>
+    </div>
 
   </div>
 
