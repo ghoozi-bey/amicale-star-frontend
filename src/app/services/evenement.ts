@@ -19,6 +19,19 @@ export class EvenementService {
     });
   }
 
+  getPublicEvents(): Observable<any[]> {
+    const token = localStorage.getItem('token');
+
+    return this.http.get<any[]>(
+      'http://localhost:8080/api/evenements/public',
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+  }
+
   getEvenementsActifs(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/actifs`, {
       headers: this.getHeaders()

@@ -10,15 +10,26 @@ export class SondageService {
 
     constructor(private http: HttpClient) {}
 
+    create(data: any) {
+        const token = localStorage.getItem('token');
+
+        return this.http.post(this.api, data, {
+            headers: {
+            Authorization: `Bearer ${token}`
+            },
+            responseType: 'text' as 'json' // 🔥 FIX
+        });
+    }
+
     getAll() {
-    return this.http.get<any[]>(this.api);
+        return this.http.get<any[]>(this.api);
     }
 
     delete(id: number) {
-    return this.http.delete(`${this.api}/${id}`);
+        return this.http.delete(`${this.api}/${id}`);
     }
 
     publish(id: number) {
-    return this.http.post(`${this.api}/${id}/publish`, {});
+        return this.http.post(`${this.api}/${id}/publish`, {});
     }
 }

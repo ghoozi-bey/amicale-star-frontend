@@ -107,14 +107,22 @@
 
 .submenu {
   list-style: none;
-  padding-left: 8px;
-  margin-top: 5px;
+  padding-left: 12px;
+  margin-top: 6px;
   border-left: 2px solid #e0e0e0;
 }
+
+.submenu li {
+  margin-bottom: 4px;
+}
+
 
 /* LIENS SOUS MENU */
 
 .submenu li a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 13px;
   color: #7a7a7a;
   padding: 9px 14px;

@@ -1,19 +1,32 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-  <!-- ===== SONDAGE INFO ===== -->
-  <div class="sondage-header">
-    <input formControlName="title" placeholder="Titre du sondage" />
-
-    <textarea formControlName="description" placeholder="Description"></textarea>
+  <!-- ===== HEADER ===== -->
+  <div class="header">
+    <h2>Créer un sondage</h2>
   </div>
 
-  <!-- ===== ADD QUESTION BUTTON ===== -->
-  <button type="button" (click)="addQuestion()">➕ Ajouter une question</button>
+  <!-- ===== SONDAGE INFO ===== -->
+  <div class="sondage-header">
+    <label>Titre</label>
+    <input formControlName="title" placeholder="Ex: Satisfaction des membres" />
 
-  <hr />
+    <label>Description</label>
+    <textarea formControlName="description" placeholder="Décrivez le sondage..."></textarea>
+  </div>
+  <div class="date-group">
+    <div>
+      <label>Date début</label>
+      <input type="datetime-local" formControlName="dateDebut" />
+    </div>
+
+    <div>
+      <label>Date fin</label>
+      <input type="datetime-local" formControlName="dateFin" />
+    </div>
+  </div>
 
   <!-- ===== QUESTIONS ===== -->
-  <div formArrayName="questions">
+  <div formArrayName="questions" class="questions-container">
 
     <div 
       *ngFor="let q of questions.controls; let i = index" 
@@ -21,41 +34,37 @@
       class="question-card"
     >
 
-      <!-- Question header -->
+      <!-- Header -->
       <div class="question-header">
-        <h3>Question {{ i + 1 }}</h3>
-        <button type="button" (click)="removeQuestion(i)">❌</button>
+        <span>Question {{ i + 1 }}</span>
+        <button type="button" class="delete-btn" (click)="removeQuestion(i)">✖</button>
       </div>
 
-      <!-- Question text -->
+      <!-- Question -->
       <input 
         formControlName="text" 
-        placeholder="Écrire la question..." 
+        placeholder="Tapez votre question..." 
       />
 
       <!-- Type -->
       <select formControlName="type" (change)="onTypeChange(i)">
         <option value="CHOIX_UNIQUE">Choix unique</option>
         <option value="CHOIX_MULTIPLE">Choix multiple</option>
-        <option value="TEXTE">Texte libre</option>
+        <option value="TEXTE">Réponse libre</option>
       </select>
 
-      <!-- ===== CHOICES (only if not TEXTE) ===== -->
-      <div *ngIf="q.get('type')?.value !== 'TEXTE'" formArrayName="choix">
+      <!-- Choices -->
+      <div *ngIf="q.get('type')?.value !== 'TEXTE'" formArrayName="choix" class="choices">
 
         <div 
           *ngFor="let c of getChoix(i).controls; let j = index"
           class="choice-row"
         >
-          <input 
-            [formControlName]="j" 
-            placeholder="Choix..." 
-          />
-
-          <button type="button" (click)="removeChoice(i, j)">❌</button>
+          <input [formControlName]="j" placeholder="Choix..." />
+          <button type="button" class="delete-btn" (click)="removeChoice(i, j)">✖</button>
         </div>
 
-        <button type="button" (click)="addChoice(i)">
+        <button type="button" class="add-choice-btn" (click)="addChoice(i)">
           ➕ Ajouter un choix
         </button>
 
@@ -65,11 +74,24 @@
 
   </div>
 
-  <hr />
+  <!-- ===== ADD QUESTION ===== -->
+  <button type="button" class="add-question-btn" (click)="addQuestion()">
+    ➕ Ajouter une question
+  </button>
 
   <!-- ===== SUBMIT ===== -->
-  <button type="submit">
+  <button type="submit" class="submit-btn">
     ✅ Créer le sondage
   </button>
+
+  <!-- ===== FEEDBACK ===== -->
+
+  <div *ngIf="successMessage" class="success-msg">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="error-msg">
+    {{ errorMessage }}
+  </div>
 
 </form>

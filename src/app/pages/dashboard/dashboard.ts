@@ -34,13 +34,12 @@ export class DashboardComponent {
 
   this.loadingService.show();
 
-  this.evenements$ = this.evenementService.getEvenementsActifs().pipe(
+  this.evenements$ = this.evenementService.getPublicEvents().pipe(
 
-    map(events => {
+    map((events: any[]) => {
       this.totalImages = events.length;
       this.loadedImages = 0;
 
-      // ✅ si aucun event → stop loader
       if (this.totalImages === 0) {
         this.loadingService.hide();
       }

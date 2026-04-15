@@ -82,11 +82,25 @@
 
   <!-- 🔴 ADMIN -->
   <div *ngIf="hasRole('ADMIN')">
-    <button (click)="toggleUsers()">Gestion utilisateurs</button>
-    <ul [hidden]="!showUsersMenu">
-      <li><a routerLink="/admin-create-user">Créer</a></li>
-      <li><a routerLink="/admin-users">Liste</a></li>
+
+    <button (click)="toggleUsers()" class="menu-button sidebar-item">
+      <span class="material-icons">people</span>
+      Gestion utilisateurs
+    </button>
+
+    <ul [hidden]="!showUsersMenu" class="submenu">
+      <li>
+        <a routerLink="/admin-create-user" routerLinkActive="active" class="sidebar-item">
+          ➕ Créer
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin-users" routerLinkActive="active" class="sidebar-item">
+          📋 Liste
+        </a>
+      </li>
     </ul>
+
   </div>
 
 </div>
