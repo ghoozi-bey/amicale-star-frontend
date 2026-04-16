@@ -1,30 +1,82 @@
 <div class="inscription-page">
 
-  <div class="inscription-card">
-
-    <h2>Inscription à l'événement</h2>
-
-    <!-- IMAGE -->
+  <!-- 🔥 IMAGE -->
+  <div class="event-banner">
     <img 
-      class="event-img"
       [src]="'http://localhost:8080/api/evenements/photo/' + eventId"
+      alt="event"
     >
+  </div>
 
-    <!-- INFOS -->
-    <div class="info">
-      <p><strong>ID événement :</strong> {{ eventId }}</p>
+  <!-- 🔥 CARD -->
+  <div class="card">
+
+    <!-- USER -->
+    <h2>Informations personnelles</h2>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Nom</label>
+        <input type="text" name="nom" [(ngModel)]="user.nom" disabled>
+      </div>
+
+      <div class="form-group">
+        <label>Prénom</label>
+        <input type="text" name="prenom" [(ngModel)]="user.prenom" disabled>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" [(ngModel)]="user.email" disabled>
+      </div>
+
+      <div class="form-group">
+        <label>Téléphone</label>
+        <input type="text" name="telephone" [(ngModel)]="user.telephone" disabled>
+      </div>
+
+      <div class="form-group full">
+        <label>Matricule</label>
+        <input type="text" name="matricule" [(ngModel)]="user.matricule" disabled>
+      </div>
+      <div class="form-group full">
+        <label>CIN</label>
+        <input type="text" name="cin" [(ngModel)]="user.cin" disabled>
+      </div>
+
     </div>
 
-    <!-- FORM -->
-    <div class="form">
+    <!-- INSCRIPTION -->
+    <h2>Détails inscription</h2>
 
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Nombre de personnes</label>
+        <input type="number" name="nbPersonnes" [(ngModel)]="nbPersonnes" min="1">
+      </div>
+
+      <div class="form-group">
+        <label>Méthode de paiement</label>
+        <select name="modePaiement" [(ngModel)]="modePaiement">
+          <option value="">-- Sélectionner --</option>
+          <option value="VIREMENT">Virement bancaire</option>
+          <option value="CASH">Paiement en cash</option>
+          <option value="SALAIRE">Coupure de salaire</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- BUTTON -->
+    <div class="actions">
       <button 
-  type="button" 
-  class="btn"
-  (click)="inscrire()">
-  Confirmer inscription
-</button>
-
+        class="btn-primary"
+        [disabled]="!modePaiement"
+        (click)="inscrire()">
+        Confirmer inscription
+      </button>
     </div>
 
   </div>

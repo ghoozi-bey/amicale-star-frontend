@@ -3,9 +3,9 @@
   <div class="card">
 
     <img 
-  [src]="getImage()" 
-  class="event-img"
-  (click)="openImage()">
+      [src]="getImage()" 
+      class="event-img"
+      (click)="openImage()">
 
     <h2>{{ event.titre }}</h2>
 
@@ -15,45 +15,74 @@
 
     <hr>
 
-    <p *ngIf="isValid(event.lieu)">
-      <span class="material-icons">location_on</span>
-      <strong>Lieu :</strong> {{ event.lieu }}
-    </p>
+    <!-- 🔥 INFOS MODERNES -->
+    <div class="info-grid">
 
-    <p *ngIf="isValid(event.dateDebut)">
-      <span class="material-icons">calendar_today</span>
-      <strong>Date début :</strong> {{ event.dateDebut }}
-    </p>
+      <div class="info-item" *ngIf="isValid(event.lieu)">
+        <span class="material-icons">location_on</span>
+        <div>
+          <small>Lieu</small>
+          <strong>{{ event.lieu }}</strong>
+        </div>
+      </div>
 
-    <p *ngIf="isValid(event.dateFin)">
-      <span class="material-icons">event</span>
-      <strong>Date fin :</strong> {{ event.dateFin }}
-    </p>
+      <div class="info-item" *ngIf="isValid(event.dateDebut)">
+        <span class="material-icons">calendar_today</span>
+        <div>
+          <small>Date début</small>
+          <strong>{{ event.dateDebut }}</strong>
+        </div>
+      </div>
 
-    <p *ngIf="isValid(event.prix)">
-      <span class="material-icons">payments</span>
-      <strong>Prix :</strong> {{ event.prix }} DT
-    </p>
+      <div class="info-item" *ngIf="isValid(event.dateFin)">
+        <span class="material-icons">event</span>
+        <div>
+          <small>Date fin</small>
+          <strong>{{ event.dateFin }}</strong>
+        </div>
+      </div>
 
-    <p *ngIf="isValid(event.nbPlaces)">
-      <span class="material-icons">groups</span>
-      <strong>Places :</strong> {{ event.nbPlaces }}
-    </p>
+      <div class="info-item" *ngIf="isValid(event.prix)">
+        <span class="material-icons">payments</span>
+        <div>
+          <small>Prix</small>
+          <strong>{{ event.prix }} DT</strong>
+        </div>
+      </div>
 
-    <p *ngIf="isValid(event.destination)">
-      <span class="material-icons">public</span>
-      <strong>Destination :</strong> {{ event.destination }}
-    </p>
+      <div class="info-item" *ngIf="isValid(event.nbPlaces)">
+        <span class="material-icons">groups</span>
+        <div>
+          <small>Places</small>
+          <strong>{{ event.nbPlaces }}</strong>
+        </div>
+      </div>
 
-    <p *ngIf="isValid(event.agence)">
-      <span class="material-icons">flight</span>
-      <strong>Agence :</strong> {{ event.agence }}
-    </p>
+      <div class="info-item" *ngIf="isValid(event.destination)">
+        <span class="material-icons">public</span>
+        <div>
+          <small>Destination</small>
+          <strong>{{ event.destination }}</strong>
+        </div>
+      </div>
 
-    <p *ngIf="isValid(event.societe)">
-      <span class="material-icons">business</span>
-      <strong>Société :</strong> {{ event.societe }}
-    </p>
+      <div class="info-item" *ngIf="isValid(event.agence)">
+        <span class="material-icons">flight</span>
+        <div>
+          <small>Agence</small>
+          <strong>{{ event.agence }}</strong>
+        </div>
+      </div>
+
+      <div class="info-item" *ngIf="isValid(event.societe)">
+        <span class="material-icons">business</span>
+        <div>
+          <small>Société</small>
+          <strong>{{ event.societe }}</strong>
+        </div>
+      </div>
+
+    </div>
 
     <button (click)="inscrire()" class="btn">
       S'inscrire
@@ -62,13 +91,12 @@
   </div>
 
 </div>
+
 <!-- 🔥 MODAL IMAGE -->
 <div class="image-modal" *ngIf="showImage" (click)="closeImage()">
-
   <img 
     [src]="getImage()" 
     class="modal-img"
     (click)="$event.stopPropagation()"
   >
-
 </div>

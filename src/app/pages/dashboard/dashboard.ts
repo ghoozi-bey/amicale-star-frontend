@@ -1,11 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EvenementService } from '../../services/evenement';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { LoadingService } from '../../services/loading.service';
 import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,7 +13,7 @@ import { map } from 'rxjs/operators';
 })
 export class DashboardComponent {
 
-  evenements$!: Observable<any[]>;
+  evenements: any[] = [];
   selectedEvent: any = null;
 
   totalImages = 0;
@@ -25,42 +22,44 @@ export class DashboardComponent {
   constructor(
     private evenementService: EvenementService,
     private loadingService: LoadingService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef // 🔥 FIX
   ) {
     this.loadEvenements();
   }
 
   loadEvenements(): void {
 
-  this.loadingService.show();
+    this.loadingService.reset();
 
-  this.evenements$ = this.evenementService.getPublicEvents().pipe(
+    setTimeout(() => { // 🔥 évite erreur Angular NG0100
+      this.loadingService.show();
+    });
 
-    map((events: any[]) => {
-      this.totalImages = events.length;
-      this.loadedImages = 0;
+    this.evenementService.getPublicEvents().subscribe({
+      next: (events) => {
 
-      if (this.totalImages === 0) {
-        this.loadingService.hide();
-      }
+        this.evenements = events;
 
-      return events.map((e: any) => ({
-        ...e,
-        imageUrl: `http://localhost:8080/api/evenements/photo/${e.id}`
-      }));
-    }),
+        this.totalImages = events.length;
+        this.loadedImages = 0;
 
-    tap({
+        this.cd.detectChanges(); // 🔥 FIX
+
+        if (this.totalImages === 0) {
+          this.loadingService.hide();
+        }
+      },
       error: () => this.loadingService.hide()
-    })
-  );
-}
+    });
+  }
 
   onImageLoad(): void {
     this.loadedImages++;
 
     if (this.loadedImages >= this.totalImages) {
       this.loadingService.hide();
+      this.cd.detectChanges(); // 🔥 FIX
     }
   }
 
@@ -69,6 +68,7 @@ export class DashboardComponent {
 
     if (this.loadedImages >= this.totalImages) {
       this.loadingService.hide();
+      this.cd.detectChanges(); // 🔥 FIX
     }
   }
 
@@ -76,16 +76,11 @@ export class DashboardComponent {
     this.router.navigate(['/inscription', id]);
   }
 
-  openDetails(e: any): void {
-    this.selectedEvent = e;
-  }
-
-  trackById(index: number, item: any) {
+  trackById(index: number, item: any): number {
     return item.id;
   }
+
   goToDetails(event: any): void {
-  this.router.navigate(['/evenement'], {
-    state: { event: event }
-  });
+  this.router.navigate(['/evenement', event.id]);
 }
 }

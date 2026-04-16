@@ -101,14 +101,11 @@ export class EvenementService {
     );
   }
 
-  inscrire(eventId: number) {
-
-    const matricule = localStorage.getItem('matricule');
-
-    return this.http.post(
-      `http://localhost:8080/api/inscriptions/${matricule}/${eventId}`,
-      {},
-      { headers: this.getHeaders() }
-    );
-  }
+  inscrire(eventId: number, data: any) {
+  return this.http.post(
+    `http://localhost:8080/api/evenements/${eventId}/inscrire`,
+    data,
+    { headers: this.getHeaders() } // 🔥 IMPORTANT
+  );
+}
 }

@@ -1,72 +1,118 @@
 /* PAGE */
 .inscription-page {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background: linear-gradient(135deg, #0f5132, #198754);
-}
-
-/* CARD */
-.inscription-card {
-  width: 400px;
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
-
-/* TITLE */
-.inscription-card h2 {
-  text-align: center;
-  margin-bottom: 15px;
-  color: #198754;
+  padding: 30px;
 }
 
 /* IMAGE */
-.event-img {
+.event-banner {
   width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 15px;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
 }
 
-/* FORM */
-form {
+.event-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* CARD */
+.card {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* TITLE */
+h2 {
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+/* GRID */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+/* FULL */
+.form-group.full {
+  grid-column: span 2;
+}
+
+/* GROUP */
+.form-group {
   display: flex;
   flex-direction: column;
 }
 
+/* LABEL */
 label {
-  margin-top: 10px;
-  font-size: 14px;
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: #555;
 }
 
-input {
+/* INPUT */
+input, select {
   padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  transition: 0.2s;
+}
+
+/* FOCUS */
+input:focus, select:focus {
+  border-color: #198754;
+  background: #fff;
+  outline: none;
+}
+
+/* DISABLED */
+input:disabled {
+  background: #eeeeee;
+  color: #666;
 }
 
 /* BUTTON */
-.btn {
-  margin-top: 15px;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-
-  background: #198754;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-
-  transition: 0.3s;
+.actions {
+  display: flex;
+  justify-content: flex-end;
 }
 
-.btn:hover {
-  background: #145c32;
+.btn-primary {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background: #198754;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-primary:hover {
+  background: #146c43;
+}
+
+.btn-primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group.full {
+    grid-column: span 1;
+  }
 }

@@ -3,9 +3,9 @@
 <div class="cards">
 
   <div class="card stat">
-  <span class="material-icons icon">event</span>
-  <p>Evenements</p>
-  <p>{{ (evenements$ | async)?.length || 0 }}</p>
+    <span class="material-icons icon">event</span>
+    <p>Evenements</p>
+    <p>{{ evenements.length }}</p>
   </div>
 
   <div class="card stat">
@@ -24,17 +24,18 @@
 
 <h2 class="subtitle">Evenements récents</h2>
 
-<div class="events" *ngIf="evenements$ | async as evenements">
+<div class="events">
 
   <div class="event-card"
        *ngFor="let e of evenements; trackBy: trackById"
-       (click)="goToInscription(e.id)">
+       (click)="goToDetails(e)">
 
     <div class="image-container">
       <img 
-  [src]="e.imageUrl"
-  (load)="onImageLoad()"
-  (error)="onImageError()">
+        [src]="e.photoUrl"
+        (load)="onImageLoad()"
+        (error)="onImageError()"
+        loading="lazy">
     </div>
 
     <div class="content">
