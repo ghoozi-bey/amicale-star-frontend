@@ -9,8 +9,8 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-inscription',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './inscription.html',
-  styleUrls: ['./inscription.css']
+  styleUrls: ['./inscription.css'],
+  templateUrl: './inscription.html'
 })
 export class InscriptionComponent implements OnInit {
 
@@ -24,8 +24,25 @@ export class InscriptionComponent implements OnInit {
     prenom: '',
     email: '',
     telephone: '',
-    matricule: ''
+    matricule: '',
+    cin: ''
   };
+
+  // FAMILLE
+  hasWife = false;
+  hasChildren = false;
+
+  wife: any = {
+    nom: '',
+    prenom: '',
+    dateNaissance: '',
+    cin: '',
+    telephone: '',
+    file: null
+  };
+
+  nbEnfants = 1;
+  children: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -35,29 +52,41 @@ export class InscriptionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     this.eventId = Number(this.route.snapshot.paramMap.get('id'));
 
     this.userService.getProfile().subscribe({
       next: (data: any) => {
-
-        console.log("DATA BACK:", data);
-
-        // 🔥 mapping SIMPLE (pas compliqué)
-        this.user.nom = data.nom;
-        this.user.prenom = data.prenom;
-        this.user.email = data.email;
-        this.user.telephone = data.telephone;
-        this.user.matricule = data.matricule || '';
-        this.user.cin = data.cin;
-
-        // 🔥 FORCER REFRESH UI
+        this.user = data;
         this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error("Erreur récupération user:", err);
       }
     });
+
+    this.updateChildren();
+  }
+
+  updateChildren() {
+    this.children = [];
+    for (let i = 0; i < this.nbEnfants; i++) {
+      this.children.push({
+        nom: '',
+        prenom: '',
+        dateNaissance: '',
+        file: null
+      });
+    }
+  }
+
+  onFileChange(event: any, type: string, index?: number) {
+    const file = event.target.files[0];
+
+    if (type === 'wife') this.wife.file = file;
+    if (type === 'child' && index !== undefined) {
+      this.children[index].file = file;
+    }
+  }
+
+  isVoyageType(): boolean {
+    return true; // adapte plus tard
   }
 
   inscrire(): void {
@@ -65,17 +94,22 @@ export class InscriptionComponent implements OnInit {
     const data = {
       eventId: this.eventId,
       nbPersonnes: this.nbPersonnes,
-      modePaiement: this.modePaiement
+      modePaiement: this.modePaiement,
+      famille: {
+        wife: this.hasWife ? this.wife : null,
+        children: this.hasChildren ? this.children : []
+      }
     };
 
     this.eventService.inscrire(this.eventId, data).subscribe({
-      next: () => {
-        alert("Inscription envoyée ✅");
-      },
-      error: (err) => {
-        console.error(err);
-        alert("Erreur inscription ❌");
-      }
+      next: () => alert("Inscription envoyée ✅"),
+      error: () => alert("Erreur ❌")
     });
   }
+  onWifeChange() {
+  if (!this.hasWife) {
+    this.hasChildren = false;
+    this.children = [];
+  }
+}
 }
