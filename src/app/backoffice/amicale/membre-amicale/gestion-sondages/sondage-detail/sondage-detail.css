@@ -1,0 +1,240 @@
+/* ===== CONTAINER ===== */
+.detail-container {
+  max-width: 750px;
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 28px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+/* ===== HEADER ===== */
+.detail-container h2 {
+  margin-bottom: 10px;
+}
+
+.desc {
+  color: #6b7280;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+/* ===== QUESTION ===== */
+.question {
+  margin-bottom: 30px;
+  padding: 18px;
+  border-radius: 14px;
+  background: #f9fafb;
+  transition: 0.25s;
+}
+
+.question:hover {
+  background: #f3f4f6;
+}
+
+.question h4 {
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ===== CHOICES ===== */
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== CHOICE ===== */
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+/* hover */
+.choice.selectable:hover {
+  background: #eef2ff;
+  border-color: #6366f1;
+  cursor: pointer;
+}
+
+/* ===== RADIO ===== */
+.circle {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #9ca3af;
+  border-radius: 50%;
+}
+
+/* ===== CHECKBOX ===== */
+.checkbox {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #9ca3af;
+  border-radius: 4px;
+}
+
+/* ===== TEXT AREA ===== */
+.text-answer {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.text-answer:focus {
+  border-color: #6366f1;
+  outline: none;
+}
+
+/* ===== HEADER BLOCK ===== */
+.sondage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+/* LEFT SIDE */
+.header-left {
+  flex: 1;
+}
+
+/* RIGHT SIDE */
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 180px;
+}
+
+/* ===== STATUS BADGE ===== */
+.status {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* STATUS COLORS (match backend enum) */
+.status-PUBLISHED {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-BROUILLON {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.status-REJECTED {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.status-ACTIF {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-TERMINE {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+/* ===== DATES ===== */
+.dates {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: #6b7280;
+  text-align: right;
+}
+
+/* subtle icon spacing */
+.dates span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== RESPONSIVE (important) ===== */
+@media (max-width: 600px) {
+  .sondage-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-right {
+    align-items: flex-start;
+  }
+
+  .dates {
+    text-align: left;
+  }
+
+  .publish-btn {
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.publish-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(16,185,129,0.3);
+}
+
+.success-msg {
+  margin-top: 10px;
+  padding: 10px;
+  background: #dcfce7;
+  color: #15803d;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.error-msg {
+  margin-top: 10px;
+  padding: 10px;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.unpublish-btn {
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.unpublish-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(239,68,68,0.3);
+}
+
+}

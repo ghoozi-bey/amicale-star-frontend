@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SondageService } from '../../../../../services/sondage.service';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-sondages',
@@ -10,19 +10,34 @@ import { RouterModule } from '@angular/router';
   templateUrl: './list-sondages.html',
   styleUrl: './list-sondages.css'
 })
+
 export class ListSondagesComponent implements OnInit {
 
   sondages: any[] = [];
+  loading = true;
 
-  constructor(private sondageService: SondageService) {}
+  constructor(private sondageService: SondageService,
+              private cdr: ChangeDetectorRef,
+              private router: Router
+              ) {}
 
   ngOnInit() {
     this.load();
   }
 
   load() {
-    this.sondageService.getAll().subscribe(data => {
-      this.sondages = data;
+    this.loading = true;
+
+    this.sondageService.getMySondages().subscribe({
+      next: (data) => {
+        this.sondages = data;
+        this.loading = false;
+        this.cdr.detectChanges(); // forces UI update
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      }
     });
   }
 
@@ -35,4 +50,21 @@ export class ListSondagesComponent implements OnInit {
   publish(id: number) {
     this.sondageService.publish(id).subscribe(() => this.load());
   }
+
+  goToDetails(sondage: any) {
+    this.router.navigate(['/sondages', sondage.id]);
+  }
+
+  formatStatus(statut: string): string {
+    const map: any = {
+      BROUILLON: 'Brouillon',
+      PUBLISHED: 'Publié',
+      REJECTED: 'Rejeté',
+      ACTIF: 'Actif',
+      TERMINE: 'Terminé'
+    };
+
+    return map[statut] || statut;
+  }
+
 }

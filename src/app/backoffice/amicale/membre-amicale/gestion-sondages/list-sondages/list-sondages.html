@@ -1,16 +1,46 @@
-<h2>Liste des sondages</h2>
+<h2>📊 Mes sondages</h2>
 
-<button routerLink="membre-amicale/sondages/create">+ Créer</button>
+<button routerLink="/gestion-sondages/create" class="create-btn">
+  ➕ Créer un sondage
+</button>
 
 <hr>
 
-<div *ngFor="let s of sondages">
-    <h3>{{ s.question }}</h3>
-    <p>Statut: {{ s.statut }}</p>
+<!-- LOADING -->
+<div *ngIf="loading">Chargement...</div>
 
-    <button [routerLink]="['gestion-sondages/edit', s.id]">Modifier</button>
-    <button (click)="publish(s.id)">Publier</button>
-    <button (click)="delete(s.id)">Supprimer</button>
+<!-- EMPTY -->
+<div *ngIf="!loading && sondages.length === 0">
+  Aucun sondage trouvé
+</div>
 
-    <hr>
+<!-- LIST -->
+<div class="sondage-grid">
+  <div 
+    *ngFor="let s of sondages" 
+    class="sondage-card"
+    (click)="goToDetails(s)"
+  >
+
+    <!-- TOP BAR -->
+    <div class="card-top">
+      <span class="status" [ngClass]="'status-' + s.statut">
+        {{ formatStatus(s.statut) }}
+      </span>
+    </div>
+
+    <!-- TITLE -->
+    <h3>{{ s.title }}</h3>
+
+    <!-- DESCRIPTION -->
+    <p class="desc">
+      {{ s.description }}
+    </p>
+
+    <!-- FOOTER (NEW) -->
+    <div class="card-footer">
+      <span>📝 {{ s.questions?.length || 0 }} questions</span>
+    </div>
+
+  </div>
 </div>

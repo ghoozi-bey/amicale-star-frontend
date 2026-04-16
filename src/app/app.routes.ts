@@ -88,6 +88,32 @@ export const routes: Routes = [
             .then(m => m.ModifierEvenementComponent)
       },
 
+      // 🗳️ SONDAGES
+      {
+        path: 'gestion-sondages',
+        loadComponent: () =>
+          import('./backoffice/amicale/membre-amicale/gestion-sondages/list-sondages/list-sondages')
+            .then(m => m.ListSondagesComponent)
+      },
+      {
+        path: 'gestion-sondages/create',
+        loadComponent: () =>
+          import('./backoffice/amicale/membre-amicale/gestion-sondages/create-sondage/create-sondage')
+            .then(m => m.CreateSondageComponent)
+      },
+      {
+        path: 'gestion-sondages/edit/:id',
+        loadComponent: () =>
+          import('./backoffice/amicale/membre-amicale/gestion-sondages/edit-sondage/edit-sondage')
+            .then(m => m.EditSondageComponent)
+      },
+      {
+        path: 'sondages/:id',
+        loadComponent: () =>
+          import('./backoffice/amicale/membre-amicale/gestion-sondages/sondage-detail/sondage-detail')
+            .then(m => m.SondageDetailComponent)
+      },
+
       // 👤 PROFILE
       {
         path: 'profile',
@@ -120,27 +146,6 @@ export const routes: Routes = [
           import('./backoffice/amicale/admin/admin-user-profile/admin-user-profile')
             .then(m => m.AdminUserProfile)
       },
-
-      // 🗳️ SONDAGES
-      {
-        path: 'gestion-sondages',
-        loadComponent: () =>
-          import('./backoffice/amicale/membre-amicale/gestion-sondages/list-sondages/list-sondages')
-            .then(m => m.ListSondagesComponent)
-      },
-      {
-        path: 'gestion-sondages/create',
-        loadComponent: () =>
-          import('./backoffice/amicale/membre-amicale/gestion-sondages/create-sondage/create-sondage')
-            .then(m => m.CreateSondageComponent)
-      },
-      {
-        path: 'gestion-sondages/edit/:id',
-        loadComponent: () =>
-          import('./backoffice/amicale/membre-amicale/gestion-sondages/edit-sondage/edit-sondage')
-            .then(m => m.EditSondageComponent)
-      }
-
     ]
   },
 

@@ -30,6 +30,49 @@ export class SondageService {
     }
 
     publish(id: number) {
-        return this.http.post(`${this.api}/${id}/publish`, {});
+        return this.http.put(
+            `http://localhost:8080/api/sondages/${id}/publish`,
+            {},
+            {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+            responseType: 'text'
+            }
+        );
     }
+
+    unpublish(id: number) {
+        const token = localStorage.getItem('token');
+
+        return this.http.put(
+            `http://localhost:8080/api/sondages/${id}/unpublish`,
+            {},
+            {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            responseType: 'text'
+            }
+        );
+    }
+
+    getMySondages() {
+        return this.http.get<any[]>('http://localhost:8080/api/sondages/me', {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        });
+    }
+
+    getById(id: any) {
+        const token = localStorage.getItem('token');
+
+        return this.http.get(`http://localhost:8080/api/sondages/public/${id}`, {
+            headers: {
+            Authorization: `Bearer ${token}`
+            }
+        });
+    }
+    
 }
