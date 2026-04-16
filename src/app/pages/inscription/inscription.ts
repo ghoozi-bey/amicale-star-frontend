@@ -91,21 +91,34 @@ export class InscriptionComponent implements OnInit {
 
   inscrire(): void {
 
-    const data = {
-      eventId: this.eventId,
-      nbPersonnes: this.nbPersonnes,
-      modePaiement: this.modePaiement,
-      famille: {
-        wife: this.hasWife ? this.wife : null,
-        children: this.hasChildren ? this.children : []
-      }
-    };
+  const data = {
+    matricule: this.user.matricule,
+    evenementId: this.eventId,
+    modePaiement: this.modePaiement,
 
-    this.eventService.inscrire(this.eventId, data).subscribe({
-      next: () => alert("Inscription envoyée ✅"),
-      error: () => alert("Erreur ❌")
-    });
-  }
+    conjoint: this.hasWife ? {
+      nom: this.wife.nom,
+      prenom: this.wife.prenom,
+      dateNaissance: this.wife.dateNaissance,
+      cin: this.wife.cin,
+      telephone: this.wife.telephone
+    } : null,
+
+    enfants: this.hasChildren ? this.children.map(c => ({
+      nom: c.nom,
+      prenom: c.prenom,
+      dateNaissance: c.dateNaissance
+    })) : []
+  };
+
+  this.eventService.createInscription(data).subscribe({
+    next: () => alert("Inscription envoyée ✅"),
+    error: (err) => {
+      console.error(err);
+      alert("Erreur ❌");
+    }
+  });
+}
   onWifeChange() {
   if (!this.hasWife) {
     this.hasChildren = false;

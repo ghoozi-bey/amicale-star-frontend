@@ -14,38 +14,32 @@
 
       <div class="form-group">
         <label>Nom</label>
-        <i class="fas fa-user"></i>
-        <input [(ngModel)]="user.nom" disabled>
+        <input name="nom" [(ngModel)]="user.nom" disabled>
       </div>
 
       <div class="form-group">
         <label>Prénom</label>
-        <i class="fas fa-user"></i>
-        <input [(ngModel)]="user.prenom" disabled>
+        <input name="prenom" [(ngModel)]="user.prenom" disabled>
       </div>
 
       <div class="form-group">
         <label>Email</label>
-        <i class="fas fa-envelope"></i>
-        <input [(ngModel)]="user.email" disabled>
+        <input name="email" [(ngModel)]="user.email" disabled>
       </div>
 
       <div class="form-group">
         <label>Téléphone</label>
-        <i class="fas fa-phone"></i>
-        <input [(ngModel)]="user.telephone" disabled>
+        <input name="telephone" [(ngModel)]="user.telephone" disabled>
       </div>
 
       <div class="form-group">
         <label>Matricule</label>
-        <i class="fas fa-id-badge"></i>
-        <input [(ngModel)]="user.matricule" disabled>
+        <input name="matricule" [(ngModel)]="user.matricule" disabled>
       </div>
 
       <div class="form-group">
         <label>CIN</label>
-        <i class="fas fa-id-card"></i>
-        <input [(ngModel)]="user.cin" disabled>
+        <input name="cin" [(ngModel)]="user.cin" disabled>
       </div>
 
     </div>
@@ -56,8 +50,7 @@
     <div class="form-grid">
       <div class="form-group">
         <label>Méthode de paiement</label>
-        <i class="fas fa-credit-card"></i>
-        <select [(ngModel)]="modePaiement">
+        <select name="modePaiement" [(ngModel)]="modePaiement">
           <option value="">-- Sélectionner --</option>
           <option value="VIREMENT">Virement</option>
           <option value="CASH">Cash</option>
@@ -75,12 +68,12 @@
       <div class="checkbox-group">
 
         <label class="checkbox-item">
-          <input type="checkbox" [(ngModel)]="hasWife">
+          <input type="checkbox" name="hasWife" [(ngModel)]="hasWife">
           <span>Ajouter épouse</span>
         </label>
 
         <label class="checkbox-item">
-          <input type="checkbox" [(ngModel)]="hasChildren">
+          <input type="checkbox" name="hasChildren" [(ngModel)]="hasChildren">
           <span>Ajouter enfants</span>
         </label>
 
@@ -95,37 +88,31 @@
 
           <div class="form-group">
             <label>Nom</label>
-            <i class="fas fa-user"></i>
-            <input [(ngModel)]="wife.nom">
+            <input name="wifeNom" [(ngModel)]="wife.nom">
           </div>
 
           <div class="form-group">
             <label>Prénom</label>
-            <i class="fas fa-user"></i>
-            <input [(ngModel)]="wife.prenom">
+            <input name="wifePrenom" [(ngModel)]="wife.prenom">
           </div>
 
           <div class="form-group">
             <label>Date de naissance</label>
-            <i class="fas fa-calendar"></i>
-            <input type="date" [(ngModel)]="wife.dateNaissance">
+            <input name="wifeDate" type="date" [(ngModel)]="wife.dateNaissance">
           </div>
 
           <div class="form-group">
             <label>CIN</label>
-            <i class="fas fa-id-card"></i>
-            <input [(ngModel)]="wife.cin">
+            <input name="wifeCin" [(ngModel)]="wife.cin">
           </div>
 
           <div class="form-group">
             <label>Téléphone</label>
-            <i class="fas fa-phone"></i>
-            <input [(ngModel)]="wife.telephone">
+            <input name="wifeTel" [(ngModel)]="wife.telephone">
           </div>
 
           <div class="form-group full" *ngIf="isVoyageType()">
             <label>Passeport (PDF obligatoire)</label>
-            <i class="fas fa-passport"></i>
             <input type="file" accept="application/pdf"
                    (change)="onFileChange($event,'wife')">
           </div>
@@ -134,15 +121,14 @@
 
       </div>
 
-      <!-- 🔥 ENFANTS (INDÉPENDANT) -->
+      <!-- 🔥 ENFANTS -->
       <div *ngIf="hasChildren" class="family-card">
 
         <h3>Enfants</h3>
 
         <div class="form-group">
           <label>Nombre d'enfants</label>
-          <i class="fas fa-list"></i>
-          <select [(ngModel)]="nbEnfants" (change)="updateChildren()">
+          <select name="nbEnfants" [(ngModel)]="nbEnfants" (change)="updateChildren()">
             <option *ngFor="let n of [1,2,3,4,5,6]" [value]="n">{{n}}</option>
           </select>
         </div>
@@ -155,25 +141,21 @@
 
             <div class="form-group">
               <label>Nom</label>
-              <i class="fas fa-user"></i>
-              <input [(ngModel)]="child.nom">
+              <input name="childNom{{i}}" [(ngModel)]="child.nom">
             </div>
 
             <div class="form-group">
               <label>Prénom</label>
-              <i class="fas fa-user"></i>
-              <input [(ngModel)]="child.prenom">
+              <input name="childPrenom{{i}}" [(ngModel)]="child.prenom">
             </div>
 
             <div class="form-group">
               <label>Date de naissance</label>
-              <i class="fas fa-calendar"></i>
-              <input type="date" [(ngModel)]="child.dateNaissance">
+              <input name="childDate{{i}}" type="date" [(ngModel)]="child.dateNaissance">
             </div>
 
             <div class="form-group full" *ngIf="isVoyageType()">
               <label>Passeport (PDF obligatoire)</label>
-              <i class="fas fa-passport"></i>
               <input type="file" accept="application/pdf"
                      (change)="onFileChange($event,'child',i)">
             </div>

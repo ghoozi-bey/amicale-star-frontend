@@ -108,4 +108,10 @@ export class EvenementService {
     { headers: this.getHeaders() } // 🔥 IMPORTANT
   );
 }
+createInscription(data: any) {
+  return this.http.post(
+    'http://localhost:8080/api/inscriptions/create',
+    data
+  );
+}
 }
