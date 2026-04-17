@@ -1,26 +1,37 @@
-/* ===== GLOBAL ===== */
+/* ===== FORM CONTAINER ===== */
 form {
-  max-width: 850px;
-  margin: 30px auto;
-  padding: 30px;
+  max-width: 860px;
+  margin: 40px auto;
+  padding: 32px;
   background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 22px;
+
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 26px;
 }
 
 /* ===== HEADER ===== */
 .header h2 {
   margin: 0;
   font-weight: 600;
-  color: #333;
+  font-size: 22px;
+  color: #0f172a;
 }
 
+.subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* ===== DATES ===== */
 .date-group {
   display: flex;
-  gap: 15px;
+  gap: 16px;
 }
 
 .date-group div {
@@ -29,44 +40,68 @@ form {
 
 /* ===== LABELS ===== */
 label {
-  font-size: 13px;
-  color: #666;
+  font-size: 12px;
+  color: #64748b;
   margin-bottom: 5px;
+  font-weight: 500;
 }
 
 /* ===== INPUTS ===== */
-input, textarea, select {
+input,
+textarea,
+select {
   width: 100%;
-  padding: 11px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
   font-size: 14px;
-  transition: 0.2s;
+  background: #ffffff;
+  transition: all 0.2s ease;
 }
 
-input:focus, textarea:focus, select:focus {
-  border-color: #4f46e5;
+/* focus */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #6366f1;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* invalid */
+input.invalid,
+textarea.invalid {
+  border: 1px solid #ef4444;
+  background: #fef2f2;
 }
 
 /* ===== QUESTION CARD ===== */
 .question-card {
-  background: #f9fafb;
-  border-radius: 14px;
+  background: #f8fafc;
+  border-radius: 16px;
   padding: 18px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border-left: 4px solid #4f46e5;
+
+  border: 1px solid #f1f5f9;
+  border-left: 4px solid #6366f1;
+
+  transition: 0.25s ease;
 }
 
-/* Header */
+.question-card:hover {
+  transform: translateY(-2px);
+  background: #f1f5f9;
+}
+
+/* header */
 .question-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: 500;
+  color: #0f172a;
 }
 
 /* ===== CHOICES ===== */
@@ -79,38 +114,58 @@ input:focus, textarea:focus, select:focus {
   flex: 1;
 }
 
-/* ===== BUTTONS ===== */
+/* ===== BUTTON BASE ===== */
 button {
-  cursor: pointer;
   border: none;
-  border-radius: 10px;
-  padding: 10px 14px;
+  border-radius: 12px;
+  padding: 10px 16px;
   font-size: 14px;
-  transition: 0.2s;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  cursor: pointer;
 }
 
-/* Add question */
+/* ===== ADD QUESTION ===== */
 .add-question-btn {
   background: #eef2ff;
   color: #4f46e5;
-  font-weight: 500;
 }
 
-/* Add choice */
+.add-question-btn:hover {
+  background: #e0e7ff;
+  transform: translateY(-1px);
+}
+
+/* ===== ADD CHOICE ===== */
 .add-choice-btn {
   background: transparent;
   color: #4f46e5;
   text-align: left;
+  font-size: 13px;
 }
 
-/* Submit */
+.add-choice-btn:hover {
+  text-decoration: underline;
+}
+
+/* ===== SUBMIT ===== */
 .submit-btn {
-  background: #43a047;
+  background: linear-gradient(135deg, #10b981, #059669);
   color: white;
   font-weight: 600;
+  font-size: 15px;
 }
 
-/* Delete */
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+.submit-btn:active {
+  transform: scale(0.97);
+}
+
+/* ===== DELETE ===== */
 .delete-btn {
   background: #fee2e2;
   color: #dc2626;
@@ -118,29 +173,47 @@ button {
   border-radius: 8px;
 }
 
+.delete-btn:hover {
+  background: #fecaca;
+}
+
+/* ===== FEEDBACK ===== */
+.success-msg,
+.error-msg {
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* success */
 .success-msg {
   background: #dcfce7;
-  color: #166534;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 14px;
-  margin-top: 10px;
+  color: #15803d;
   border-left: 4px solid #22c55e;
-  font-weight: 500;
 }
 
+/* error */
 .error-msg {
   background: #fee2e2;
-  color: #991b1b;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 14px;
-  margin-top: 10px;
+  color: #b91c1c;
   border-left: 4px solid #ef4444;
-  font-weight: 500;
 }
 
-/* Hover */
-button:hover {
-  opacity: 0.9;
+/* ===== FIELD ERROR ===== */
+.field-error {
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  form {
+    padding: 20px;
+  }
+
+  .date-group {
+    flex-direction: column;
+  }
 }

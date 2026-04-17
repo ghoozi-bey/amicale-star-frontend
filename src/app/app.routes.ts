@@ -108,7 +108,7 @@ export const routes: Routes = [
             .then(m => m.EditSondageComponent)
       },
       {
-        path: 'sondages/:id',
+        path: 'gestion-sondages/:id',
         loadComponent: () =>
           import('./backoffice/amicale/membre-amicale/gestion-sondages/sondage-detail/sondage-detail')
             .then(m => m.SondageDetailComponent)

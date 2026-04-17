@@ -3,26 +3,73 @@
   <!-- ===== HEADER ===== -->
   <div class="header">
     <h2>Créer un sondage</h2>
+    <p class="subtitle">Ajoutez des questions et configurez votre sondage</p>
   </div>
 
   <!-- ===== SONDAGE INFO ===== -->
   <div class="sondage-header">
-    <label>Titre</label>
-    <input formControlName="title" placeholder="Ex: Satisfaction des membres" />
+
+    <label>Titre *</label>
+    <input 
+      formControlName="title" 
+      placeholder="Ex: Satisfaction des membres"
+      [class.invalid]="form.get('title')?.invalid && form.get('title')?.touched"
+    />
+    <div class="field-error" *ngIf="form.get('title')?.touched && form.get('title')?.errors">
+      <span *ngIf="form.get('title')?.errors?.['required']">
+        Le titre est obligatoire
+      </span>
+    </div>
 
     <label>Description</label>
-    <textarea formControlName="description" placeholder="Décrivez le sondage..."></textarea>
+    <textarea 
+      formControlName="description" 
+      placeholder="Décrivez le sondage..."
+    ></textarea>
+
   </div>
+
+  <!-- ===== DATES ===== -->
   <div class="date-group">
+
     <div>
-      <label>Date début</label>
-      <input type="datetime-local" formControlName="dateDebut" />
+      <label>Date début *</label>
+      <input 
+        type="datetime-local" 
+        formControlName="dateDebut"
+        [class.invalid]="form.get('dateDebut')?.invalid && form.get('dateDebut')?.touched"
+      />
+      <div class="field-error" *ngIf="form.get('dateDebut')?.touched && form.get('dateDebut')?.errors">
+        <span *ngIf="form.get('dateDebut')?.errors?.['required']">
+          La date de début est obligatoire
+        </span>
+      </div>
+      <div class="field-error"
+          *ngIf="form.get('dateDebut')?.errors?.['tooEarly']">
+        La date de début doit être à partir de demain
+      </div>
     </div>
 
     <div>
-      <label>Date fin</label>
-      <input type="datetime-local" formControlName="dateFin" />
+      <label>Date fin *</label>
+      <input 
+        type="datetime-local" 
+        formControlName="dateFin"
+        [class.invalid]="form.get('dateFin')?.invalid && form.get('dateFin')?.touched"
+      />
+      <div class="field-error" *ngIf="form.get('dateFin')?.touched && form.get('dateFin')?.errors">
+        <span *ngIf="form.get('dateFin')?.errors?.['required']">
+          La date de fin est obligatoire
+        </span>
+      </div>
     </div>
+
+  </div>
+
+  <!-- DATE LOGIC ERROR -->
+  <div class="field-error"
+      *ngIf="form.get('dateDebut')?.errors?.['invalidDate'] || form.get('dateFin')?.errors?.['invalidDate']">
+    La date de début doit être avant la date de fin
   </div>
 
   <!-- ===== QUESTIONS ===== -->
@@ -43,8 +90,14 @@
       <!-- Question -->
       <input 
         formControlName="text" 
-        placeholder="Tapez votre question..." 
+        placeholder="Tapez votre question..."
+        [class.invalid]="q.get('text')?.invalid && q.get('text')?.touched"
       />
+      <div class="field-error" *ngIf="q.get('text')?.touched && q.get('text')?.errors">
+        <span *ngIf="q.get('text')?.errors?.['required']">
+          La question est obligatoire
+        </span>
+      </div>
 
       <!-- Type -->
       <select formControlName="type" (change)="onTypeChange(i)">
@@ -60,11 +113,32 @@
           *ngFor="let c of getChoix(i).controls; let j = index"
           class="choice-row"
         >
-          <input [formControlName]="j" placeholder="Choix..." />
-          <button type="button" class="delete-btn" (click)="removeChoice(i, j)">✖</button>
+          <input 
+            [formControlName]="j" 
+            placeholder="Choix..."
+          />
+
+          <button 
+            type="button" 
+            class="delete-btn" 
+            (click)="removeChoice(i, j)"
+          >
+            ✖
+          </button>
         </div>
 
-        <button type="button" class="add-choice-btn" (click)="addChoice(i)">
+        <!-- CHOICES ERROR -->
+        <div class="field-error"
+            *ngIf="getChoix(i).controls.some(c => c.touched) 
+                    && getChoix(i).controls.filter(c => c.value?.trim() !== '').length < 2">
+          Ajoutez au moins 2 choix valides
+        </div>
+
+        <button 
+          type="button" 
+          class="add-choice-btn" 
+          (click)="addChoice(i)"
+        >
           ➕ Ajouter un choix
         </button>
 
@@ -75,23 +149,30 @@
   </div>
 
   <!-- ===== ADD QUESTION ===== -->
-  <button type="button" class="add-question-btn" (click)="addQuestion()">
+  <button 
+    type="button" 
+    class="add-question-btn" 
+    (click)="addQuestion()"
+  >
     ➕ Ajouter une question
   </button>
 
   <!-- ===== SUBMIT ===== -->
-  <button type="submit" class="submit-btn">
-     Créer le sondage
+  <button 
+    type="submit" 
+    class="submit-btn"
+  >
+    {{ isLoading ? 'Création...' : 'Créer le sondage' }}
   </button>
 
-  <!-- ===== FEEDBACK ===== -->
-
-  <div *ngIf="successMessage" class="success-msg">
-    {{ successMessage }}
-  </div>
-
+  <!-- GLOBAL ERROR -->
   <div *ngIf="errorMessage" class="error-msg">
     {{ errorMessage }}
+  </div>
+
+  <!-- SUCCESS -->
+  <div *ngIf="successMessage" class="success-msg">
+    {{ successMessage }}
   </div>
 
 </form>

@@ -27,42 +27,55 @@
 
   <hr>
 
-  <button 
-    *ngIf="sondage.statut === 'BROUILLON'"
-    class="publish-btn"
-    (click)="publish()"
-    >
-    🚀 Publier
-  </button>
+  <div class="actions">
 
-  <!-- UNPUBLISH -->
-  <button 
-    *ngIf="sondage.statut === 'PUBLISHED'"
-    class="unpublish-btn"
-    (click)="unpublish()"
-    >
-    ⛔ Annuler publication
-  </button>
+    <!-- BROUILLON actions -->
+    <button 
+      *ngIf="sondage?.statut === 'BROUILLON'"
+      class="publish-btn"
+      (click)="publish()">
+      Publier
+    </button>
 
-  <div *ngIf="successMessage" class="success-msg">
-    {{ successMessage }}
-  </div>
+    <button 
+      *ngIf="sondage?.statut === 'BROUILLON'"
+      class="reject-btn"
+      (click)="reject()">
+      Rejeter
+    </button>
 
-  <div *ngIf="errorMessage" class="error-msg">
-    {{ errorMessage }}
+    <!-- PUBLISHED -->
+    <button 
+      *ngIf="sondage?.statut === 'PUBLISHED'"
+      class="unpublish-btn"
+      (click)="unpublish()">
+      Annuler publication
+    </button>
+
+    <!-- EDIT -->
+    <button 
+      *ngIf="canEdit()"
+      (click)="onEdit()"
+      class="edit-btn">
+      Modifier
+    </button>
+
   </div>
 
 
   <hr>
 
   <!-- QUESTIONS -->
-  <div *ngFor="let q of sondage.questions" class="question">
+  <div *ngFor="let q of sondage?.questions" class="question">
 
-    <h4>{{ q.text }}</h4>
+    <h4>
+      {{ q.text }} 
+      <span class="question-type">({{ formatType(q.type) }})</span>
+    </h4>
 
     <!-- SINGLE -->
     <div *ngIf="q.type === 'CHOIX_UNIQUE'" class="choices">
-      <div *ngFor="let c of q.choixList" class="choice selectable">
+      <div *ngFor="let c of q?.choixList" class="choice selectable">
         <span class="circle"></span>
         {{ c.label }}
       </div>
@@ -70,17 +83,21 @@
 
     <!-- MULTIPLE -->
     <div *ngIf="q.type === 'CHOIX_MULTIPLE'" class="choices">
-      <div *ngFor="let c of q.choixList" class="choice selectable">
+      <div *ngFor="let c of q?.choixList" class="choice selectable">
         <span class="checkbox"></span>
         {{ c.label }}
       </div>
     </div>
+    
 
-    <!-- TEXT -->
-    <div *ngIf="q.type === 'TEXTE'">
-      <textarea placeholder="Votre réponse..." class="text-answer"></textarea>
-    </div>
+  </div>
 
+  <div *ngIf="successMessage" class="success-msg">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="error-msg">
+    {{ errorMessage }}
   </div>
 
 </div>

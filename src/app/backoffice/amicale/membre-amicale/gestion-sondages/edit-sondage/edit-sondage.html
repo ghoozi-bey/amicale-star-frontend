@@ -1,1 +1,158 @@
-<p>edit-sondage works!</p>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <!-- ===== HEADER ===== -->
+  <div class="header">
+    <h2>Modifier le sondage</h2>
+    <p class="subtitle">Modifiez les informations et les questions</p>
+  </div>
+
+  <!-- ===== SONDAGE INFO ===== -->
+  <div class="sondage-header">
+
+    <label>Titre *</label>
+    <input 
+      formControlName="title" 
+      placeholder="Ex: Satisfaction des membres"
+      [class.invalid]="form.get('title')?.invalid && form.get('title')?.touched"
+    />
+    <div class="field-error" *ngIf="form.get('title')?.touched && form.get('title')?.errors">
+      <span *ngIf="form.get('title')?.errors?.['required']">
+        Le titre est obligatoire
+      </span>
+    </div>
+
+    <label>Description</label>
+    <textarea 
+      formControlName="description" 
+      placeholder="Décrivez le sondage..."
+    ></textarea>
+
+  </div>
+
+  <!-- ===== DATES ===== -->
+  <div class="date-group">
+
+    <div>
+      <label>Date début *</label>
+      <input 
+        type="datetime-local" 
+        formControlName="dateDebut"
+        [class.invalid]="form.get('dateDebut')?.invalid && form.get('dateDebut')?.touched"
+      />
+      <div class="field-error" *ngIf="form.get('dateDebut')?.touched && form.get('dateDebut')?.errors">
+        <span *ngIf="form.get('dateDebut')?.errors?.['required']">
+          La date de début est obligatoire
+        </span>
+      </div>
+    </div>
+
+    <div>
+      <label>Date fin *</label>
+      <input 
+        type="datetime-local" 
+        formControlName="dateFin"
+        [class.invalid]="form.get('dateFin')?.invalid && form.get('dateFin')?.touched"
+      />
+      <div class="field-error" *ngIf="form.get('dateFin')?.touched && form.get('dateFin')?.errors">
+        <span *ngIf="form.get('dateFin')?.errors?.['required']">
+          La date de fin est obligatoire
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DATE LOGIC ERROR -->
+  <div class="field-error"
+      *ngIf="form.errors?.['invalidDate']">
+    La date de début doit être avant la date de fin
+  </div>
+
+  <!-- ===== QUESTIONS ===== -->
+  <div formArrayName="questions" class="questions-container">
+
+    <div 
+      *ngFor="let q of questions.controls; let i = index" 
+      [formGroupName]="i"
+      class="question-card"
+    >
+
+      <!-- Header -->
+      <div class="question-header">
+        <span>Question {{ i + 1 }}</span>
+        <button type="button" class="delete-btn" (click)="removeQuestion(i)">✖</button>
+      </div>
+
+      <!-- Question -->
+      <input 
+        formControlName="text" 
+        placeholder="Tapez votre question..."
+        [class.invalid]="q.get('text')?.invalid && q.get('text')?.touched"
+      />
+      <div class="field-error" *ngIf="q.get('text')?.touched && q.get('text')?.errors">
+        <span *ngIf="q.get('text')?.errors?.['required']">
+          La question est obligatoire
+        </span>
+      </div>
+
+      <!-- Type -->
+      <select formControlName="type" (change)="onTypeChange(i)">
+        <option value="CHOIX_UNIQUE">Choix unique</option>
+        <option value="CHOIX_MULTIPLE">Choix multiple</option>
+        <option value="TEXTE">Réponse libre</option>
+      </select>
+
+      <!-- Choices -->
+      <div *ngIf="q.get('type')?.value !== 'TEXTE'" formArrayName="choix" class="choices">
+
+        <div 
+          *ngFor="let c of getChoixArray(i).controls; let j = index"
+          class="choice-row"
+        >
+          <input 
+            [formControlName]="j" 
+            placeholder="Choix..."
+            [class.invalid]="c.invalid && c.touched"
+          />
+
+          <button 
+            type="button" 
+            class="delete-btn" 
+            (click)="removeChoix(i, j)"
+          >
+            ✖
+          </button>
+        </div>
+
+        <button 
+          type="button" 
+          class="add-choice-btn" 
+          (click)="addChoix(i)"
+        >
+          ➕ Ajouter un choix
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ===== ADD QUESTION ===== -->
+  <button 
+    type="button" 
+    class="add-question-btn" 
+    (click)="addQuestion()"
+  >
+    ➕ Ajouter une question
+  </button>
+
+  <!-- ===== SUBMIT ===== -->
+  <button 
+    type="submit" 
+    class="submit-btn"
+  >
+    Enregistrer les modifications
+  </button>
+
+</form>

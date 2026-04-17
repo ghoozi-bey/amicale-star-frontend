@@ -1,0 +1,263 @@
+/* ===== FORM CONTAINER ===== */
+form {
+  max-width: 880px;
+  margin: 40px auto;
+  padding: 36px;
+  background: #ffffff;
+  border-radius: 22px;
+
+  border: 1px solid #eef2f7;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+
+  position: relative;
+}
+
+/* ===== EDIT BADGE ===== */
+form::before {
+  content: "Mode édition";
+  position: absolute;
+  top: -12px;
+  left: 20px;
+
+  font-size: 11px;
+  font-weight: 600;
+  color: #4f46e5;
+  background: #eef2ff;
+
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #e0e7ff;
+}
+
+/* ===== HEADER ===== */
+.header h2 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 22px;
+  color: #0f172a;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* ===== SECTION SPACING ===== */
+.sondage-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===== DATES ===== */
+.date-group {
+  display: flex;
+  gap: 16px;
+}
+
+.date-group div {
+  flex: 1;
+}
+
+/* ===== LABELS ===== */
+label {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* ===== INPUTS ===== */
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+/* focus */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #6366f1;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+/* invalid */
+input.invalid,
+textarea.invalid {
+  border: 1px solid #ef4444;
+  background: #fef2f2;
+}
+
+/* disabled */
+input:disabled,
+textarea:disabled,
+select:disabled {
+  background: #f8fafc;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* ===== QUESTION CARD ===== */
+.question-card {
+  background: #f9fafb;
+  border-radius: 16px;
+  padding: 18px;
+  margin: 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  border: 1px solid #f1f5f9;
+  border-left: 4px solid #6366f1;
+
+  transition: all 0.25s ease;
+}
+
+.question-card:hover {
+  transform: translateY(-2px);
+  background: #f3f4f6;
+}
+
+/* ===== QUESTION HEADER ===== */
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  color: #0f172a;
+}
+
+/* ===== CHOICES ===== */
+.choice-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.choice-row input {
+  flex: 1;
+}
+
+/* ===== BUTTON BASE ===== */
+button {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+/* subtle click effect */
+button:active {
+  transform: scale(0.96);
+}
+
+/* ===== ADD QUESTION ===== */
+.add-question-btn {
+  background: #eef2ff;
+  color: #4f46e5;
+  border: 1px dashed #c7d2fe;
+}
+
+.add-question-btn:hover {
+  background: #e0e7ff;
+  transform: translateY(-1px);
+}
+
+/* ===== ADD CHOICE ===== */
+.add-choice-btn {
+  background: transparent;
+  color: #4f46e5;
+  font-size: 13px;
+}
+
+.add-choice-btn:hover {
+  text-decoration: underline;
+}
+
+/* ===== SUBMIT ===== */
+.submit-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+}
+
+.submit-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ===== DELETE ===== */
+.delete-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.delete-btn:hover {
+  background: #fecaca;
+}
+
+/* ===== FEEDBACK ===== */
+.success-msg,
+.error-msg {
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.success-msg {
+  background: #ecfdf5;
+  color: #15803d;
+  border-left: 4px solid #22c55e;
+}
+
+.error-msg {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-left: 4px solid #ef4444;
+}
+
+/* ===== FIELD ERROR ===== */
+.field-error {
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  form {
+    padding: 20px;
+  }
+
+  .date-group {
+    flex-direction: column;
+  }
+}

@@ -1,78 +1,103 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Sondage } from '../models/sondage.model';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class SondageService {
 
-    private api = 'http://localhost:8080/api/sondages';
+  private api = 'http://localhost:8080/api/sondages';
 
-    constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-    create(data: any) {
-        const token = localStorage.getItem('token');
+  // =========================
+  // CREATE
+  // =========================
+  create(data: any) {
+    return this.http.post(this.api, data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      responseType: 'text' as 'json'
+    });
+  }
 
-        return this.http.post(this.api, data, {
-            headers: {
-            Authorization: `Bearer ${token}`
-            },
-            responseType: 'text' as 'json' // 🔥 FIX
-        });
-    }
+  // =========================
+  // GET ALL
+  // =========================
+  getAll() {
+    return this.http.get<Sondage[]>(this.api);
+  }
 
-    getAll() {
-        return this.http.get<any[]>(this.api);
-    }
+  // =========================
+  // GET BY ID (FIXED TYPING)
+  // =========================
+  getById(id: number) {
+    return this.http.get<Sondage>(`${this.api}/public/${id}`);
+  }
 
-    delete(id: number) {
-        return this.http.delete(`${this.api}/${id}`);
-    }
+  // =========================
+  // UPDATE (🔥 YOU WERE MISSING THIS)
+  // =========================
+  update(id: number, data: any) {
+    return this.http.put(`${this.api}/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+  }
 
-    publish(id: number) {
-        return this.http.put(
-            `http://localhost:8080/api/sondages/${id}/publish`,
-            {},
-            {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            },
-            responseType: 'text'
-            }
-        );
-    }
+  // =========================
+  // DELETE
+  // =========================
+  delete(id: number) {
+    return this.http.delete(`${this.api}/${id}`);
+  }
 
-    unpublish(id: number) {
-        const token = localStorage.getItem('token');
+  // =========================
+  // PUBLISH
+  // =========================
+  publish(id: number) {
+    return this.http.put(`${this.api}/${id}/publish`, {}, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      responseType: 'text'
+    });
+  }
 
-        return this.http.put(
-            `http://localhost:8080/api/sondages/${id}/unpublish`,
-            {},
-            {
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-            responseType: 'text'
-            }
-        );
-    }
+  // =========================
+  // UNPUBLISH
+  // =========================
+  unpublish(id: number) {
+    return this.http.put(`${this.api}/${id}/unpublish`, {}, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      responseType: 'text'
+    });
+  }
 
-    getMySondages() {
-        return this.http.get<any[]>('http://localhost:8080/api/sondages/me', {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-        });
-    }
+  // =========================
+  // REJECT (add token ⚠️)
+  // =========================
+  reject(id: number) {
+    return this.http.put(`${this.api}/${id}/reject`, {}, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+  }
 
-    getById(id: any) {
-        const token = localStorage.getItem('token');
-
-        return this.http.get(`http://localhost:8080/api/sondages/public/${id}`, {
-            headers: {
-            Authorization: `Bearer ${token}`
-            }
-        });
-    }
-    
+  // =========================
+  // MY SONDAGES
+  // =========================
+  getMySondages() {
+    return this.http.get<Sondage[]>(`${this.api}/me`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+  }
 }

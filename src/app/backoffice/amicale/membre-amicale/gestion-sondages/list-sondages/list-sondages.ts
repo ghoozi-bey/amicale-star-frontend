@@ -52,7 +52,7 @@ export class ListSondagesComponent implements OnInit {
   }
 
   goToDetails(sondage: any) {
-    this.router.navigate(['/sondages', sondage.id]);
+    this.router.navigate(['/gestion-sondages', sondage.id]);
   }
 
   formatStatus(statut: string): string {

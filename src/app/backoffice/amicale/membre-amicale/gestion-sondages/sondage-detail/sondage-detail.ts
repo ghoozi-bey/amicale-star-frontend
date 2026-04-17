@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { SondageService } from '../../../../../services/sondage.service';
 
 @Component({
@@ -19,16 +20,24 @@ export class SondageDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private sondageService: SondageService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
+    const idParam = this.route.snapshot.paramMap.get('id');
+
+    if (!idParam) {
+      console.error('ID not found in route');
+      return;
+    }
+
+    const id = Number(idParam);
 
     this.sondageService.getById(id).subscribe({
       next: (data) => {
         this.sondage = data;
-        this.cdr.detectChanges(); // forces UI update
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error(err);
@@ -46,6 +55,15 @@ export class SondageDetailComponent implements OnInit {
     };
 
     return map[statut] || statut;
+  }
+
+  formatType(type: string): string {
+    switch (type) {
+      case 'CHOIX_UNIQUE': return 'Choix unique';
+      case 'CHOIX_MULTIPLE': return 'Choix multiple';
+      case 'TEXTE': return 'Réponse libre';
+      default: return type;
+    }
   }
 
   publish() {
@@ -92,6 +110,37 @@ export class SondageDetailComponent implements OnInit {
         console.error(err);
         this.errorMessage = '❌ Erreur lors de l’annulation';
         this.cdr.detectChanges(); // forces UI update
+      }
+    });
+  }
+
+  canEdit(): boolean {
+    return this.sondage?.statut === 'BROUILLON' || this.sondage?.statut === 'PUBLISHED';
+  }
+
+  onEdit() {
+    this.router.navigate(['/gestion-sondages/edit', this.sondage.id]);
+  }
+
+  reject() {
+    if (!this.sondage?.id) return;
+
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    this.sondageService.reject(this.sondage.id).subscribe({
+      next: () => {
+        this.successMessage = '❌ Sondage rejeté';
+        this.cdr.detectChanges();
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMessage = 'Erreur lors du rejet';
+        this.cdr.detectChanges();
       }
     });
   }
