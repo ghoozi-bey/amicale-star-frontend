@@ -101,17 +101,11 @@ export class EvenementService {
     );
   }
 
-  inscrire(eventId: number, data: any) {
-  return this.http.post(
-    `http://localhost:8080/api/evenements/${eventId}/inscrire`,
-    data,
-    { headers: this.getHeaders() } // 🔥 IMPORTANT
-  );
-}
-createInscription(data: any) {
+  
+createInscription(formData: FormData) {
   return this.http.post(
     'http://localhost:8080/api/inscriptions/create',
-    data
+    formData
   );
 }
 }

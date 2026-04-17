@@ -17,7 +17,7 @@ export class InscriptionComponent implements OnInit {
   eventId!: number;
 
   nbPersonnes: number = 1;
-  modePaiement: string = '';
+  modePaiement: string = 'VIREMENT';
 
   user: any = {
     nom: '',
@@ -79,50 +79,79 @@ export class InscriptionComponent implements OnInit {
   onFileChange(event: any, type: string, index?: number) {
     const file = event.target.files[0];
 
-    if (type === 'wife') this.wife.file = file;
+    if (type === 'wife') {
+      this.wife.file = file;
+      console.log("FILE CONJOINT:", this.wife.file); // 🔥 TEST
+    }
+
     if (type === 'child' && index !== undefined) {
       this.children[index].file = file;
     }
   }
 
-  isVoyageType(): boolean {
-    return true; // adapte plus tard
-  }
-
   inscrire(): void {
 
-  const data = {
-    matricule: this.user.matricule,
-    evenementId: this.eventId,
-    modePaiement: this.modePaiement,
+    const formData = new FormData();
 
-    conjoint: this.hasWife ? {
-      nom: this.wife.nom,
-      prenom: this.wife.prenom,
-      dateNaissance: this.wife.dateNaissance,
-      cin: this.wife.cin,
-      telephone: this.wife.telephone
-    } : null,
+    const data = {
+      matricule: this.user.matricule,      // 🔥 IMPORTANT
+      evenementId: this.eventId,           // 🔥 IMPORTANT
+      modePaiement: this.modePaiement,
 
-    enfants: this.hasChildren ? this.children.map(c => ({
-      nom: c.nom,
-      prenom: c.prenom,
-      dateNaissance: c.dateNaissance
-    })) : []
-  };
+      conjoint: this.hasWife ? {
+        nom: this.wife.nom,
+        prenom: this.wife.prenom,
+        dateNaissance: this.wife.dateNaissance,
+        cin: this.wife.cin,
+        telephone: this.wife.telephone
+      } : null,
 
-  this.eventService.createInscription(data).subscribe({
-    next: () => alert("Inscription envoyée ✅"),
-    error: (err) => {
-      console.error(err);
-      alert("Erreur ❌");
+      enfants: this.hasChildren ? this.children.map(c => ({
+        nom: c.nom,
+        prenom: c.prenom,
+        dateNaissance: c.dateNaissance
+      })) : []
+    };
+
+    // JSON → Blob
+    formData.append("data", new Blob(
+      [JSON.stringify(data)],
+      { type: "application/json" }
+    ));
+
+    // 🔥 TEST AVANT ENVOI
+    console.log("FILE CONJOINT AVANT ENVOI:", this.wife.file);
+
+    // fichier conjoint
+    if (this.wife.file) {
+      formData.append("conjointFile", this.wife.file);
     }
-  });
-}
-  onWifeChange() {
-  if (!this.hasWife) {
-    this.hasChildren = false;
-    this.children = [];
+
+    // fichiers enfants
+    this.children.forEach((c) => {
+      if (c.file) {
+        formData.append("enfantsFiles", c.file);
+      }
+    });
+
+    console.log("FORMDATA TEST:", formData);
+
+    this.eventService.createInscription(formData).subscribe({
+      next: () => alert("Inscription envoyée ✅"),
+      error: (err) => {
+        console.error(err);
+        alert("Erreur ❌");
+      }
+    });
   }
+
+  onWifeChange() {
+    if (!this.hasWife) {
+      this.hasChildren = false;
+      this.children = [];
+    }
+  }
+  isVoyageType(): boolean {
+  return true;
 }
 }
