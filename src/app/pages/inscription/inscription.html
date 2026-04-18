@@ -14,32 +14,32 @@
 
       <div class="form-group">
         <label>Nom</label>
-        <input name="nom" [(ngModel)]="user.nom" disabled>
+        <input [(ngModel)]="user.nom" disabled>
       </div>
 
       <div class="form-group">
         <label>Prénom</label>
-        <input name="prenom" [(ngModel)]="user.prenom" disabled>
+        <input [(ngModel)]="user.prenom" disabled>
       </div>
 
       <div class="form-group">
         <label>Email</label>
-        <input name="email" [(ngModel)]="user.email" disabled>
+        <input [(ngModel)]="user.email" disabled>
       </div>
 
       <div class="form-group">
         <label>Téléphone</label>
-        <input name="telephone" [(ngModel)]="user.telephone" disabled>
+        <input [(ngModel)]="user.telephone" disabled>
       </div>
 
       <div class="form-group">
         <label>Matricule</label>
-        <input name="matricule" [(ngModel)]="user.matricule" disabled>
+        <input [(ngModel)]="user.matricule" disabled>
       </div>
 
       <div class="form-group">
         <label>CIN</label>
-        <input name="cin" [(ngModel)]="user.cin" disabled>
+        <input [(ngModel)]="user.cin" disabled>
       </div>
 
     </div>
@@ -47,10 +47,17 @@
     <!-- INSCRIPTION -->
     <h2>Détails inscription</h2>
 
+    <!-- 🔥 PASSEPORT ADHERENT -->
+    <div class="form-group full" *ngIf="isPassportRequired">
+      <label>Passeport Adhérent (PDF obligatoire)</label>
+      <input type="file" accept="application/pdf"
+             (change)="onAdherentFileChange($event)">
+    </div>
+
     <div class="form-grid">
       <div class="form-group">
         <label>Méthode de paiement</label>
-        <select name="modePaiement" [(ngModel)]="modePaiement">
+        <select [(ngModel)]="modePaiement">
           <option value="">-- Sélectionner --</option>
           <option value="VIREMENT">Virement</option>
           <option value="CASH">Cash</option>
@@ -68,18 +75,18 @@
       <div class="checkbox-group">
 
         <label class="checkbox-item">
-          <input type="checkbox" name="hasWife" [(ngModel)]="hasWife">
+          <input type="checkbox" [(ngModel)]="hasWife">
           <span>Ajouter épouse</span>
         </label>
 
         <label class="checkbox-item">
-          <input type="checkbox" name="hasChildren" [(ngModel)]="hasChildren">
+          <input type="checkbox" [(ngModel)]="hasChildren">
           <span>Ajouter enfants</span>
         </label>
 
       </div>
 
-      <!-- 🔥 ÉPOUSE -->
+      <!-- ÉPOUSE -->
       <div *ngIf="hasWife" class="family-card">
 
         <h3>Épouse</h3>
@@ -88,30 +95,31 @@
 
           <div class="form-group">
             <label>Nom</label>
-            <input name="wifeNom" [(ngModel)]="wife.nom">
+            <input [(ngModel)]="wife.nom">
           </div>
 
           <div class="form-group">
             <label>Prénom</label>
-            <input name="wifePrenom" [(ngModel)]="wife.prenom">
+            <input [(ngModel)]="wife.prenom">
           </div>
 
           <div class="form-group">
             <label>Date de naissance</label>
-            <input name="wifeDate" type="date" [(ngModel)]="wife.dateNaissance">
+            <input type="date" [(ngModel)]="wife.dateNaissance">
           </div>
 
           <div class="form-group">
             <label>CIN</label>
-            <input name="wifeCin" [(ngModel)]="wife.cin">
+            <input [(ngModel)]="wife.cin">
           </div>
 
           <div class="form-group">
             <label>Téléphone</label>
-            <input name="wifeTel" [(ngModel)]="wife.telephone">
+            <input [(ngModel)]="wife.telephone">
           </div>
 
-          <div class="form-group full" *ngIf="isVoyageType()">
+          <!-- 🔥 PASSEPORT ÉPOUSE -->
+          <div class="form-group full" *ngIf="isPassportRequired">
             <label>Passeport (PDF obligatoire)</label>
             <input type="file" accept="application/pdf"
                    (change)="onFileChange($event,'wife')">
@@ -121,14 +129,14 @@
 
       </div>
 
-      <!-- 🔥 ENFANTS -->
+      <!-- ENFANTS -->
       <div *ngIf="hasChildren" class="family-card">
 
         <h3>Enfants</h3>
 
         <div class="form-group">
           <label>Nombre d'enfants</label>
-          <select name="nbEnfants" [(ngModel)]="nbEnfants" (change)="updateChildren()">
+          <select [(ngModel)]="nbEnfants" (change)="updateChildren()">
             <option *ngFor="let n of [1,2,3,4,5,6]" [value]="n">{{n}}</option>
           </select>
         </div>
@@ -141,20 +149,21 @@
 
             <div class="form-group">
               <label>Nom</label>
-              <input name="childNom{{i}}" [(ngModel)]="child.nom">
+              <input [(ngModel)]="child.nom">
             </div>
 
             <div class="form-group">
               <label>Prénom</label>
-              <input name="childPrenom{{i}}" [(ngModel)]="child.prenom">
+              <input [(ngModel)]="child.prenom">
             </div>
 
             <div class="form-group">
               <label>Date de naissance</label>
-              <input name="childDate{{i}}" type="date" [(ngModel)]="child.dateNaissance">
+              <input type="date" [(ngModel)]="child.dateNaissance">
             </div>
 
-            <div class="form-group full" *ngIf="isVoyageType()">
+            <!-- 🔥 PASSEPORT ENFANT -->
+            <div class="form-group full" *ngIf="isPassportRequired">
               <label>Passeport (PDF obligatoire)</label>
               <input type="file" accept="application/pdf"
                      (change)="onFileChange($event,'child',i)">
@@ -169,10 +178,37 @@
     </div>
 
     <!-- BUTTON -->
-    <button [disabled]="!modePaiement" (click)="inscrire()">
-      Confirmer inscription
+    <button 
+      (click)="inscrire()"
+      [disabled]="!modePaiement || nbPlaces === 0 || isLoading"
+    >
+      {{ isLoading ? 'Envoi en cours...' : 'Confirmer inscription' }}
     </button>
 
+    <!-- PLACES -->
+    <p [style.color]="nbPlaces === 0 ? 'red' : 'green'">
+      Places restantes : {{ nbPlaces }}
+    </p>
+
+    <p *ngIf="nbPlaces === 0" style="color:red;">
+      Événement complet ❌
+    </p>
+
+  </div>
+
+  <!-- MODAL -->
+  <div *ngIf="showModal" class="modal-overlay">
+    <div class="modal-box">
+
+      <h2 [style.color]="isSuccess ? 'green' : 'red'">
+        {{ isSuccess ? 'Succès' : 'Erreur' }}
+      </h2>
+
+      <p>{{ modalMessage }}</p>
+
+      <button (click)="showModal = false">OK</button>
+
+    </div>
   </div>
 
 </div>

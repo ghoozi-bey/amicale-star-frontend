@@ -28,41 +28,45 @@ export class EventsComponent implements OnInit {
   }
 
   loadEvents() {
-    this.loading = true;
+  this.loading = true;
 
-    this.eventService.getMesInscriptions().subscribe({
-      next: (data: any) => {
+  const matricule = localStorage.getItem('matricule');
 
-        this.events = (data || [])
-          .filter((i: any) => i && i.evenement)
-          .map((i: any) => {
-
-            const e = i.evenement;
-
-            return {
-              id: e.id,
-              titre: e.titre,
-              lieu: e.lieu,
-              dateDebut: e.dateDebut,
-              dateFin: e.dateFin,
-              statut: i.statut,
-
-              // 🔥 backend gère tout
-              imageUrl: `${this.apiUrl}/photo/${e.id}`
-            };
-          });
-
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-
-      error: (err) => {
-        console.error(err);
-        this.loading = false;
-        this.cdr.detectChanges();
-      }
-    });
+  if (!matricule) {
+    console.error("❌ matricule introuvable");
+    this.loading = false;
+    return;
   }
+
+  this.eventService.getMesInscriptions(matricule).subscribe({
+    next: (data: any[]) => {
+
+      this.events = (data || [])
+        .filter((i: any) => i && i.evenement)
+        .map((i: any) => {
+
+          const e = i.evenement;
+
+          return {
+            id: e.id,
+            titre: e.titre,
+            lieu: e.lieu,
+            dateDebut: e.dateDebut,
+            dateFin: e.dateFin,
+            statut: i.statut,
+
+            imageUrl: `${this.apiUrl}/photo/${e.id}`
+          };
+        });
+
+      this.loading = false;
+    },
+    error: (err) => {
+      console.error(err);
+      this.loading = false;
+    }
+  });
+}
 
   goToInscription(eventId: number) {
     this.router.navigate(['/inscription', eventId]);

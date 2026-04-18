@@ -13,27 +13,41 @@ export class MesEvenementsComponent implements OnInit {
 
   inscriptions: any[] = [];
   loading = false;
+  matricule: string = '';
 
   constructor(private eventService: EvenementService) {}
 
   ngOnInit(): void {
-    this.load();
-  }
+
+  // 🔥 ON FORCE LE BON MATRICULE
+  this.matricule = localStorage.getItem('matricule') || '';
+
+  console.log("✅ MATRICULE FINAL:", this.matricule);
+
+  this.load();
+}
 
   load() {
-    this.loading = true;
 
-    this.eventService.getMesInscriptions().subscribe({
-      next: (data: any[]) => {
-        this.inscriptions = data || [];
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.loading = false;
-      }
-    });
+  if (!this.matricule) {
+    console.error("❌ Matricule introuvable");
+    return;
   }
+
+  this.loading = true;
+
+  this.eventService.getMesInscriptions(this.matricule).subscribe({
+    next: (data: any[]) => {
+      console.log("✅ DATA:", data);
+      this.inscriptions = data || [];
+      this.loading = false;
+    },
+    error: (err) => {
+      console.error("❌ ERREUR:", err);
+      this.loading = false;
+    }
+  });
+}
 
   getStatutClass(statut: string) {
     switch (statut) {

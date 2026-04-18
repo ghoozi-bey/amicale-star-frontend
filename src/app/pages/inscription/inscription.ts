@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EvenementService } from '../../services/evenement';
 import { UserService } from '../../services/user.service';
@@ -16,8 +16,18 @@ export class InscriptionComponent implements OnInit {
 
   eventId!: number;
 
-  nbPersonnes: number = 1;
+  nbPlaces: number = 0;
+  isLoading = false;
+
+  // 🔥 PASSEPORT LOGIC
+  isPassportRequired: boolean = false;
+
   modePaiement: string = 'VIREMENT';
+
+  // ✅ MODAL
+  showModal = false;
+  modalMessage = "";
+  isSuccess = true;
 
   user: any = {
     nom: '',
@@ -28,7 +38,8 @@ export class InscriptionComponent implements OnInit {
     cin: ''
   };
 
-  // FAMILLE
+  adherentFile: File | null = null;
+
   hasWife = false;
   hasChildren = false;
 
@@ -48,7 +59,8 @@ export class InscriptionComponent implements OnInit {
     private route: ActivatedRoute,
     private eventService: EvenementService,
     private userService: UserService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -62,6 +74,50 @@ export class InscriptionComponent implements OnInit {
     });
 
     this.updateChildren();
+    this.loadNbPlaces();
+    this.loadEventDetails(); // 🔥 IMPORTANT
+  }
+
+  // =========================
+  // 🔥 LOAD EVENT (LOGIQUE FIX)
+  // =========================
+  loadEventDetails() {
+    this.eventService.getEvenementById(this.eventId).subscribe({
+      next: (event: any) => {
+
+        const typeId = event.typeEvenementId;
+        const isInternational = event.isInternational === true;
+
+        const isVoyage = typeId === 2;
+        const isOmraHaj = typeId === 1;
+
+        // 🔥 LOGIQUE FINALE CORRECTE
+        this.isPassportRequired =
+          isOmraHaj || (isVoyage && isInternational);
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error("Erreur chargement event", err);
+      }
+    });
+  }
+
+  // =========================
+  // LOAD PLACES
+  // =========================
+  loadNbPlaces() {
+    this.eventService.getNbPlaces(this.eventId).subscribe({
+      next: (data) => {
+        this.zone.run(() => {
+          this.nbPlaces = data;
+          this.cdr.detectChanges();
+        });
+      },
+      error: () => {
+        this.nbPlaces = 0;
+      }
+    });
   }
 
   updateChildren() {
@@ -76,28 +132,48 @@ export class InscriptionComponent implements OnInit {
     }
   }
 
+  onAdherentFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) this.adherentFile = file;
+  }
+
   onFileChange(event: any, type: string, index?: number) {
     const file = event.target.files[0];
 
-    if (type === 'wife') {
-      this.wife.file = file;
-      console.log("FILE CONJOINT:", this.wife.file); // 🔥 TEST
-    }
-
-    if (type === 'child' && index !== undefined) {
-      this.children[index].file = file;
-    }
+    if (type === 'wife') this.wife.file = file;
+    if (type === 'child' && index !== undefined) this.children[index].file = file;
   }
 
+  // =========================
+  // INSCRIPTION
+  // =========================
   inscrire(): void {
+
+    if (this.isLoading) return;
+
+    if (this.nbPlaces === 0) {
+      this.modalMessage = "Événement complet ❌";
+      this.isSuccess = false;
+      this.showModal = true;
+      return;
+    }
+
+    // 🔥 VALIDATION PASSEPORT
+    if (this.isPassportRequired && !this.adherentFile) {
+      this.modalMessage = "Passeport obligatoire ❌";
+      this.isSuccess = false;
+      this.showModal = true;
+      return;
+    }
+
+    this.isLoading = true;
 
     const formData = new FormData();
 
     const data = {
-      matricule: this.user.matricule,      // 🔥 IMPORTANT
-      evenementId: this.eventId,           // 🔥 IMPORTANT
+      matricule: this.user.matricule,
+      evenementId: this.eventId,
       modePaiement: this.modePaiement,
-
       conjoint: this.hasWife ? {
         nom: this.wife.nom,
         prenom: this.wife.prenom,
@@ -105,7 +181,6 @@ export class InscriptionComponent implements OnInit {
         cin: this.wife.cin,
         telephone: this.wife.telephone
       } : null,
-
       enfants: this.hasChildren ? this.children.map(c => ({
         nom: c.nom,
         prenom: c.prenom,
@@ -113,34 +188,49 @@ export class InscriptionComponent implements OnInit {
       })) : []
     };
 
-    // JSON → Blob
     formData.append("data", new Blob(
       [JSON.stringify(data)],
       { type: "application/json" }
     ));
 
-    // 🔥 TEST AVANT ENVOI
-    console.log("FILE CONJOINT AVANT ENVOI:", this.wife.file);
+    if (this.adherentFile) {
+      formData.append("adherentFile", this.adherentFile);
+    }
 
-    // fichier conjoint
-    if (this.wife.file) {
+    if (this.hasWife && this.wife.file) {
       formData.append("conjointFile", this.wife.file);
     }
 
-    // fichiers enfants
-    this.children.forEach((c) => {
-      if (c.file) {
-        formData.append("enfantsFiles", c.file);
-      }
-    });
-
-    console.log("FORMDATA TEST:", formData);
+    if (this.hasChildren) {
+      this.children.forEach(c => {
+        if (c.file) formData.append("enfantsFiles", c.file);
+      });
+    }
 
     this.eventService.createInscription(formData).subscribe({
-      next: () => alert("Inscription envoyée ✅"),
+      next: () => {
+        this.zone.run(() => {
+          this.modalMessage = "Inscription réussie ✅";
+          this.isSuccess = true;
+          this.showModal = true;
+
+          this.loadNbPlaces();
+
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        });
+      },
       error: (err) => {
-        console.error(err);
-        alert("Erreur ❌");
+        this.zone.run(() => {
+          console.error(err);
+
+          this.modalMessage = err.error || "Erreur lors de l'inscription ❌";
+          this.isSuccess = false;
+          this.showModal = true;
+
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        });
       }
     });
   }
@@ -151,7 +241,4 @@ export class InscriptionComponent implements OnInit {
       this.children = [];
     }
   }
-  isVoyageType(): boolean {
-  return true;
-}
 }

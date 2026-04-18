@@ -87,19 +87,12 @@ export class EvenementService {
     });
   }
 
-  getMesInscriptions() {
-
-    const matricule = localStorage.getItem('matricule');
-
-    if (!matricule) {
-      throw new Error("Matricule null ❌");
-    }
-
-    return this.http.get<any[]>(
-      `http://localhost:8080/api/inscriptions/mes-inscriptions/${matricule}`,
-      { headers: this.getHeaders() }
-    );
-  }
+  getMesInscriptions(matricule: string) {
+  return this.http.get<any[]>(
+    `http://localhost:8080/api/inscriptions/mes-inscriptions/${matricule}`,
+    { headers: this.getHeaders() }
+  );
+}
 
   
 createInscription(formData: FormData) {
@@ -107,5 +100,8 @@ createInscription(formData: FormData) {
     'http://localhost:8080/api/inscriptions/create',
     formData
   );
+}
+getNbPlaces(eventId: number) {
+  return this.http.get<number>(`http://localhost:8080/api/evenements/${eventId}/places`);
 }
 }

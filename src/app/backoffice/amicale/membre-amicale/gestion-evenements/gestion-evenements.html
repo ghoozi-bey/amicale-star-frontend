@@ -24,6 +24,15 @@
       <input formControlName="destination">
       <div class="error" *ngIf="f['destination'].invalid && f['destination'].touched">Obligatoire</div>
     </div>
+    <!-- 🔥 NOUVEAU : TYPE VOYAGE -->
+    <!-- 🔥 TYPE VOYAGE (INTERNE / EXTERNE) -->
+<div class="form-group" *ngIf="typeEvenementId === 2">
+  <label>Type de déplacement</label>
+  <select formControlName="isInternational">
+    <option [ngValue]="false">Interne (Tunisie)</option>
+    <option [ngValue]="true">Externe (International)</option>
+  </select>
+</div>
 
     <div class="form-group" *ngIf="typeEvenementId === 1">
       <label>Agence</label>

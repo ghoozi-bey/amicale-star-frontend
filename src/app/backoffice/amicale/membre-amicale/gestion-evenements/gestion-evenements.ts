@@ -47,7 +47,8 @@ export class GestionEvenementsComponent implements OnInit {
       dateFin: [''],
       nbPlaces: [null],
       prix: [null],
-      description: ['', Validators.required]
+      description: ['', Validators.required],
+      isInternational: [false] // utilisé seulement pour VOYAGE
     });
   }
 
@@ -80,13 +81,13 @@ export class GestionEvenementsComponent implements OnInit {
   }
 
   onFileSelected(event: any) {
-  const file = event.target.files[0];
+    const file = event.target.files[0];
 
-  if (file) {
-    this.selectedFile = file;
-    console.log("FILE OK:", file); // 🔥 debug
+    if (file) {
+      this.selectedFile = file;
+      console.log("FILE OK:", file);
+    }
   }
-}
 
   createEvent() {
 
@@ -115,18 +116,29 @@ export class GestionEvenementsComponent implements OnInit {
     if (data.nbPlaces) formData.append('nbPlaces', String(data.nbPlaces));
     if (data.prix) formData.append('prix', String(data.prix));
 
-    // 🔥 CORRECTION IMPORTANTE
+    // =========================
+    // 🔥 LOGIQUE MÉTIER
+    // =========================
+
+    // ✅ CONVENTION
     if (this.typeEvenementId === 3) {
       formData.append('societe', data.societe || '');
+      formData.append('isInternational', 'false'); // 🔥 forcé
     }
 
+    // ✅ OMRA / HAJ
     if (this.typeEvenementId === 1) {
       formData.append('agence', data.agence || '');
+      formData.append('isInternational', 'true'); // 🔥 forcé
     }
 
+    // ✅ VOYAGE
     if (this.typeEvenementId === 2) {
       formData.append('destination', data.destination || '');
+      formData.append('isInternational', String(data.isInternational)); // 🔥 choix utilisateur
     }
+
+    // =========================
 
     if (this.selectedFile) {
       formData.append('photo', this.selectedFile);
