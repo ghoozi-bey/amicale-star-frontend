@@ -111,4 +111,5 @@ export class SidebarComponent implements OnInit {
   hasRole(role: string): boolean {
     return this.userRole.toUpperCase() === role.toUpperCase();
   }
+  
 }

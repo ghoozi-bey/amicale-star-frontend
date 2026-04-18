@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 
 import { LayoutComponent } from './layout/layout';
 import { DashboardComponent } from './pages/dashboard/dashboard';
-import { EventsComponent } from './pages/evenements/evenements';
 import { GestionEvenementsComponent } from './backoffice/amicale/membre-amicale/gestion-evenements/gestion-evenements';
 
 import { authGuard } from './services/auth.guard';
@@ -16,7 +15,7 @@ export const routes: Routes = [
       import('./pages/login/login').then(m => m.LoginComponent)
   },
 
-  // 🔁 REDIRECTION
+  // 🔁 REDIRECTION INIT
   {
     path: '',
     redirectTo: 'login',
@@ -28,43 +27,24 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     canActivate: [authGuard],
+
+    // 🔥 FIX IMPORTANT
+    runGuardsAndResolvers: 'always',
+
     children: [
 
-      // 📊 DASHBOARD
       {
         path: 'dashboard',
         component: DashboardComponent
       },
 
-      // 📅 EVENEMENTS
+      // 🔥 REDIRECTION
       {
         path: 'evenements',
-        component: EventsComponent,
-        runGuardsAndResolvers: 'always'
+        redirectTo: 'mes-evenements',
+        pathMatch: 'full'
       },
 
-      // 🔥 NOUVELLE PAGE INSCRIPTION
-      {
-        path: 'inscription/:id',
-        loadComponent: () =>
-          import('./pages/inscription/inscription')
-            .then(m => m.InscriptionComponent)
-      },
-      
-  {
-  path: 'evenement/:id',
-  loadComponent: () =>
-    import('./pages/evenement-details/evenement-details')
-      .then(m => m.EvenementDetailsComponent)
-},
-
-      // ➕ GESTION EVENEMENTS
-      {
-        path: 'gestion-evenements',
-        component: GestionEvenementsComponent
-      },
-
-      // 👤 MES EVENEMENTS (adhérent)
       {
         path: 'mes-evenements',
         loadComponent: () =>
@@ -72,7 +52,25 @@ export const routes: Routes = [
             .then(m => m.MesEvenementsComponent)
       },
 
-      // 🟢 MES EVENEMENTS (amicale)
+      {
+        path: 'evenement/:id',
+        loadComponent: () =>
+          import('./pages/evenement-details/evenement-details')
+            .then(m => m.EvenementDetailsComponent)
+      },
+
+      {
+        path: 'inscription/:id',
+        loadComponent: () =>
+          import('./pages/inscription/inscription')
+            .then(m => m.InscriptionComponent)
+      },
+
+      {
+        path: 'gestion-evenements',
+        component: GestionEvenementsComponent
+      },
+
       {
         path: 'mes-evenements-amicale',
         loadComponent: () =>
@@ -80,7 +78,6 @@ export const routes: Routes = [
             .then(m => m.MesEvenementsMembreAmicaleComponent)
       },
 
-      // ✏️ MODIFIER EVENEMENT
       {
         path: 'modifier-evenement/:id',
         loadComponent: () =>
@@ -88,7 +85,6 @@ export const routes: Routes = [
             .then(m => m.ModifierEvenementComponent)
       },
 
-      // 🗳️ SONDAGES
       {
         path: 'gestion-sondages',
         loadComponent: () =>
@@ -114,14 +110,12 @@ export const routes: Routes = [
             .then(m => m.SondageDetailComponent)
       },
 
-      // 👤 PROFILE
       {
         path: 'profile',
         loadComponent: () =>
           import('./pages/profile/profile').then(m => m.ProfileComponent)
       },
 
-      // 🔴 ADMIN
       {
         path: 'admin-users',
         loadComponent: () =>
@@ -145,14 +139,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./backoffice/amicale/admin/admin-user-profile/admin-user-profile')
             .then(m => m.AdminUserProfile)
-      },
+      }
+
     ]
   },
 
-  // 🔥 FALLBACK (important)
   {
     path: '**',
     redirectTo: 'login'
   }
-
 ];

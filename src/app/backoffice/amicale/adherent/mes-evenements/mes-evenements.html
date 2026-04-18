@@ -14,16 +14,16 @@
 
       <!-- IMAGE -->
       <img 
-        [src]="'http://localhost:8080/api/evenements/photo/' + ins.evenement.id"
+        [src]="'http://localhost:8080/api/evenements/photo/' + ins.evenementId"
         class="img"
       >
 
       <!-- INFOS -->
-      <h3>{{ ins.evenement.titre }}</h3>
+      <h3>{{ ins.titreEvenement }}</h3>
 
-      <p>📍 {{ ins.evenement.lieu }}</p>
-
-      <p>📅 {{ ins.evenement.dateDebut || '-' }}</p>
+      <!-- ❌ lieu/date non dispo pour l’instant -->
+      <p>📍 -</p>
+      <p>📅 -</p>
 
       <!-- STATUT INSCRIPTION -->
       <p>
@@ -49,5 +49,6 @@
   <div *ngIf="!loading && inscriptions.length === 0" class="empty">
     Aucun événement inscrit
   </div>
+  <p>DEBUG: {{ inscriptions.length }}</p>
 
 </div>

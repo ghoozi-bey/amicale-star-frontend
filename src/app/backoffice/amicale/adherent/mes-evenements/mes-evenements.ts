@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EvenementService } from '../../../../services/evenement';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-mes-evenements',
@@ -9,45 +10,48 @@ import { EvenementService } from '../../../../services/evenement';
   templateUrl: './mes-evenements.html',
   styleUrls: ['./mes-evenements.css']
 })
-export class MesEvenementsComponent implements OnInit {
+export class MesEvenementsComponent implements OnInit, OnDestroy {
 
   inscriptions: any[] = [];
   loading = false;
   matricule: string = '';
 
+  private sub!: Subscription; // 🔥 important
+
   constructor(private eventService: EvenementService) {}
 
   ngOnInit(): void {
+    this.matricule = localStorage.getItem('matricule') || '';
 
-  // 🔥 ON FORCE LE BON MATRICULE
-  this.matricule = localStorage.getItem('matricule') || '';
+    if (!this.matricule) {
+      console.error("❌ Matricule introuvable");
+      return;
+    }
 
-  console.log("✅ MATRICULE FINAL:", this.matricule);
-
-  this.load();
-}
-
-  load() {
-
-  if (!this.matricule) {
-    console.error("❌ Matricule introuvable");
-    return;
+    this.load();
   }
 
-  this.loading = true;
+  load() {
+    this.loading = true;
 
-  this.eventService.getMesInscriptions(this.matricule).subscribe({
-    next: (data: any[]) => {
-      console.log("✅ DATA:", data);
-      this.inscriptions = data || [];
-      this.loading = false;
-    },
-    error: (err) => {
-      console.error("❌ ERREUR:", err);
-      this.loading = false;
+    this.sub = this.eventService.getMesInscriptions(this.matricule)
+      .subscribe({
+        next: (data: any[]) => {
+          this.inscriptions = data || [];
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    // 🔥 STOP les appels multiples
+    if (this.sub) {
+      this.sub.unsubscribe();
     }
-  });
-}
+  }
 
   getStatutClass(statut: string) {
     switch (statut) {

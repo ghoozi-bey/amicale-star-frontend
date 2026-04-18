@@ -3,16 +3,11 @@
   <!-- Profil -->
   <div class="user-profile" (click)="goToProfile()">
 
-    <!-- PHOTO -->
     <ng-container *ngIf="!loadingPhoto">
-
       <img *ngIf="userPhoto" [src]="userPhoto" class="avatar">
-
       <img *ngIf="!userPhoto" src="assets/default-pfp.jpg" class="avatar">
-
     </ng-container>
 
-    <!-- ✅ NAME FIX FINAL -->
     <ng-container *ngIf="user$ | async as user; else noUser">
       <span class="name">
         {{ user.prenom }} {{ user.nom }}
@@ -25,13 +20,13 @@
 
   </div>
 
-  <!-- 🌍 PUBLIC -->
+  <!-- PUBLIC -->
   <a routerLink="/dashboard" routerLinkActive="active" class="sidebar-item">
     <span class="material-icons">dashboard</span>
     Dashboard
   </a>
 
-  <a routerLink="/evenements" routerLinkActive="active" class="sidebar-item">
+  <a routerLink="/mes-evenements" routerLinkActive="active" class="sidebar-item">
     <span class="material-icons">event</span>
     Mes Inscriptions
   </a>
@@ -46,7 +41,7 @@
     Élections
   </a>
 
-  <!-- 🟢 MEMBRE AMICALE -->
+  <!-- MEMBRE AMICALE -->
   <div *ngIf="hasRole('MEMBRE_AMICALE')">
 
     <button (click)="toggleEvents()" class="menu-button sidebar-item">
@@ -54,33 +49,52 @@
       Gestion événements
     </button>
 
-    <ul [hidden]="!showEventsMenu" class="submenu">
-      <li><a routerLink="/gestion-evenements" class="sidebar-item">Ajouter événement</a></li>
-      <li><a routerLink="/mes-evenements-amicale" class="sidebar-item">Mes événements</a></li>
+    <!-- 🔥 FIX: *ngIf au lieu de hidden -->
+    <ul *ngIf="showEventsMenu" class="submenu">
+      <li>
+        <a routerLink="/gestion-evenements" routerLinkActive="active" class="sidebar-item">
+          Ajouter événement
+        </a>
+      </li>
+      <li>
+        <a routerLink="/mes-evenements-amicale" routerLinkActive="active" class="sidebar-item">
+          Mes événements
+        </a>
+      </li>
     </ul>
 
     <button (click)="toggleSondages()" class="menu-button sidebar-item">
-  <span class="material-icons">bar_chart</span>
-  Gestion sondages
-</button>
+      <span class="material-icons">bar_chart</span>
+      Gestion sondages
+    </button>
 
-    <ul [hidden]="!showSondagesMenu" class="submenu">
-      <li><a routerLink="/gestion-sondages/create">Créer sondage</a></li>
-      <li><a routerLink="/gestion-sondages">Liste sondages</a></li>
+    <!-- 🔥 FIX ici aussi -->
+    <ul *ngIf="showSondagesMenu" class="submenu">
+      <li>
+        <a routerLink="/gestion-sondages/create" routerLinkActive="active">
+          Créer sondage
+        </a>
+      </li>
+      <li>
+        <a routerLink="/gestion-sondages" routerLinkActive="active">
+          Liste sondages
+        </a>
+      </li>
     </ul>
 
   </div>
 
-  <!-- 🟣 RESPONSABLE -->
+  <!-- RESPONSABLE -->
   <div *ngIf="hasRole('RESPONSABLE_ELECTION')">
     <button (click)="toggleElections()">Gestion élections</button>
-    <ul [hidden]="!showElectionsMenu">
+
+    <ul *ngIf="showElectionsMenu">
       <li><a routerLink="/elections/create">Créer</a></li>
       <li><a routerLink="/elections">Liste</a></li>
     </ul>
   </div>
 
-  <!-- 🔴 ADMIN -->
+  <!-- ADMIN -->
   <div *ngIf="hasRole('ADMIN')">
 
     <button (click)="toggleUsers()" class="menu-button sidebar-item">
@@ -88,7 +102,7 @@
       Gestion utilisateurs
     </button>
 
-    <ul [hidden]="!showUsersMenu" class="submenu">
+    <ul *ngIf="showUsersMenu" class="submenu">
       <li>
         <a routerLink="/admin-create-user" routerLinkActive="active" class="sidebar-item">
           ➕ Créer
