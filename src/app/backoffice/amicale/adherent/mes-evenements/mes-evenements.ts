@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EvenementService } from '../../../../services/evenement';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-mes-evenements',
@@ -10,15 +9,16 @@ import { Subscription } from 'rxjs';
   templateUrl: './mes-evenements.html',
   styleUrls: ['./mes-evenements.css']
 })
-export class MesEvenementsComponent implements OnInit, OnDestroy {
+export class MesEvenementsComponent implements OnInit {
 
   inscriptions: any[] = [];
   loading = false;
   matricule: string = '';
 
-  private sub!: Subscription; // 🔥 important
-
-  constructor(private eventService: EvenementService) {}
+  constructor(
+    private eventService: EvenementService,
+    private cdr: ChangeDetectorRef // 🔥 IMPORTANT
+  ) {}
 
   ngOnInit(): void {
     this.matricule = localStorage.getItem('matricule') || '';
@@ -34,23 +34,21 @@ export class MesEvenementsComponent implements OnInit, OnDestroy {
   load() {
     this.loading = true;
 
-    this.sub = this.eventService.getMesInscriptions(this.matricule)
+    this.eventService.getMesInscriptions(this.matricule)
       .subscribe({
         next: (data: any[]) => {
+
           this.inscriptions = data || [];
           this.loading = false;
+
+          // 🔥 FIX FINAL
+          this.cdr.detectChanges();
         },
         error: () => {
           this.loading = false;
+          this.cdr.detectChanges();
         }
       });
-  }
-
-  ngOnDestroy(): void {
-    // 🔥 STOP les appels multiples
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
   }
 
   getStatutClass(statut: string) {

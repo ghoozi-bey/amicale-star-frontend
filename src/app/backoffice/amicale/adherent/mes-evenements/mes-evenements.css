@@ -1,43 +1,270 @@
+/* PAGE */
 .page {
   padding: 20px;
 }
 
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 16px;
+/* HEADER */
+.header {
+  margin-bottom: 20px;
 }
 
+.header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: #777;
+  font-size: 14px;
+}
+
+/* GRID */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* CARD */
 .card {
-  background: white;
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+}
+
+/* IMAGE */
+.img-container {
+  position: relative;
+  height: 150px;
 }
 
 .img {
   width: 100%;
-  height: 150px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 10px;
 }
 
+/* BADGE (STATUT) */
+.badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 20px;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* BODY */
+.card-body {
+  padding: 15px;
+}
+
+/* TITLE */
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+/* INFO */
+.info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+/* STATUS COLORS (BADGE + TEXTE) */
 .ok {
-  color: green;
-  font-weight: bold;
+  background: #2e7d32;
+  color: #fff;
 }
 
 .refuse {
-  color: red;
-  font-weight: bold;
+  background: #d32f2f;
+  color: #fff;
 }
 
 .attente {
-  color: orange;
-  font-weight: bold;
+  background: #f9a825;
+  color: #fff;
 }
 
-.empty {
+/* EMPTY */
+.empty-box {
   text-align: center;
   margin-top: 50px;
+  color: #777;
+}
+
+.empty-box p {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* ===================== */
+/* LOADER (ON NE TOUCHE PAS) */
+/* ===================== */
+
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #e0e0e0;
+  border-top: 5px solid #2e7d32;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  margin-top: 10px;
+  color: #666;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* STATS */
+.stats {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  flex: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.stat-number {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #777;
+}
+
+/* ANIMATION */
+.fade-in {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* SKELETON */
+.skeleton {
+  animation: pulse 1.5s infinite;
+}
+
+.skeleton-box {
+  height: 150px;
+  background: #eee;
+  border-radius: 10px;
+}
+
+.skeleton-text {
+  height: 12px;
+  background: #eee;
+  margin: 10px 0;
+  border-radius: 5px;
+}
+
+.skeleton-text.small {
+  width: 60%;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+/* HEADER PRO */
+.header-pro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #2e7d32, #43a047);
+  padding: 20px;
+  border-radius: 14px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+/* LEFT */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-left .icon {
+  font-size: 28px;
+  background: rgba(255,255,255,0.2);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* TEXT */
+.header-left h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.header-left p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+/* RIGHT */
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+/* BADGE */
+.badge-global {
+  background: white;
+  color: #2e7d32;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 13px;
 }

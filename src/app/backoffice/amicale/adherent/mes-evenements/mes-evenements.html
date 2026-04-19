@@ -1,54 +1,108 @@
 <div class="page">
 
-  <h2>Mes Événements</h2>
+  <div class="header-pro">
 
-  <!-- LOADING -->
-  <div *ngIf="loading" class="loading">
-    Chargement...
+  <div class="header-left">
+    <div class="icon">📊</div>
+
+    <div>
+      <h1>Mes inscriptions</h1>
+      <p>Suivi de vos événements en temps réel</p>
+    </div>
   </div>
 
-  <!-- LIST -->
-  <div *ngIf="!loading && inscriptions.length > 0" class="cards">
+  <div class="header-right">
+    <span class="badge-global">
+      {{ inscriptions.length }} total
+    </span>
+  </div>
 
-    <div class="card" *ngFor="let ins of inscriptions">
+</div>
 
-      <!-- IMAGE -->
-      <img 
-        [src]="'http://localhost:8080/api/evenements/photo/' + ins.evenementId"
-        class="img"
-      >
+  <!-- STATS -->
+  <div class="stats" *ngIf="!loading && inscriptions.length > 0">
 
-      <!-- INFOS -->
-      <h3>{{ ins.titreEvenement }}</h3>
+    <div class="stat-card">
+      <span class="stat-number">{{ inscriptions.length }}</span>
+      <span class="stat-label">Événements</span>
+    </div>
 
-      <!-- ❌ lieu/date non dispo pour l’instant -->
-      <p>📍 -</p>
-      <p>📅 -</p>
+    <div class="stat-card">
+      <span class="stat-number">
+        {{ inscriptions.filter(i => i.statut === 'ACCEPTEE').length }}
+      </span>
+      <span class="stat-label">Acceptés</span>
+    </div>
 
-      <!-- STATUT INSCRIPTION -->
-      <p>
-        Statut :
-        <span [ngClass]="getStatutClass(ins.statut)">
-          {{ ins.statut }}
-        </span>
-      </p>
-
-      <!-- STATUT PAIEMENT -->
-      <p>
-        Paiement :
-        <span [ngClass]="getPaiementClass(ins.statutPaiement)">
-          {{ ins.statutPaiement }}
-        </span>
-      </p>
-
+    <div class="stat-card">
+      <span class="stat-number">
+        {{ inscriptions.filter(i => i.statut === 'EN_ATTENTE').length }}
+      </span>
+      <span class="stat-label">En attente</span>
     </div>
 
   </div>
 
-  <!-- EMPTY -->
-  <div *ngIf="!loading && inscriptions.length === 0" class="empty">
-    Aucun événement inscrit
-  </div>
-  <p>DEBUG: {{ inscriptions.length }}</p>
+  <!-- LOADING (SKELETON) -->
+  <ng-container *ngIf="loading; else content">
+    <div class="cards">
+      <div class="card skeleton" *ngFor="let i of [1,2,3,4]">
+        <div class="img skeleton-box"></div>
+        <div class="card-body">
+          <div class="skeleton-text"></div>
+          <div class="skeleton-text small"></div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- CONTENT -->
+  <ng-template #content>
+
+    <!-- LIST -->
+    <div *ngIf="inscriptions.length > 0; else empty" class="cards">
+
+      <div class="card fade-in" *ngFor="let ins of inscriptions">
+
+        <!-- IMAGE -->
+        <div class="img-container">
+          <img 
+            [src]="'http://localhost:8080/api/evenements/photo/' + ins.evenementId"
+            class="img"
+          >
+
+          <!-- BADGE STATUT -->
+          <span class="badge" [ngClass]="getStatutClass(ins.statut)">
+            {{ ins.statut }}
+          </span>
+        </div>
+
+        <!-- BODY -->
+        <div class="card-body">
+
+          <h3 class="title">{{ ins.titreEvenement }}</h3>
+
+          <div class="info">
+            <span>💳 Paiement</span>
+            <span [ngClass]="getPaiementClass(ins.statutPaiement)">
+              {{ ins.statutPaiement }}
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- EMPTY -->
+    <ng-template #empty>
+      <div class="empty-box">
+        <p>😕 Aucun événement pour le moment</p>
+        <span>Inscrivez-vous pour voir vos événements ici</span>
+      </div>
+    </ng-template>
+
+  </ng-template>
 
 </div>

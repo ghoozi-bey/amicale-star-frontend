@@ -8,27 +8,24 @@ import { authGuard } from './services/auth.guard';
 
 export const routes: Routes = [
 
-  // 🔐 LOGIN
   {
     path: 'login',
     loadComponent: () =>
       import('./pages/login/login').then(m => m.LoginComponent)
   },
 
-  // 🔁 REDIRECTION INIT
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
   },
 
-  // 🔐 ZONE PROTÉGÉE
   {
     path: '',
     component: LayoutComponent,
     canActivate: [authGuard],
 
-    // 🔥 FIX IMPORTANT
+    // 🔥 important pour refresh
     runGuardsAndResolvers: 'always',
 
     children: [
@@ -38,7 +35,6 @@ export const routes: Routes = [
         component: DashboardComponent
       },
 
-      // 🔥 REDIRECTION
       {
         path: 'evenements',
         redirectTo: 'mes-evenements',
@@ -91,18 +87,21 @@ export const routes: Routes = [
           import('./backoffice/amicale/membre-amicale/gestion-sondages/list-sondages/list-sondages')
             .then(m => m.ListSondagesComponent)
       },
+
       {
         path: 'gestion-sondages/create',
         loadComponent: () =>
           import('./backoffice/amicale/membre-amicale/gestion-sondages/create-sondage/create-sondage')
             .then(m => m.CreateSondageComponent)
       },
+
       {
         path: 'gestion-sondages/edit/:id',
         loadComponent: () =>
           import('./backoffice/amicale/membre-amicale/gestion-sondages/edit-sondage/edit-sondage')
             .then(m => m.EditSondageComponent)
       },
+
       {
         path: 'gestion-sondages/:id',
         loadComponent: () =>
@@ -122,18 +121,21 @@ export const routes: Routes = [
           import('./backoffice/amicale/admin/admin-users/admin-users')
             .then(m => m.AdminUsersComponent)
       },
+
       {
         path: 'admin-create-user',
         loadComponent: () =>
           import('./backoffice/amicale/admin/admin-create-user/admin-create-user')
             .then(m => m.AdminCreateUserComponent)
       },
+
       {
         path: 'admin-edit-user/:matricule',
         loadComponent: () =>
           import('./backoffice/amicale/admin/admin-edit-user/admin-edit-user')
             .then(m => m.AdminEditUserComponent)
       },
+
       {
         path: 'admin-user-profile/:matricule',
         loadComponent: () =>
