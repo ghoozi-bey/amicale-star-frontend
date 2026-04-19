@@ -62,6 +62,14 @@
 
   </div>
 
+  <div *ngIf="successMessage" class="success-msg">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="error-msg">
+    {{ errorMessage }}
+  </div>
+
 
   <hr>
 
@@ -90,14 +98,6 @@
     </div>
     
 
-  </div>
-
-  <div *ngIf="successMessage" class="success-msg">
-    {{ successMessage }}
-  </div>
-
-  <div *ngIf="errorMessage" class="error-msg">
-    {{ errorMessage }}
   </div>
 
 </div>

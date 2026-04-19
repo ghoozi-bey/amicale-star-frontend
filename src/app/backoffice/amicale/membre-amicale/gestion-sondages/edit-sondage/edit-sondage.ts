@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -16,12 +16,16 @@ export class EditSondageComponent implements OnInit {
 
   form!: FormGroup;
   sondageId!: number;
+  successMessage: string = '';
+  errorMessage: string = '';
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private sondageService: SondageService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -104,8 +108,11 @@ export class EditSondageComponent implements OnInit {
       choix: this.fb.array(
         q?.type === 'TEXTE'
           ? []
-          : (q?.choixList || []).map((c: any) =>
-              this.fb.control(c.label, Validators.required)
+          : (q?.choixList?.length
+              ? q.choixList.map((c: any) =>
+                  this.fb.control(c.label, Validators.required)
+                )
+              : [this.fb.control('', Validators.required)]
             )
       )
     });
@@ -113,10 +120,21 @@ export class EditSondageComponent implements OnInit {
 
   addQuestion() {
     this.questions.push(this.createQuestion());
+
+    // auto add 1 choice (better UX)
+    const index = this.questions.length - 1;
+    this.addChoix(index);
   }
 
   removeQuestion(index: number) {
     this.questions.removeAt(index);
+  }
+
+  isQuestionValid(q: any): boolean {
+    if (q.get('type')?.value === 'TEXTE') return true;
+
+    const choixArray = q.get('choix') as FormArray;
+    return choixArray.length > 0 && choixArray.controls.every(c => c.value?.trim());
   }
 
   // =========================
@@ -138,14 +156,51 @@ export class EditSondageComponent implements OnInit {
   // SUBMIT
   // =========================
   onSubmit() {
-    if (this.form.invalid) return;
+    if (this.form.invalid || this.questions.length === 0) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
-    this.sondageService.update(this.sondageId, this.form.value).subscribe({
+    const formValue = this.form.value;
+
+    const payload = {
+      title: formValue.title,
+      description: formValue.description,
+      dateDebut: formValue.dateDebut + ':00',
+      dateFin: formValue.dateFin + ':00',
+      questions: formValue.questions.map((q: any) => ({
+        text: q.text,
+        type: q.type,
+        choix: q.type === 'TEXTE'
+          ? []
+          : q.choix.map((c: string) => c)
+      }))
+    };
+
+    this.successMessage = '';
+    this.errorMessage = '';
+    this.isLoading = true;
+
+    this.sondageService.update(this.sondageId, payload).subscribe({
       next: () => {
-        this.router.navigate(['/gestion-sondages']);
+        this.isLoading = false;
+
+        this.successMessage = '✅ Sondage modifié avec succès';
+        this.cdr.detectChanges(); // FORCE UI UPDATE
+
+        console.log('SUCCESS SET'); // 🔍 debug
+
+        // ⏳ WAIT before redirect
+        setTimeout(() => {
+          this.router.navigate(['/gestion-sondages']);
+        }, 2000);
       },
       error: (err) => {
-        console.error(err);
+        this.isLoading = false;
+        console.error('UPDATE ERROR:', err);
+
+        this.errorMessage = '❌ Erreur lors de la modification';
+        this.cdr.detectChanges(); // FORCE UI UPDATE
       }
     });
   }
@@ -153,11 +208,10 @@ export class EditSondageComponent implements OnInit {
   onTypeChange(index: number) {
     const question = this.questions.at(index);
     const type = question.get('type')?.value;
-
     const choixArray = this.getChoixArray(index);
 
     if (type === 'TEXTE') {
-      choixArray.clear(); // remove choices
+      choixArray.clear();
     } else if (choixArray.length === 0) {
       choixArray.push(this.fb.control('', Validators.required));
     }

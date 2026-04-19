@@ -124,4 +124,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   hasRole(role: string): boolean {
     return this.userRole.toUpperCase() === role.toUpperCase();
   }
+
+  onImageError(event: any) {
+    event.target.src = 'assets/default-pfp.jpg';
+  }
 }

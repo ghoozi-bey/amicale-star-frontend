@@ -125,6 +125,13 @@ export class SondageDetailComponent implements OnInit {
   reject() {
     if (!this.sondage?.id) return;
 
+    // confirmation
+    const confirmReject = confirm(
+      '⚠️ Cette action est irréversible.\nVoulez-vous vraiment rejeter ce sondage ?'
+    );
+
+    if (!confirmReject) return;
+
     this.successMessage = '';
     this.errorMessage = '';
 

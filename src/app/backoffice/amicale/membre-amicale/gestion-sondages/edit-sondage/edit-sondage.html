@@ -147,12 +147,21 @@
     ➕ Ajouter une question
   </button>
 
+  <div *ngIf="successMessage" class="success-msg">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="error-msg">
+    {{ errorMessage }}
+  </div>
+
   <!-- ===== SUBMIT ===== -->
   <button 
     type="submit" 
     class="submit-btn"
+    [disabled]="form.invalid || isLoading"
   >
-    Enregistrer les modifications
+    {{ isLoading ? 'Enregistrement...' : 'Enregistrer les modifications' }}
   </button>
 
 </form>

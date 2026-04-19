@@ -86,7 +86,8 @@ export class SondageService {
     return this.http.put(`${this.api}/${id}/reject`, {}, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      responseType: 'text'
     });
   }
 

@@ -4,8 +4,20 @@
   <div class="user-profile" (click)="goToProfile()">
 
     <ng-container *ngIf="!loadingPhoto">
-      <img *ngIf="userPhoto" [src]="userPhoto" class="avatar">
-      <img *ngIf="!userPhoto" src="assets/default-pfp.jpg" class="avatar">
+
+      <img 
+        *ngIf="userPhoto" 
+        [src]="userPhoto" 
+        class="avatar"
+        (error)="onImageError($event)"
+      >
+
+      <img 
+        *ngIf="!userPhoto" 
+        src="assets/default-pfp.jpg" 
+        class="avatar"
+      >
+
     </ng-container>
 
     <ng-container *ngIf="user$ | async as user; else noUser">
