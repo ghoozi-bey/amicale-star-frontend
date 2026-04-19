@@ -45,11 +45,13 @@ export class EvenementService {
   }
 
   getMesEvenements(): Observable<any[]> {
-    return this.http.get<any[]>(
-      `${this.apiUrl}/mes-evenements-crees`,
-      { headers: this.getHeaders() }
-    );
-  }
+  const matricule = localStorage.getItem('matricule'); // 🔥 IMPORTANT
+
+  return this.http.get<any[]>(
+    `${this.apiUrl}/mes-evenements-crees?matricule=${matricule}`,
+    { headers: this.getHeaders() }
+  );
+}
 
   getEvenementById(id: number): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/${id}`, {
@@ -98,7 +100,10 @@ export class EvenementService {
 createInscription(formData: FormData) {
   return this.http.post(
     'http://localhost:8080/api/inscriptions/create',
-    formData
+    formData,
+    {
+      responseType: 'text' // ✅ FIX parsing error
+    }
   );
 }
 getNbPlaces(eventId: number) {

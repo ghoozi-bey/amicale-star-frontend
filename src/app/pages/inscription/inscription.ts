@@ -18,6 +18,7 @@ export class InscriptionComponent implements OnInit {
 
   nbPlaces: number = 0;
   isLoading = false;
+  
 
   // 🔥 PASSEPORT LOGIC
   isPassportRequired: boolean = false;
@@ -221,17 +222,27 @@ export class InscriptionComponent implements OnInit {
         });
       },
       error: (err) => {
-        this.zone.run(() => {
-          console.error(err);
+  this.zone.run(() => {
+    console.error(err);
 
-          this.modalMessage = err.error || "Erreur lors de l'inscription ❌";
-          this.isSuccess = false;
-          this.showModal = true;
+    let message = "Erreur lors de l'inscription ❌";
 
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        });
-      }
+    if (typeof err?.error === 'string') {
+      message = err.error;
+    } else if (err?.error?.message) {
+      message = err.error.message;
+    } else if (err?.message) {
+      message = err.message;
+    }
+
+    this.modalMessage = message;
+    this.isSuccess = false;
+    this.showModal = true;
+
+    this.isLoading = false;
+    this.cdr.detectChanges();
+  });
+}
     });
   }
 

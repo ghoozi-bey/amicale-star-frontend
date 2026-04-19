@@ -5,11 +5,10 @@
     <!-- 🔥 IMAGE + BADGE -->
     <div class="event-image-container">
       <img 
-        [src]="event.photo 
-          ? 'http://localhost:8080/uploads/events/' + event.photo 
-          : 'assets/imagepardefaut.jpg'" 
-        class="event-image"
-      >
+  *ngIf="event.photoUrl; "
+  [src]="event.photoUrl"
+  class="event-image"
+/>
 
       <!-- 🔥 BADGE STATUT -->
       <span 

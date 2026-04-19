@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 export class MesEvenementsMembreAmicaleComponent implements OnInit {
 
   events$!: Observable<any[]>;
-  loading = true; // 🔥 ajout
+  loading = true;
 
   constructor(
     private eventService: EvenementService,
@@ -28,19 +28,22 @@ export class MesEvenementsMembreAmicaleComponent implements OnInit {
   loadEvents() {
     this.loading = true;
 
-    this.events$ = this.eventService.getEvenementsCrees();
+    // ✅ FIX ICI 🔥
+    this.events$ = this.eventService.getMesEvenements();
 
-    // 🔥 on déclenche loading OFF
     this.events$.subscribe({
       next: () => this.loading = false,
-      error: () => this.loading = false
+      error: (err) => {
+        console.error(err); // 🔥 debug
+        this.loading = false;
+      }
     });
   }
 
   deleteEvent(id: number) {
     if (confirm("Supprimer cet événement ?")) {
       this.eventService.deleteEvenement(id).subscribe(() => {
-        this.loadEvents(); // 🔥 refresh
+        this.loadEvents();
       });
     }
   }

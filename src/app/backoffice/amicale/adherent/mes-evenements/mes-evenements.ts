@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EvenementService } from '../../../../services/evenement';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-mes-evenements',
@@ -15,9 +16,13 @@ export class MesEvenementsComponent implements OnInit {
   loading = false;
   matricule: string = '';
 
+  selectedInscription: any = null;
+  showModal = false;
+
   constructor(
     private eventService: EvenementService,
-    private cdr: ChangeDetectorRef // 🔥 IMPORTANT
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -37,11 +42,8 @@ export class MesEvenementsComponent implements OnInit {
     this.eventService.getMesInscriptions(this.matricule)
       .subscribe({
         next: (data: any[]) => {
-
           this.inscriptions = data || [];
           this.loading = false;
-
-          // 🔥 FIX FINAL
           this.cdr.detectChanges();
         },
         error: () => {
@@ -49,6 +51,33 @@ export class MesEvenementsComponent implements OnInit {
           this.cdr.detectChanges();
         }
       });
+  }
+
+  openDetails(id: number) {
+  console.log("CLICK:", id);
+
+  // 🔥 ouvrir modal directement
+  this.showModal = true;
+  this.selectedInscription = null;
+
+  this.http.get<any>(`http://localhost:8080/api/inscriptions/${id}`)
+    .subscribe({
+      next: (data) => {
+        console.log("DATA:", data);
+        this.selectedInscription = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(err);
+        alert("Erreur backend !");
+        this.closeModal();
+      }
+    });
+}
+
+  closeModal() {
+    this.showModal = false;
+    this.selectedInscription = null;
   }
 
   getStatutClass(statut: string) {

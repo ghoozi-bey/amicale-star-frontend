@@ -10,13 +10,14 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule],
   templateUrl: './modifier-evenement.html',
   styleUrls: [
-  './modifier-evenement.css',
-  '../gestion-evenements/gestion-evenements.css'  // 🔥 IMPORTANT
-]
+    './modifier-evenement.css',
+    '../gestion-evenements/gestion-evenements.css'
+  ]
 })
 export class ModifierEvenementComponent implements OnInit {
 
   evenement: any = null;
+  imageUrl: string = ''; // 🔥 IMPORTANT
   id!: number;
   loading = true;
 
@@ -24,44 +25,54 @@ export class ModifierEvenementComponent implements OnInit {
     private route: ActivatedRoute,
     private eventService: EvenementService,
     private router: Router,
-    private cdr: ChangeDetectorRef // 🔥 important
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
 
-  this.id = Number(this.route.snapshot.paramMap.get('id'));
-  this.loading = true;
+    this.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.loading = true;
 
-  this.eventService.getEvenementById(this.id).subscribe({
-    next: (data: any) => {
+    this.eventService.getEvenementById(this.id).subscribe({
+      next: (data: any) => {
 
-      console.log("DATA:", data);
+        console.log("DATA:", data);
 
-      this.evenement = data;
-      this.loading = false;
-    },
-    error: (err: any) => {
-      console.error("ERREUR:", err);
-      this.loadFallback();
-    }
-  });
+        this.evenement = data;
 
-  // 🔥 sécurité anti blocage
-  setTimeout(() => {
-    if (this.loading) {
-      console.log("⏳ fallback auto");
-      this.loadFallback();
-    }
-  }, 3000);
-}
+        // 🔥 FIX IMAGE (ANTI CACHE)
+        if (this.evenement?.photoUrl) {
+          this.imageUrl = this.evenement.photoUrl + '?t=' + new Date().getTime();
+        }
 
-  // 🔥 fallback si backend bug
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error("ERREUR:", err);
+        this.loadFallback();
+      }
+    });
+
+    // fallback sécurité
+    setTimeout(() => {
+      if (this.loading) {
+        this.loadFallback();
+      }
+    }, 3000);
+  }
+
   loadFallback() {
     this.eventService.getAllEvenements().subscribe({
       next: (data: any[]) => {
         this.evenement = data.find(e => e.id == this.id);
+
+        if (this.evenement?.photoUrl) {
+          this.imageUrl = this.evenement.photoUrl + '?t=' + new Date().getTime();
+        }
+
         this.loading = false;
-        this.cdr.detectChanges(); // 🔥 fix affichage
+        this.cdr.detectChanges();
       },
       error: () => {
         this.loading = false;

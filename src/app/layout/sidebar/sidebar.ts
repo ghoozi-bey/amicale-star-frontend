@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -35,7 +35,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private router: Router,
     private authService: AuthService,
     private http: HttpClient,
-    private zone: NgZone // 🔥 IMPORTANT
+    private zone: NgZone,
+    private cdr: ChangeDetectorRef // 🔥 AJOUT
   ) {}
 
   ngOnInit(): void {
@@ -54,7 +55,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.loadProfilePhoto();
     }
 
-    // ✅ FIX PROPRE (zone Angular)
     this.profileListener = () => {
       this.zone.run(() => {
         this.loadProfilePhoto();
@@ -75,18 +75,19 @@ export class SidebarComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
 
-          // ✅ toujours dans Angular
           this.zone.run(() => {
 
             if (data?.photoUrl) {
-              this.userPhoto = data.photoUrl;
-              this.authService.setUserPhoto(data.photoUrl);
+              this.userPhoto = data.photoUrl + '?t=' + new Date().getTime(); // 🔥 cache fix
+              this.authService.setUserPhoto(this.userPhoto);
             } else {
               this.userPhoto = null;
               this.authService.setUserPhoto(null);
             }
 
             this.loadingPhoto = false;
+
+            this.cdr.detectChanges(); // 🔥 FIX FINAL
           });
 
         },
@@ -94,6 +95,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
           this.zone.run(() => {
             this.userPhoto = null;
             this.loadingPhoto = false;
+            this.cdr.detectChanges(); // 🔥 IMPORTANT
           });
         }
       });
@@ -122,5 +124,4 @@ export class SidebarComponent implements OnInit, OnDestroy {
   hasRole(role: string): boolean {
     return this.userRole.toUpperCase() === role.toUpperCase();
   }
-
 }
