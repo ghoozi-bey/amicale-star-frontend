@@ -1,106 +1,126 @@
-/* ===== GLOBAL ===== */
-.container {
-  padding: 30px;
-}
-
-/* ===== TITRE ===== */
-h2 {
-  font-size: 26px;
-  font-weight: 600;
-  margin-bottom: 25px;
-  color: #1e293b;
-}
-
-/* ===== GRID ===== */
+/* CONTAINER */
 .events-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 25px;
+  gap: 20px;
+  padding: 20px;
 }
 
-/* ===== CARD ===== */
+/* CARD */
 .event-card {
-  width: 320px;
-  border-radius: 16px;
-  overflow: hidden;
+  width: 300px;
   background: #ffffff;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   transition: all 0.3s ease;
-  cursor: pointer;
 }
 
-/* HOVER EFFECT */
 .event-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
 }
 
-/* ===== IMAGE ===== */
+/* IMAGE */
+.event-image-container {
+  position: relative;
+}
+
 .event-image {
   width: 100%;
   height: 180px;
   object-fit: cover;
-  background: #f1f5f9;
 }
 
-/* ===== CONTENT ===== */
-.event-content {
-  padding: 16px;
-}
-
-/* TITRE */
-.event-title {
-  font-size: 20px;
+/* BADGE */
+.status-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 20px;
+  color: white;
   font-weight: 600;
-  margin-bottom: 8px;
-  color: #0f172a;
 }
 
-/* INFO */
+.status-badge.active {
+  background: #22c55e;
+}
+
+.status-badge.archived {
+  background: #6b7280;
+}
+
+/* CONTENT */
+.event-content {
+  padding: 15px;
+}
+
+.event-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* INFOS */
 .event-info {
-  font-size: 14px;
-  color: #475569;
-  margin: 6px 0;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 6px;
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-/* PRIX */
+.event-info i {
+  color: #3b82f6;
+}
+
+/* PRICE */
 .event-price {
-  font-weight: 600;
+  color: #16a34a;
+  font-weight: bold;
+}
+
+.event-price i {
   color: #16a34a;
 }
 
-/* ===== BADGE ===== */
+/* TYPE */
 .event-badge {
-  display: inline-block;
-  background: #0ea5e9;
-  color: white;
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-size: 12px;
   margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  background: #f3f4f6;
+  border-radius: 10px;
+  font-size: 12px;
 }
 
-/* ===== BUTTONS ===== */
+/* ACTIONS */
 .event-actions {
-  margin-top: 15px;
   display: flex;
-  gap: 10px;
+  justify-content: space-between;
+  margin-top: 15px;
 }
 
+/* BUTTON BASE */
 .btn {
-  flex: 1;
-  padding: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
   border: none;
-  border-radius: 8px;
-  font-size: 13px;
   cursor: pointer;
-  transition: 0.2s;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
-/* Modifier */
+/* EDIT */
 .btn-edit {
   background: #3b82f6;
   color: white;
@@ -110,7 +130,7 @@ h2 {
   background: #2563eb;
 }
 
-/* Supprimer */
+/* DELETE */
 .btn-delete {
   background: #ef4444;
   color: white;
@@ -120,9 +140,20 @@ h2 {
   background: #dc2626;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .event-card {
-    width: 100%;
-  }
+/* DISABLED */
+.btn-delete.disabled-btn {
+  background: #fca5a5;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-delete:disabled {
+  pointer-events: none;
+}
+
+/* NO DATA */
+.no-data {
+  text-align: center;
+  padding: 20px;
+  color: #777;
 }

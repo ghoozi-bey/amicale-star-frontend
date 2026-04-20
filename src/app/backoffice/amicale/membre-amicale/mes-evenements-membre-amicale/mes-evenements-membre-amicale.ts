@@ -29,7 +29,7 @@ export class MesEvenementsMembreAmicaleComponent implements OnInit {
     this.loading = true;
 
     // ✅ FIX ICI 🔥
-    this.events$ = this.eventService.getMesEvenements();
+    this.events$ = this.eventService.getEvenementsCrees();
 
     this.events$.subscribe({
       next: () => this.loading = false,
