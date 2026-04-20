@@ -52,7 +52,15 @@ export class SondageService {
   // DELETE
   // =========================
   delete(id: number) {
-    return this.http.delete(`${this.api}/${id}`);
+    return this.http.delete(
+      `${this.api}/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+        responseType: 'text'
+      }
+    );
   }
 
   // =========================
@@ -101,4 +109,5 @@ export class SondageService {
       }
     });
   }
+  
 }

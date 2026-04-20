@@ -151,4 +151,31 @@ export class SondageDetailComponent implements OnInit {
       }
     });
   }
+
+  deleteSondage() {
+    if (!this.sondage?.id) return;
+
+    const confirmDelete = confirm(
+      '⚠️ Cette action est définitive.\nVoulez-vous supprimer ce sondage ?'
+    );
+
+    if (!confirmDelete) return;
+
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    this.sondageService.delete(this.sondage.id).subscribe({
+      next: () => {
+        this.successMessage = '🗑️ Sondage supprimé';
+
+        setTimeout(() => {
+          this.router.navigate(['/gestion-sondages']);
+        }, 1500);
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMessage = 'Erreur lors de la suppression';
+      }
+    });
+  }
 }

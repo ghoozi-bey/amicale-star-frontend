@@ -60,6 +60,14 @@
       Modifier
     </button>
 
+    <!-- DELETE -->
+    <button 
+      *ngIf="sondage.statut === 'REJECTED'"
+      class="delete-btn"
+      (click)="deleteSondage()">
+      Supprimer
+    </button>
+
   </div>
 
   <div *ngIf="successMessage" class="success-msg">
