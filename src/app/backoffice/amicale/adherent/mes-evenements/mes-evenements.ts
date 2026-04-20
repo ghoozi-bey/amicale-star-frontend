@@ -14,7 +14,6 @@ export class MesEvenementsComponent implements OnInit {
 
   inscriptions: any[] = [];
   loading = false;
-  matricule: string = '';
 
   selectedInscription: any = null;
   showModal = false;
@@ -26,54 +25,58 @@ export class MesEvenementsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.matricule = localStorage.getItem('matricule') || '';
-
-    if (!this.matricule) {
-      console.error("❌ Matricule introuvable");
-      return;
-    }
-
     this.load();
   }
 
+  // 🔥 LOAD SANS MATRICULE
   load() {
-    this.loading = true;
+  this.loading = true;
 
-    this.eventService.getMesInscriptions(this.matricule)
+  const token = localStorage.getItem('token');
+  console.log("TOKEN TEST =", token);
+
+  this.http.get<any[]>(
+    'http://localhost:8080/api/inscriptions/mes-inscriptions',
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  ).subscribe({
+    next: (data) => {
+      console.log("DATA OK 🔥", data);
+      this.inscriptions = data || [];
+      this.loading = false;
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error("ERROR ❌", err);
+      this.loading = false;
+      this.cdr.detectChanges();
+    }
+  });
+}
+
+  openDetails(id: number) {
+    console.log("CLICK:", id);
+
+    this.showModal = true;
+    this.selectedInscription = null;
+
+    this.http.get<any>(`http://localhost:8080/api/inscriptions/${id}`)
       .subscribe({
-        next: (data: any[]) => {
-          this.inscriptions = data || [];
-          this.loading = false;
+        next: (data) => {
+          console.log("DATA:", data);
+          this.selectedInscription = data;
           this.cdr.detectChanges();
         },
-        error: () => {
-          this.loading = false;
-          this.cdr.detectChanges();
+        error: (err) => {
+          console.error(err);
+          alert("Erreur backend !");
+          this.closeModal();
         }
       });
   }
-
-  openDetails(id: number) {
-  console.log("CLICK:", id);
-
-  // 🔥 ouvrir modal directement
-  this.showModal = true;
-  this.selectedInscription = null;
-
-  this.http.get<any>(`http://localhost:8080/api/inscriptions/${id}`)
-    .subscribe({
-      next: (data) => {
-        console.log("DATA:", data);
-        this.selectedInscription = data;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error(err);
-        alert("Erreur backend !");
-        this.closeModal();
-      }
-    });
-}
 
   closeModal() {
     this.showModal = false;

@@ -89,10 +89,16 @@ export class EvenementService {
     });
   }
 
-  getMesInscriptions(matricule: string) {
+  getMesInscriptions() {
+  const token = localStorage.getItem('token');
+
   return this.http.get<any[]>(
-    `http://localhost:8080/api/inscriptions/mes-inscriptions/${matricule}`,
-    { headers: this.getHeaders() }
+    'http://localhost:8080/api/inscriptions/mes-inscriptions',
+    {
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    }
   );
 }
 

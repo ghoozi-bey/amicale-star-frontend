@@ -27,53 +27,37 @@ export class EventsComponent implements OnInit {
     this.loadEvents();
   }
 
+  // 🔥 VERSION SÉCURISÉE
   loadEvents() {
-  this.loading = true;
+    this.loading = true;
 
-  const matricule = localStorage.getItem('matricule');
+    this.eventService.getMesInscriptions().subscribe({
+      next: (data: any[]) => {
 
-  if (!matricule) {
-    console.error("❌ matricule introuvable");
-    this.loading = false;
-    return;
+        this.events = (data || []).map((i: any) => ({
+          id: i.evenementId,        // 🔥 venant de InscriptionDTO
+          titre: i.titre,
+          statut: i.statut,
+
+          imageUrl: `${this.apiUrl}/photo/${i.evenementId}`
+        }));
+
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
-
-  this.eventService.getMesInscriptions(matricule).subscribe({
-    next: (data: any[]) => {
-
-      this.events = (data || [])
-        .filter((i: any) => i && i.evenement)
-        .map((i: any) => {
-
-          const e = i.evenement;
-
-          return {
-            id: e.id,
-            titre: e.titre,
-            lieu: e.lieu,
-            dateDebut: e.dateDebut,
-            dateFin: e.dateFin,
-            statut: i.statut,
-
-            imageUrl: `${this.apiUrl}/photo/${e.id}`
-          };
-        });
-
-      this.loading = false;
-    },
-    error: (err) => {
-      console.error(err);
-      this.loading = false;
-    }
-  });
-}
 
   goToInscription(eventId: number) {
     this.router.navigate(['/inscription', eventId]);
   }
 
-  // 🔥 simple (juste sécurité)
   onImageError(event: any) {
-    event.target.src = 'assets/default-event.png'; // optionnel
+    event.target.src = 'assets/default-event.png';
   }
 }
