@@ -141,7 +141,19 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./backoffice/amicale/admin/admin-user-profile/admin-user-profile')
             .then(m => m.AdminUserProfile)
-      }
+      },
+      {
+        path: 'inscriptions-evenement/:id',
+        loadComponent: () =>
+          import('./backoffice/amicale/membre-amicale/inscriptions-evenement/inscriptions-evenement')
+            .then(m => m.InscriptionsEvenement)
+    },
+    {
+  path: 'gestion-inscriptions/:id',
+  loadComponent: () =>
+    import('./backoffice/amicale/membre-amicale/gestion-inscriptions/gestion-inscriptions')
+      .then(m => m.GestionInscriptions)
+}
 
     ]
   },
@@ -150,4 +162,5 @@ export const routes: Routes = [
     path: '**',
     redirectTo: 'login'
   }
+  
 ];

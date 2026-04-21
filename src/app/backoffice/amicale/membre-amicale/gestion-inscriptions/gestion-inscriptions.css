@@ -1,0 +1,72 @@
+.details-container {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.status-badge {
+  width: fit-content;
+  margin: 0 auto 20px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  color: white;
+}
+
+.en-attente {
+  background-color: orange;
+}
+
+.acceptee {
+  background-color: green;
+}
+
+.refusee {
+  background-color: red;
+}
+
+.card {
+  background: #fff;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+  margin-bottom: 10px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.accept {
+  background-color: #28a745;
+  color: white;
+}
+
+.reject {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}

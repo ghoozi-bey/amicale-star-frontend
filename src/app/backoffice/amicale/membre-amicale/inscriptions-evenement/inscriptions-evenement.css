@@ -1,0 +1,185 @@
+.container {
+  padding: 20px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+thead {
+  background: #2e7d32;
+  color: white;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+}
+
+tr:nth-child(even) {
+  background: #f5f5f5;
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 10px;
+  color: white;
+  font-size: 12px;
+}
+
+.attente {
+  background: orange;
+}
+
+.ok {
+  background: green;
+}
+
+.refuse {
+  background: red;
+}
+
+.btn {
+  border: none;
+  padding: 6px 10px;
+  margin: 2px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.view {
+  background: #2196f3;
+  color: white;
+}
+
+.accept {
+  background: #4caf50;
+  color: white;
+}
+
+.reject {
+  background: #f44336;
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+/* 🔥 ALIGNEMENT PARFAIT */
+.actions {
+  display: flex;
+  align-items: center;     /* centre vertical */
+  justify-content: center; /* centre horizontal */
+  gap: 8px;
+}
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+}
+
+/* 👁 BLEU */
+.btn-view {
+  background-color: #3498db;
+}
+.btn-view:hover {
+  background-color: #2980b9;
+}
+
+/* ✅ VERT */
+.btn-accept {
+  background-color: #2ecc71;
+}
+.btn-accept:hover {
+  background-color: #27ae60;
+}
+
+/* ❌ ROUGE */
+.btn-refuse {
+  background-color: #e74c3c;
+}
+.btn-refuse:hover {
+  background-color: #c0392b;
+}
+/* 🔥 BADGE BASE */
+.badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* 💰 PAIEMENT */
+.paye {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.non-paye {
+  background-color: #e74c3c;
+  color: white;
+}
+
+/* 📌 STATUT */
+.attente {
+  background-color: #f39c12;
+  color: white;
+}
+
+.acceptee {
+  background-color: #27ae60;
+  color: white;
+}
+
+.refusee {
+  background-color: #c0392b;
+  color: white;
+}
+.page-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.title-left i {
+  font-size: 28px;
+  color: #2c7a4b;
+}
+
+.page-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.page-header p,
+.page-header span {
+  margin: 0;
+  font-size: 13px;
+  color: gray;
+}

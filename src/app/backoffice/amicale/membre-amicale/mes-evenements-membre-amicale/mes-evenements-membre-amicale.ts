@@ -51,4 +51,7 @@ export class MesEvenementsMembreAmicaleComponent implements OnInit {
   editEvent(id: number) {
     this.router.navigate(['/modifier-evenement', id]);
   }
+  goToInscriptions(id: number) {
+  this.router.navigate(['/inscriptions-evenement', id]);
+}
 }
