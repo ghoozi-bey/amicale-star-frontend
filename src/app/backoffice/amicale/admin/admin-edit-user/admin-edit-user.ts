@@ -118,32 +118,28 @@ export class AdminEditUserComponent {
 
   updateUser() {
     const token = localStorage.getItem('token');
-    const updatedFields: any = {};
 
     this.validationErrors = {};
     this.errorMessage = '';
     this.successMessage = '';
 
-    for (const key in this.user) {
-      if (this.user[key] !== null && this.user[key] !== undefined) {
-        updatedFields[key] = this.user[key];
-      }
+    const updatedFields: any = {
+      nom: this.user.nom,
+      prenom: this.user.prenom,
+      email: this.user.email,
+      cin: this.user.cin,
+      telephone: this.user.telephone,
+      departement: this.user.departement,
+      dateNaissance: this.user.date_naissance,
+      typeAdherent: this.user.type_adherent,
+      typeEvenementId: this.user.type_evenement_id,
+      actif: this.user.actif
+    };
+
+    // send password ONLY if filled
+    if (this.user.password && this.user.password.trim() !== '') {
+      updatedFields.password = this.user.password;
     }
-
-    // don't send empty password
-    if (!this.user.password) {
-      delete updatedFields.password;
-    }
-
-    // FIX field mappings
-    updatedFields.typeAdherent = this.user.type_adherent;
-    updatedFields.typeEvenementId = this.user.type_evenement_id;
-    updatedFields.departement = this.user.departement;
-    updatedFields.dateNaissance = this.user.date_naissance;
-
-    delete updatedFields.type_adherent;
-    delete updatedFields.type_evenement_id;
-    delete updatedFields.date_naissance;
 
     this.http.patch(`${this.api}/${this.user.matricule}`, updatedFields, {
       headers: { Authorization: 'Bearer ' + token }
@@ -158,8 +154,7 @@ export class AdminEditUserComponent {
 
           setTimeout(() => {
             this.router.navigate(['/admin-users']);
-          }, 2000); // give time to display message
-
+          }, 2000);
         }, 3000);
       },
       error: (err) => {
@@ -173,4 +168,5 @@ export class AdminEditUserComponent {
       }
     });
   }
+  
 }

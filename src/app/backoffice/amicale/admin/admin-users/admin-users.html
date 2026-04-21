@@ -42,7 +42,10 @@
          (click)="goToUser(user.matricule)">
 
       <!-- 🔹 Avatar -->
-      <img [src]="user.imageUrl" class="user-avatar">
+      <img 
+        [src]="user.imageUrl || 'assets/default-pfp.jpg'"
+        (error)="onImageError($event)"
+        class="user-avatar">
 
       <!-- 🔹 Info -->
       <div class="user-info">

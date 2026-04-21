@@ -36,26 +36,31 @@ export class AdminUsersComponent {
     ) {}
 
     ngOnInit() {
-    this.loadUsers();
-    this.loadEnums();
+        this.loadUsers();
+        this.loadEnums();
     }
 
     loadUsers() {
-    this.http.get<any[]>(this.api, {
-        headers: { Authorization: 'Bearer ' + this.authService.getToken() }
-    }).subscribe({
-        next: (data) => {
-            this.users = data.map((user: any) => ({
-            ...user,
-            imageUrl: this.buildImage(user)
-        }));
-        
-        this.filteredUsers = [...this.users]; // initial copy
+        this.http.get<any[]>(this.api, {
+            headers: { Authorization: 'Bearer ' + this.authService.getToken() }
+        }).subscribe({
+            next: (data) => {
+                this.users = data.map((user: any) => ({
+                ...user,
+                typeAdherent: (user.typeAdherent || user.type_adherent || user.role || '')
+                    .replace('ROLE_', '')
+                    .toUpperCase(),
+                imageUrl: user.photoUrl
+                    ? user.photoUrl + '?t=' + new Date().getTime()
+                    : null
+            }));
+            
+            this.filteredUsers = [...this.users]; // initial copy
 
-        this.cdr.detectChanges(); // forces UI update
-        },
-        error: (err) => console.error('Erreur chargement users', err)
-    });
+            this.cdr.detectChanges(); // forces UI update
+            },
+            error: (err) => console.error('Erreur chargement users', err)
+        });
     }
 
     deleteUser(matricule: string) {
@@ -128,6 +133,7 @@ export class AdminUsersComponent {
     }
 
     applyFilters() {
+        console.log("applyFilters triggered");
 
         let result = [...this.users];
 
@@ -136,41 +142,47 @@ export class AdminUsersComponent {
             const term = this.searchTerm.toLowerCase();
 
             result = result.filter(user =>
-            (user.nom + ' ' + user.prenom).toLowerCase().includes(term) ||
-            user.email.toLowerCase().includes(term)
+            ((user.nom || '') + ' ' + (user.prenom || '')).toLowerCase().includes(term) ||
+            (user.email || '').toLowerCase().includes(term)
             );
         }
 
-        // 🔽 TYPE
+        // 🔽 TYPE (FIXED)
         if (this.selectedType) {
-            result = result.filter(user => user.typeAdherent === this.selectedType);
+            result = result.filter(user => {
+                console.log("Selected:", this.selectedType);
+                console.log("User type:", user.typeAdherent, user.type_adherent);
+
+                const userType = (user.typeAdherent || user.type_adherent || '').replace('ROLE_', '');
+                return userType === this.selectedType;
+            });
         }
 
-        // 🔽 DEPARTEMENT
+        // 🔽 DEPARTEMENT (safe)
         if (this.selectedDepartement) {
-            result = result.filter(user => user.departement === this.selectedDepartement);
+            result = result.filter(user =>
+            (user.departement || '') === this.selectedDepartement
+            );
         }
 
         // 🔃 SORT
         if (this.sortOrder === 'asc') {
-            result.sort((a, b) => a.nom.localeCompare(b.nom));
+            result.sort((a, b) => (a.nom || '').localeCompare(b.nom || ''));
         }
 
         if (this.sortOrder === 'desc') {
-            result.sort((a, b) => b.nom.localeCompare(a.nom));
+            result.sort((a, b) => (b.nom || '').localeCompare(a.nom || ''));
         }
 
         this.filteredUsers = result;
     }
 
     loadEnums() {
-        console.log("🔥 loadEnums called");
         const token = this.authService.getToken();
 
         this.http.get<string[]>('http://localhost:8080/api/admin/departements', {
             headers: { Authorization: 'Bearer ' + token }
         }).subscribe(data => {
-            console.log("DEPARTEMENTS:", data); // 🔥
             this.departements = data;
             this.cdr.detectChanges();
         });
@@ -178,7 +190,6 @@ export class AdminUsersComponent {
         this.http.get<string[]>('http://localhost:8080/api/admin/types-adherent', {
             headers: { Authorization: 'Bearer ' + token }
         }).subscribe(data => {
-            console.log("TYPES ADHÉRENT:", data); // 🔥
             this.typesAdherent = data;
             this.cdr.detectChanges();
         });
