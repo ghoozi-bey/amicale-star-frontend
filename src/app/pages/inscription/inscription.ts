@@ -29,6 +29,7 @@ export class InscriptionComponent implements OnInit {
   showModal = false;
   modalMessage = "";
   isSuccess = true;
+  event: any = {};
 
   user: any = {
     nom: '',
@@ -83,26 +84,29 @@ export class InscriptionComponent implements OnInit {
   // 🔥 LOAD EVENT (LOGIQUE FIX)
   // =========================
   loadEventDetails() {
-    this.eventService.getEvenementById(this.eventId).subscribe({
-      next: (event: any) => {
+  this.eventService.getEvenementById(this.eventId).subscribe({
+    next: (event: any) => {
 
-        const typeId = event.typeEvenementId;
-        const isInternational = event.isInternational === true;
+      this.event = event; // 🔥 LA LIGNE QUI MANQUE
 
-        const isVoyage = typeId === 2;
-        const isOmraHaj = typeId === 1;
+      console.log("EVENT LOADED =", event); // 🔥 DEBUG
 
-        // 🔥 LOGIQUE FINALE CORRECTE
-        this.isPassportRequired =
-          isOmraHaj || (isVoyage && isInternational);
+      const typeId = event.typeEvenementId;
+      const isInternational = event.isInternational === true;
 
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error("Erreur chargement event", err);
-      }
-    });
-  }
+      const isVoyage = typeId === 2;
+      const isOmraHaj = typeId === 1;
+
+      this.isPassportRequired =
+        isOmraHaj || (isVoyage && isInternational);
+
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error("Erreur chargement event", err);
+    }
+  });
+}
 
   // =========================
   // LOAD PLACES
@@ -172,9 +176,11 @@ export class InscriptionComponent implements OnInit {
     const formData = new FormData();
 
     const data = {
+      
       matricule: this.user.matricule,
       evenementId: this.eventId,
       modePaiement: this.modePaiement,
+      prixTotal: this.calculatePrix(),
       conjoint: this.hasWife ? {
         nom: this.wife.nom,
         prenom: this.wife.prenom,
@@ -188,6 +194,7 @@ export class InscriptionComponent implements OnInit {
         dateNaissance: c.dateNaissance
       })) : []
     };
+    console.log("🔥 DATA INSCRIPTION =", data);
 
     formData.append("data", new Blob(
       [JSON.stringify(data)],
@@ -252,4 +259,87 @@ export class InscriptionComponent implements OnInit {
       this.children = [];
     }
   }
+  getAge(date: string): number {
+  if (!date) return 0;
+
+  const birth = new Date(date);
+  const today = new Date();
+
+  let age = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+
+  return age;
+}
+  getRemiseMessage(child: any): string {
+
+  if (!child.dateNaissance || !this.event) return '';
+
+  const age = this.getAge(child.dateNaissance);
+
+  if (this.event.remiseEnfant12Active && age <= 12) {
+    return `✔ Remise ${this.event.remiseEnfant12Pourcentage}% (moins de 12 ans)`;
+  }
+
+  if (this.event.remiseEnfant18Active && age <= 18) {
+    return `✔ Remise ${this.event.remiseEnfant18Pourcentage}% (moins de 18 ans)`;
+  }
+
+  return '';
+}
+getRemiseCouple(): string {
+
+  if (!this.event || !this.hasWife) return '';
+
+  if (this.event.remiseCoupleActive) {
+    return `✔ Remise couple ${this.event.remiseCouplePourcentage}% appliquée`;
+  }
+
+  return '';
+}calculatePrix(): number {
+
+  if (!this.event) return 0;
+
+  let prix = Number(this.event?.prix) || 0;
+
+  // 👥 nombre de personnes
+  let nbPersonnes = 1;
+
+  if (this.hasWife) nbPersonnes += 1;
+  if (this.hasChildren) nbPersonnes += this.children.length;
+
+  let total = prix * nbPersonnes;
+
+  // =====================
+  // 👶 REMISE ENFANTS
+  // =====================
+  this.children.forEach(child => {
+
+    if (!child.dateNaissance) return;
+
+    const age = this.getAge(child.dateNaissance);
+
+    if (this.event.remiseEnfant12Active && age <= 12) {
+      total -= prix * (this.event.remiseEnfant12Pourcentage / 100);
+    }
+
+    else if (this.event.remiseEnfant18Active && age <= 18) {
+      total -= prix * (this.event.remiseEnfant18Pourcentage / 100);
+    }
+
+  });
+
+  // =====================
+  // 👩 REMISE COUPLE
+  // =====================
+  if (this.hasWife && this.event.remiseCoupleActive) {
+    total -= prix * (this.event.remiseCouplePourcentage / 100);
+  }
+
+  return total < 0 ? 0 : total;
+}
+  
 }

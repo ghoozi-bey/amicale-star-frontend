@@ -24,7 +24,6 @@ export class GestionEvenementsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
     this.initForm();
 
     const token = localStorage.getItem('token');
@@ -37,20 +36,30 @@ export class GestionEvenementsComponent implements OnInit {
   }
 
   initForm() {
-    this.eventForm = this.fb.group({
-      titre: ['', Validators.required],
-      lieu: [''],
-      destination: [''],
-      agence: [''],
-      societe: [''],
-      dateDebut: [''],
-      dateFin: [''],
-      nbPlaces: [null],
-      prix: [null],
-      description: ['', Validators.required],
-      isInternational: [false] // utilisé seulement pour VOYAGE
-    });
-  }
+  this.eventForm = this.fb.group({
+    titre: ['', Validators.required],
+    lieu: [''],
+    destination: [''],
+    agence: [''],
+    societe: [''],
+    dateDebut: [''],
+    dateFin: [''],
+    nbPlaces: [null],
+    prix: [null],
+    description: ['', Validators.required],
+    isInternational: [false],
+
+    // 🔥 AJOUT OBLIGATOIRE
+    remiseEnfant12Active: [false],
+    remiseEnfant12Pourcentage: [0],
+
+    remiseEnfant18Active: [false],
+    remiseEnfant18Pourcentage: [0],
+
+    remiseCoupleActive: [false],
+    remiseCouplePourcentage: [0],
+  });
+}
 
   get f() {
     return this.eventForm.controls;
@@ -89,70 +98,115 @@ export class GestionEvenementsComponent implements OnInit {
     }
   }
 
+  // 🔥 RESET REMISES SI NON ACTIVES
+  cleanRemises(data: any) {
+    if (!data.remiseEnfant12Active) data.remiseEnfant12Pourcentage = 0;
+    if (!data.remiseEnfant18Active) data.remiseEnfant18Pourcentage = 0;
+    if (!data.remiseCoupleActive) data.remiseCouplePourcentage = 0;
+  }
+
   createEvent() {
 
-    if (this.eventForm.invalid) {
-      this.eventForm.markAllAsTouched();
-      alert("Formulaire invalide ❌");
-      return;
-    }
-
-    if (!this.typeEvenementId) {
-      alert("Type événement invalide ❌");
-      return;
-    }
-
-    const data = this.eventForm.value;
-    const formData = new FormData();
-
-    formData.append('typeEvenement', String(this.typeEvenementId));
-    formData.append('titre', data.titre);
-    formData.append('description', data.description);
-    formData.append('lieu', data.lieu || '');
-
-    if (data.dateDebut) formData.append('dateDebut', data.dateDebut);
-    if (data.dateFin) formData.append('dateFin', data.dateFin);
-
-    if (data.nbPlaces) formData.append('nbPlaces', String(data.nbPlaces));
-    if (data.prix) formData.append('prix', String(data.prix));
-
-    // =========================
-    // 🔥 LOGIQUE MÉTIER
-    // =========================
-
-    // ✅ CONVENTION
-    if (this.typeEvenementId === 3) {
-      formData.append('societe', data.societe || '');
-      formData.append('isInternational', 'false'); // 🔥 forcé
-    }
-
-    // ✅ OMRA / HAJ
-    if (this.typeEvenementId === 1) {
-      formData.append('agence', data.agence || '');
-      formData.append('isInternational', 'true'); // 🔥 forcé
-    }
-
-    // ✅ VOYAGE
-    if (this.typeEvenementId === 2) {
-      formData.append('destination', data.destination || '');
-      formData.append('isInternational', String(data.isInternational)); // 🔥 choix utilisateur
-    }
-
-    // =========================
-
-    if (this.selectedFile) {
-      formData.append('photo', this.selectedFile);
-    }
-
-    this.eventService.createEvenement(formData).subscribe({
-      next: () => {
-        alert("✅ Evénement créé");
-        this.router.navigate(['/dashboard']);
-      },
-      error: (err) => {
-        console.error("❌ ERROR:", err);
-        alert(err.error || "Erreur création ❌");
-      }
-    });
+  if (this.eventForm.invalid) {
+    this.eventForm.markAllAsTouched();
+    alert("Formulaire invalide ❌");
+    return;
   }
+
+  if (!this.typeEvenementId) {
+    alert("Type événement invalide ❌");
+    return;
+  }
+
+  const data = this.eventForm.value;
+
+  // 🔥 CLEAN REMISES
+  this.cleanRemises(data);
+
+  const formData = new FormData();
+
+  formData.append('typeEvenement', String(this.typeEvenementId));
+  formData.append('titre', data.titre);
+  formData.append('description', data.description);
+  formData.append('lieu', data.lieu || '');
+
+  if (data.dateDebut) formData.append('dateDebut', data.dateDebut);
+  if (data.dateFin) formData.append('dateFin', data.dateFin);
+
+  if (data.nbPlaces) formData.append('nbPlaces', String(data.nbPlaces));
+  if (data.prix) formData.append('prix', String(data.prix));
+
+  // =========================
+  // 🔥 LOGIQUE MÉTIER
+  // =========================
+
+  if (this.typeEvenementId === 3) {
+    formData.append('societe', data.societe || '');
+    formData.append('isInternational', 'false');
+  }
+
+  if (this.typeEvenementId === 1) {
+    formData.append('agence', data.agence || '');
+    formData.append('isInternational', 'true');
+  }
+
+  if (this.typeEvenementId === 2) {
+    formData.append('destination', data.destination || '');
+    formData.append('isInternational', String(data.isInternational));
+  }
+
+  // =========================
+  // 🔥 CORRECTION REMISES (IMPORTANT)
+  // =========================
+
+  formData.append(
+    'remiseEnfant12Active',
+    data.remiseEnfant12Active ? 'true' : 'false'
+  );
+
+  formData.append(
+    'remiseEnfant12Pourcentage',
+    String(data.remiseEnfant12Pourcentage || 0)
+  );
+
+  formData.append(
+    'remiseEnfant18Active',
+    data.remiseEnfant18Active ? 'true' : 'false'
+  );
+
+  formData.append(
+    'remiseEnfant18Pourcentage',
+    String(data.remiseEnfant18Pourcentage || 0)
+  );
+
+  formData.append(
+    'remiseCoupleActive',
+    data.remiseCoupleActive ? 'true' : 'false'
+  );
+
+  formData.append(
+    'remiseCouplePourcentage',
+    String(data.remiseCouplePourcentage || 0)
+  );
+  
+
+  // =========================
+
+  if (this.selectedFile) {
+    formData.append('photo', this.selectedFile);
+  }
+
+  this.eventService.createEvenement(formData).subscribe({
+    next: () => {
+      alert("✅ Evénement créé");
+      this.router.navigate(['/dashboard']);
+    },
+    error: (err) => {
+      console.error("❌ ERROR:", err);
+      alert(err.error || "Erreur création ❌");
+    }
+    
+  });
+  console.log("DATA =", data);
+}
 }
