@@ -190,6 +190,7 @@ export class AdminCreateUserComponent {
         }
 
         this.successMessage = '';
+        console.log("REQUEST BODY:", this.newUser);
         this.cdr.detectChanges();
       }
     });

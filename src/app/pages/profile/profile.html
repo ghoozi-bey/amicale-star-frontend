@@ -14,34 +14,31 @@
 
   <!-- AVATAR -->
   <div class="avatar-container">
+    <div class="avatar-wrapper">
 
-    <div 
-      class="avatar"
-      [ngStyle]="{
-        'background-image': (preview || userPhoto) 
-          ? 'url(' + (preview || userPhoto) + ')' 
-          : 'url(assets/default-pfp.jpg)'
-      }"
-    >
-
-      <span 
-        class="delete-icon"
-        *ngIf="hasRealPhoto()"
-        (click)="removePhoto($event)">
-        🗑
-      </span>
-
-      <span class="camera">
-        {{ (preview || userPhoto) ? '✏️' : '📷' }}
-      </span>
-
-      <input 
-        type="file"
-        (change)="onFileSelected($event)"
-        class="file-input"
+      <div 
+        class="avatar"
+        [style.background-image]="'url(' + getAvatarUrl() + ')'"
       >
-    </div>
 
+        <span 
+          class="delete-icon"
+          *ngIf="userPhoto && !preview"
+          (click)="removePhoto($event)">
+          🗑
+        </span>
+
+        <span class="camera">
+          {{ preview || userPhoto ? '✏️' : '📷' }}
+        </span>
+
+        <input 
+          type="file"
+          (change)="onFileSelected($event)"
+          class="file-input"
+        >
+      </div>
+    </div>
   </div>
 
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">

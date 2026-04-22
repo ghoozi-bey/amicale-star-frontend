@@ -39,13 +39,16 @@
 
     <div class="user-card"
          *ngFor="let user of filteredUsers"
-         (click)="goToUser(user.matricule)">
+          (click)="goToUser(user.matricule)">
 
       <!-- 🔹 Avatar -->
-      <img 
-        [src]="user.imageUrl || 'assets/default-pfp.jpg'"
-        (error)="onImageError($event)"
+      <img *ngIf="user.hasPhoto; else defaultImg"
+        [src]="user.photoUrl"
         class="user-avatar">
+
+      <ng-template #defaultImg>
+        <img src="assets/default-pfp.jpg" class="user-avatar">
+      </ng-template>
 
       <!-- 🔹 Info -->
       <div class="user-info">

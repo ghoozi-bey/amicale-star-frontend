@@ -35,21 +35,10 @@ export class AdminUserProfile {
       headers: { Authorization: 'Bearer ' + this.authService.getToken() }
     }).subscribe((data: any) => {
 
-      this.user = {
-        ...data,
-        imageUrl: this.buildImage(data)
-      };
+      this.user = data;
 
-      this.cdr.detectChanges(); // forces UI update
-      console.log("USER:", this.user);
+      this.cdr.detectChanges(); // forces UI updates
     });
-  }
-
-  buildImage(user: any): string {
-    if (user.photo && typeof user.photo === 'string') {
-      return `data:${user.photoType};base64,${user.photo}`;
-    }
-    return 'assets/default-pfp.jpg'; // Fallback image
   }
 
   editUser() {

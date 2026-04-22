@@ -1,16 +1,22 @@
 .profile-container {
   display: flex;
   justify-content: center;
+  padding: 40px 0;
 }
 
 /* 🔥 CARD */
 .profile-card {
-  background: white;
-  padding: 30px;
-  border-radius: 16px;
+  background: #ffffff;
+  padding: 35px 30px;
+  border-radius: 20px;
   width: 500px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  transition: 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-4px);
 }
 
 /* 🔥 AVATAR */
@@ -20,32 +26,37 @@
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 15px;
+  border: 3px solid #f0f0f0;
 }
 
 /* 🔥 TEXT */
 .email {
   color: #666;
   margin-bottom: 20px;
+  font-size: 14px;
 }
 
 /* 🔥 GRID INFO */
 .info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 18px;
+  margin-top: 25px;
   text-align: left;
 }
 
 .info-item {
   display: flex;
   flex-direction: column;
+  padding: 10px;
+  border-radius: 10px;
+  background: #f9f9f9;
 }
 
 .label {
   font-size: 12px;
   color: #888;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .value {
@@ -55,20 +66,20 @@
 
 /* 🔥 ACTIONS */
 .actions {
-  margin-top: 25px;
+  margin-top: 30px;
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 /* 🔥 BUTTON BASE */
 button {
-  padding: 8px 16px;
+  padding: 10px 18px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 /* 🔥 EDIT */
@@ -79,6 +90,7 @@ button.edit {
 
 button.edit:hover {
   background: #1b5e20;
+  transform: scale(1.05);
 }
 
 /* 🔥 DELETE */
@@ -89,4 +101,5 @@ button.delete {
 
 button.delete:hover {
   background: #b71c1c;
+  transform: scale(1.05);
 }

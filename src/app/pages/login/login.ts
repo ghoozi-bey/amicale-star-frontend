@@ -34,8 +34,6 @@ export class LoginComponent {
       // 🔥 TEST FORCÉ (IMPORTANT)
       localStorage.setItem('matricule', 'STAR123455');
 
-      console.log("MAT TEST:", localStorage.getItem('matricule'));
-
       // ✅ REDIRECTION
       this.router.navigate(['/dashboard']);
     },

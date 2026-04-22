@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -29,6 +29,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   showElectionsMenu = false;
   showUsersMenu = false;
 
+  photoUrlWithCache: string | null = null;
+
   private profileListener!: () => void;
 
   constructor(
@@ -36,7 +38,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private http: HttpClient,
     private zone: NgZone,
-    private cdr: ChangeDetectorRef // 🔥 AJOUT
   ) {}
 
   ngOnInit(): void {
@@ -46,14 +47,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     const role = localStorage.getItem('role');
     this.userRole = role ? role.replace('ROLE_', '') : '';
 
-    const existingPhoto = this.authService.getUserPhoto();
-
-    if (existingPhoto) {
-      this.userPhoto = existingPhoto;
-      this.loadingPhoto = false;
-    } else {
-      this.loadProfilePhoto();
-    }
+    this.loadProfilePhoto();
 
     this.profileListener = () => {
       this.zone.run(() => {
@@ -75,27 +69,28 @@ export class SidebarComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
 
-          this.zone.run(() => {
+          this.zone.run(() => {   // 🔥 THIS IS THE FIX
 
-            if (data?.photoUrl) {
-              this.userPhoto = data.photoUrl + '?t=' + new Date().getTime(); // 🔥 cache fix
-              this.authService.setUserPhoto(this.userPhoto);
+            if (data?.hasPhoto && data?.photoUrl) {
+              this.userPhoto = data.photoUrl + '?t=' + Date.now();
+              this.photoUrlWithCache = this.userPhoto;
             } else {
               this.userPhoto = null;
-              this.authService.setUserPhoto(null);
+              this.photoUrlWithCache = null;
             }
+
+            this.authService.setUserPhoto(this.userPhoto);
 
             this.loadingPhoto = false;
 
-            this.cdr.detectChanges(); // 🔥 FIX FINAL
           });
 
         },
         error: () => {
           this.zone.run(() => {
             this.userPhoto = null;
+            this.photoUrlWithCache = null;
             this.loadingPhoto = false;
-            this.cdr.detectChanges(); // 🔥 IMPORTANT
           });
         }
       });

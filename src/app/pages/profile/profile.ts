@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -33,7 +33,6 @@ export class ProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef,
     private authService: AuthService,
     public loadingService: LoadingService
   ) {}
@@ -53,11 +52,13 @@ export class ProfileComponent implements OnInit {
 
   loadProfile() {
 
-    this.loadingService.show();
+    queueMicrotask(() => this.loadingService.show());
 
     this.http.get<any>('http://localhost:8080/api/user/profile')
       .subscribe({
         next: (data) => {
+
+          console.log("PROFILE DATA:", data);
 
           this.form.patchValue({
             nom: data?.nom ?? '',
@@ -72,18 +73,21 @@ export class ProfileComponent implements OnInit {
             email: data?.email ?? ''
           });
 
-          this.userPhoto = data?.photoUrl || null;
+          if (data?.hasPhoto && data?.photoUrl) {
+            this.userPhoto = data.photoUrl + '?t=' + Date.now();
+          } else {
+            this.userPhoto = null;
+          }
           this.authService.setUserPhoto(this.userPhoto);
 
           this.preview = null;
           this.removePhotoFlag = false; // 🔥 RESET
 
-          this.loadingService.hide();
-          this.cdr.detectChanges();
+          queueMicrotask(() => this.loadingService.hide());
         },
 
         error: () => {
-          this.loadingService.hide();
+          queueMicrotask(() => this.loadingService.hide());
         }
       });
   }
@@ -129,7 +133,6 @@ export class ProfileComponent implements OnInit {
     const reader = new FileReader();
     reader.onload = () => {
       this.preview = reader.result as string;
-      this.cdr.detectChanges();
     };
 
     if (this.selectedFile) {
@@ -166,7 +169,7 @@ export class ProfileComponent implements OnInit {
       formData.append('photoProfil', this.selectedFile);
     }
 
-    this.loadingService.show();
+    queueMicrotask(() => this.loadingService.show());
 
     this.http.put('http://localhost:8080/api/user/profile', formData, {
       observe: 'response'
@@ -175,7 +178,7 @@ export class ProfileComponent implements OnInit {
 
       next: (res) => {
 
-        this.loadingService.hide();
+        queueMicrotask(() => this.loadingService.hide());
 
         if (res.status === 200) {
 
@@ -206,7 +209,7 @@ export class ProfileComponent implements OnInit {
 
       error: (err) => {
 
-        this.loadingService.hide();
+        queueMicrotask(() => this.loadingService.hide());
 
         if (err.status === 200) {
 
@@ -224,7 +227,7 @@ export class ProfileComponent implements OnInit {
       },
 
       complete: () => {
-        this.loadingService.hide();
+        queueMicrotask(() => this.loadingService.hide());
       }
 
     });
@@ -242,6 +245,13 @@ export class ProfileComponent implements OnInit {
   }
 
   hasRealPhoto(): boolean {
-    return !!this.userPhoto && this.userPhoto !== 'assets/default-pfp.jpg';
+    return !!this.userPhoto;
   }
+
+  getAvatarUrl(): string {
+    if (this.preview) return this.preview;
+    if (this.userPhoto) return this.userPhoto;
+    return 'assets/default-pfp.jpg';
+  }
+
 }

@@ -3,22 +3,13 @@
   <!-- Profil -->
   <div class="user-profile" (click)="goToProfile()">
 
-    <ng-container *ngIf="!loadingPhoto">
+    <img *ngIf="photoUrlWithCache; else defaultImg"
+      [src]="photoUrlWithCache"
+      class="avatar">
 
-      <img 
-        *ngIf="userPhoto" 
-        [src]="userPhoto" 
-        class="avatar"
-        (error)="onImageError($event)"
-      >
-
-      <img 
-        *ngIf="!userPhoto" 
-        src="assets/default-pfp.jpg" 
-        class="avatar"
-      >
-
-    </ng-container>
+      <ng-template #defaultImg>
+        <img src="assets/default-pfp.jpg" class="avatar">
+      </ng-template>
 
     <ng-container *ngIf="user$ | async as user; else noUser">
       <span class="name">
@@ -98,11 +89,18 @@
 
   <!-- RESPONSABLE -->
   <div *ngIf="hasRole('RESPONSABLE_ELECTION')">
-    <button (click)="toggleElections()">Gestion élections</button>
+    <button (click)="toggleElections()" class="menu-button sidebar-item">
+      <span class="material-icons">how_to_vote</span>
+      Gestion élections
+    </button>
 
-    <ul *ngIf="showElectionsMenu">
-      <li><a routerLink="/elections/create">Créer</a></li>
-      <li><a routerLink="/elections">Liste</a></li>
+    <ul *ngIf="showElectionsMenu" class="submenu">
+      <li>
+        <a routerLink="/gestion-elections/create" routerLinkActive="active"> Créer </a>
+      </li>
+      <li>
+        <a routerLink="/gestion-elections" routerLinkActive="active"> Liste </a>
+      </li>
     </ul>
   </div>
 
@@ -117,12 +115,12 @@
     <ul *ngIf="showUsersMenu" class="submenu">
       <li>
         <a routerLink="/admin-create-user" routerLinkActive="active" class="sidebar-item">
-          ➕ Créer
+          Créer
         </a>
       </li>
       <li>
         <a routerLink="/admin-users" routerLinkActive="active" class="sidebar-item">
-          📋 Liste
+          Liste
         </a>
       </li>
     </ul>

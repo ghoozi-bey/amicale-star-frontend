@@ -23,7 +23,7 @@ export class DashboardComponent {
     private evenementService: EvenementService,
     private loadingService: LoadingService,
     private router: Router,
-    private cd: ChangeDetectorRef // 🔥 FIX
+    private cd: ChangeDetectorRef
   ) {
     this.loadEvenements();
   }

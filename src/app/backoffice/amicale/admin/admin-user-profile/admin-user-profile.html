@@ -2,13 +2,19 @@
 
   <div class="profile-card">
 
-    <!-- 🔥 Avatar -->
-    <img [src]="user.imageUrl" class="profile-avatar">
+    <!-- Avatar -->
+    <img *ngIf="user.hasPhoto; else defaultImg"
+        [src]="user.photoUrl"
+        class="profile-avatar">
+
+    <ng-template #defaultImg>
+      <img src="assets/default-pfp.jpg" class="profile-avatar">
+    </ng-template>
 
     <h2>{{ user.nom }} {{ user.prenom }}</h2>
     <p class="email">{{ user.email }}</p>
 
-    <!-- 🔥 INFO GRID -->
+    <!-- INFO GRID -->
     <div class="info-grid">
 
       <div class="info-item">
@@ -41,14 +47,14 @@
         <span class="value">{{ user.dateNaissance }}</span>
       </div>
 
-      <div class="info-item" *ngIf="user.typeEvenement.id">
+      <div class="info-item" *ngIf="user.typeEvenement?.id">
         <span class="label">Type Événement</span>
         <span class="value">{{ user.typeEvenement.nom }}</span>
       </div>
 
     </div>
 
-    <!-- 🔥 ACTIONS -->
+    <!-- ACTIONS -->
     <div class="actions">
       <button class="edit" (click)="editUser()">Modifier</button>
       <button class="delete" (click)="deleteUser()">Supprimer</button>

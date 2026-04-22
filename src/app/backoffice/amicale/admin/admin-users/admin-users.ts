@@ -49,14 +49,11 @@ export class AdminUsersComponent {
                 ...user,
                 typeAdherent: (user.typeAdherent || user.type_adherent || user.role || '')
                     .replace('ROLE_', '')
-                    .toUpperCase(),
-                imageUrl: user.photoUrl
-                    ? user.photoUrl + '?t=' + new Date().getTime()
-                    : null
+                    .toUpperCase()
             }));
-            
-            this.filteredUsers = [...this.users]; // initial copy
 
+            this.filteredUsers = [...this.users];
+            console.log(this.users);
             this.cdr.detectChanges(); // forces UI update
             },
             error: (err) => console.error('Erreur chargement users', err)
@@ -96,36 +93,6 @@ export class AdminUsersComponent {
             alert('Erreur lors de la mise à jour');
             }
         });
-    }
-
-    getUserImage(user: any): string {
-        if (user.photo && user.photoType) {
-            return `data:${user.photoType};base64,${user.photo}`;
-        }
-
-        return 'assets/default-pfp.jpg'; // fallback
-    }
-
-    onImageError(event: any) {
-        event.target.src = 'assets/default-pfp.jpg';
-    }
-
-    buildImage(user: any): string {
-
-        if (user.photo && typeof user.photo === 'string') {
-            return `data:${user.photoType};base64,${user.photo}`;
-        }
-
-        if (user.photo && Array.isArray(user.photo)) {
-            const binary = new Uint8Array(user.photo)
-                .reduce((data, byte) => data + String.fromCharCode(byte), '');
-
-            const base64 = btoa(binary);
-
-            return `data:${user.photoType};base64,${base64}`;
-        }
-
-        return 'assets/default-pfp.jpg'; // ✅ FIXED
     }
 
     goToUser(matricule: string) {
