@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-inscriptions-evenement',
@@ -13,67 +15,58 @@ export class InscriptionsEvenement implements OnInit {
 
   inscriptions: any[] = [];
   eventId!: number;
+  loading = true;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router // 🔥 ajouté
-  ) {}
+  private route: ActivatedRoute,
+  private router: Router,
+  private http: HttpClient,
+  private cdr: ChangeDetectorRef // 🔥
+) {}
 
   ngOnInit(): void {
-    // 🔥 meilleure pratique (support navigation dynamique)
-    this.route.paramMap.subscribe(params => {
-      this.eventId = Number(params.get('id'));
-      console.log("EVENT ID =", this.eventId);
+  this.route.paramMap.subscribe(params => {
+    const newId = Number(params.get('id'));
 
+    if (this.eventId !== newId) {
+      this.eventId = newId;
       this.loadInscriptions();
-    });
-  }
+    }
+  });
+}
 
-  // 🔥 méthode séparée (propre)
   loadInscriptions() {
-    // ⚠️ TEMPORAIRE (remplacer par backend)
-    this.inscriptions = [
-      {
-        id: 1,
-        nom: 'Ghazi Bey',
-        email: 'ghazi@email.com',
-        modePaiement: 'NON_PAYE',
-        statut: 'EN_ATTENTE'
-      },
-      {
-        id: 2,
-        nom: 'Ali Test',
-        email: 'ali@test.com',
-        modePaiement: 'PAYE',
-        statut: 'ACCEPTEE'
-      }
-    ];
+    this.loading = true;
+
+    this.http.get<any[]>(`http://localhost:8080/api/inscriptions/event/${this.eventId}`)
+      .subscribe({
+        next: (data) => {
+          this.inscriptions = data;
+          this.loading = false;
+          this.cdr.detectChanges(); // 🔥
+        },
+        error: (err) => {
+          console.error(err);
+          this.loading = false;
+        }
+      });
   }
 
-  // 👁️ voir détails (optionnel)
+  // 👁️ DETAILS INSCRIPTION (IMPORTANT FIX)
   voirDetails(inscriptionId: number) {
-    this.router.navigate(['/inscription', inscriptionId]);
-  }
+  this.router.navigate(['/gestion-inscriptions', inscriptionId]);
+}
 
-  // ✅ accepter
+  // ✅ UI ONLY (temporaire)
   accepter(inscriptionId: number) {
-    console.log("ACCEPTER", inscriptionId);
-
-    // 🔥 simulation update
     this.inscriptions = this.inscriptions.map(i =>
       i.id === inscriptionId ? { ...i, statut: 'ACCEPTEE' } : i
     );
   }
 
-  // ❌ refuser
   refuser(inscriptionId: number) {
-    console.log("REFUSER", inscriptionId);
-
     this.inscriptions = this.inscriptions.map(i =>
       i.id === inscriptionId ? { ...i, statut: 'REFUSEE' } : i
     );
   }
-  voirInscriptions(eventId: number) {
-  this.router.navigate(['/gestion-inscriptions', eventId]);
-}
 }

@@ -153,7 +153,14 @@ export const routes: Routes = [
   loadComponent: () =>
     import('./backoffice/amicale/membre-amicale/gestion-inscriptions/gestion-inscriptions')
       .then(m => m.GestionInscriptions)
-}
+    },
+    {
+  path: 'gestion-inscriptions/:id',
+  loadComponent: () =>
+    import('./backoffice/amicale/membre-amicale/gestion-inscriptions/gestion-inscriptions')
+      .then(m => m.GestionInscriptions)
+    }
+
 
     ]
   },

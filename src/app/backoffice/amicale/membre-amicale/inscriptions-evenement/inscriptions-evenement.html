@@ -1,18 +1,23 @@
 <div class="inscriptions-container">
 
-  <!-- 🔥 TITLE -->
+  <!-- HEADER -->
   <div class="page-header">
-  <div class="title-left">
-    <i class="fas fa-users"></i>
-    <div>
-      <h2>Gestion des inscriptions</h2>
-      <p>Liste des participants de cet événement</p>
+    <div class="title-left">
+      <i class="fas fa-users"></i>
+      <div>
+        <h2>Gestion des inscriptions</h2>
+        <p>Liste des participants de cet événement</p>
+      </div>
     </div>
   </div>
-</div>
 
-  <!-- 🔥 TABLE -->
-  <div class="table-container">
+  <!-- LOADING -->
+  <div *ngIf="loading" class="loading">
+    Chargement...
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-container" *ngIf="!loading && inscriptions.length > 0">
 
     <table class="inscriptions-table">
 
@@ -70,27 +75,27 @@
 
             <!-- 👁 VOIR -->
             <button 
-  class="btn btn-view"
-  title="Voir détails"
-  (click)="voirInscriptions(insc.eventId)"
->
-  <i class="fas fa-eye"></i>
-</button>
+              class="btn btn-view"
+              title="Voir détails"
+              (click)="voirDetails(insc.id)"
+            >
+              <i class="fas fa-eye"></i>
+            </button>
 
-            <!-- ✅ ACCEPTER -->
+            <!-- ✅ -->
             <button 
-              class="btn-action btn-accept" 
-              title="Accepter"
+              class="btn-action btn-accept"
               *ngIf="insc.statut === 'EN_ATTENTE'"
+              (click)="accepter(insc.id)"
             >
               <i class="fas fa-check"></i>
             </button>
 
-            <!-- ❌ REFUSER -->
+            <!-- ❌ -->
             <button 
-              class="btn-action btn-refuse" 
-              title="Refuser"
+              class="btn-action btn-refuse"
               *ngIf="insc.statut === 'EN_ATTENTE'"
+              (click)="refuser(insc.id)"
             >
               <i class="fas fa-times"></i>
             </button>
@@ -103,6 +108,11 @@
 
     </table>
 
+  </div>
+
+  <!-- EMPTY -->
+  <div *ngIf="!loading && inscriptions.length === 0" class="empty">
+    Aucune inscription trouvée
   </div>
 
 </div>

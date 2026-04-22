@@ -1,48 +1,120 @@
-<div class="details-container">
+<div class="details-container" *ngIf="!loading && data">
 
   <h2 class="title">Détails de l'inscription</h2>
 
   <!-- STATUS -->
-  <div class="status-badge en-attente">
-    EN_ATTENTE
+  <div 
+    class="status-badge"
+    [ngClass]="{
+      'en-attente': data.statut === 'EN_ATTENTE',
+      'acceptee': data.statut === 'ACCEPTEE',
+      'refusee': data.statut === 'REFUSEE'
+    }"
+  >
+    {{ data.statut }}
   </div>
 
   <!-- ADHERENT -->
   <div class="card">
     <h3>👤 Adhérent</h3>
-    <p><strong>Nom :</strong> Ghazi Bey</p>
-    <p><strong>Email :</strong> ghazi@email.com</p>
-    <p><strong>Téléphone :</strong> 12345678</p>
+    <p><strong>Nom :</strong> {{ data.nom }} {{ data.prenom }}</p>
+    <p><strong>Email :</strong> {{ data.email }}</p>
+    <p><strong>Téléphone :</strong> {{ data.telephone }}</p>
+
+    <!-- PASSEPORT PDF -->
+    <div *ngIf="data.passeport">
+      <p><strong>Passeport :</strong></p>
+      <button 
+  class="btn-pdf"
+  *ngIf="data.passeport"
+  (click)="openPdf(data.passeport)"
+>
+  📄 Voir passeport
+</button>
+    </div>
   </div>
 
   <!-- EVENT -->
   <div class="card">
     <h3>🎫 Événement</h3>
-    <p><strong>Titre :</strong> Voyage Djerba</p>
-    <p><strong>Prix :</strong> 200 DT</p>
+    <p><strong>Titre :</strong> {{ data.titre }}</p>
+    <p><strong>Prix :</strong> {{ data.prix }} DT</p>
+    <p><strong>Type :</strong> {{ data.typeEvenement }}</p>
   </div>
 
   <!-- PAYMENT -->
   <div class="card">
     <h3>💳 Paiement</h3>
-    <p><strong>Mode :</strong> Espèces</p>
-    <p><strong>Statut :</strong> NON_PAYE</p>
+    <p><strong>Mode :</strong> {{ data.modePaiement }}</p>
+    <p><strong>Statut :</strong> {{ data.statutPaiement }}</p>
   </div>
 
   <!-- FAMILY -->
   <div class="card">
     <h3>👨‍👩‍👧 Famille</h3>
-    <p><strong>Conjoint :</strong> Oui</p>
-    <ul>
-      <li>Enfant 1</li>
-      <li>Enfant 2</li>
+
+    <!-- CONJOINT -->
+    <p><strong>Conjoint :</strong> {{ data.conjoint ? 'Oui' : 'Non' }}</p>
+
+    <div *ngIf="data.conjoint">
+      <p>{{ data.conjoint.nom }} {{ data.conjoint.prenom }}</p>
+
+      <div *ngIf="data.conjoint.passeport">
+        <a 
+          [href]="'data:application/pdf;base64,' + data.conjoint.passeport"
+          target="_blank"
+          class="btn-pdf"
+        >
+          📄 Passeport conjoint
+        </a>
+      </div>
+    </div>
+
+    <!-- ENFANTS -->
+    <ul *ngIf="data.enfants && data.enfants.length > 0">
+      <li *ngFor="let e of data.enfants">
+
+        {{ e.nom }} {{ e.prenom }}
+
+        <div *ngIf="e.passeport">
+          <a 
+            [href]="'data:application/pdf;base64,' + e.passeport"
+            target="_blank"
+            class="btn-pdf"
+          >
+            📄 Passeport enfant
+          </a>
+        </div>
+
+      </li>
     </ul>
+
+    <p *ngIf="!data.enfants || data.enfants.length === 0">
+      Aucun enfant
+    </p>
+
+  </div>
+
+  <!-- PRIX TOTAL -->
+  <div class="card">
+    <h3>💰 Total</h3>
+    <p><strong>{{ data.prixTotal }} DT</strong></p>
   </div>
 
   <!-- ACTIONS -->
   <div class="actions">
-    <button class="btn accept">✅ Valider</button>
-    <button class="btn reject">❌ Refuser</button>
-  </div>
 
+  <button class="btn accept" (click)="valider()">
+    ✅ Valider
+  </button>
+
+  <button class="btn reject" (click)="refuser()">
+    ❌ Refuser
+  </button>
+
+</div>
+
+<!-- LOADING -->
+<div *ngIf="loading">
+  Chargement...
 </div>
