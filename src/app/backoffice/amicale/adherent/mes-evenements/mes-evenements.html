@@ -1,6 +1,6 @@
 <div class="page">
 
-  <!-- HEADER PRO -->
+  <!-- HEADER -->
   <div class="header-pro">
     <div class="header-left">
       <span class="material-icons icon">insights</span>
@@ -45,126 +45,101 @@
   </div>
 
   <!-- LOADING -->
-  <ng-container *ngIf="loading; else content">
-    <div class="cards">
-      <div class="card skeleton" *ngFor="let i of [1,2,3,4]">
-        <div class="img skeleton-box"></div>
-        <div class="card-body">
-          <div class="skeleton-text"></div>
-          <div class="skeleton-text small"></div>
-        </div>
-      </div>
-    </div>
-  </ng-container>
+  <div *ngIf="loading" class="loading">
+    Chargement...
+  </div>
 
   <!-- CONTENT -->
-  <ng-template #content>
+  <div *ngIf="!loading && inscriptions.length > 0" class="cards">
 
-    <div *ngIf="inscriptions.length > 0; else empty" class="cards">
+    <div class="card"
+         *ngFor="let ins of inscriptions"
+         (click)="openDetails(ins.id)"
+         style="cursor:pointer;">
 
-      <div class="card fade-in"
-           *ngFor="let ins of inscriptions"
-           (click)="openDetails(ins.id)"
-           style="cursor:pointer;">
+      <!-- IMAGE -->
+      <div class="img-container">
+        <img 
+          [src]="'http://localhost:8080/api/evenements/photo/' + ins.evenementId"
+          class="img"
+        >
 
-        <div class="img-container">
-          <img 
-            [src]="'http://localhost:8080/api/evenements/photo/' + ins.evenementId"
-            class="img"
-          >
+        <span class="badge" [ngClass]="getStatutClass(ins.statut)">
+          {{ ins.statut }}
+        </span>
+      </div>
 
-          <span class="badge" [ngClass]="getStatutClass(ins.statut)">
-            {{ ins.statut }}
-          </span>
-        </div>
+      <!-- BODY -->
+      <div class="card-body">
 
-        <div class="card-body">
+        <h3 class="title">{{ ins.titreEvenement }}</h3>
 
-          <h3 class="title">{{ ins.titreEvenement }}</h3>
+        <!-- 🔥 ÉCHÉANCIER -->
+        <div class="echeancier" *ngIf="paiementsMap[ins.id]?.length">
 
-          <div class="info">
+          <div class="ligne-paiement"
+               *ngFor="let p of paiementsMap[ins.id]"
+               (click)="$event.stopPropagation()">
 
-            <div class="paiement">
-              <span class="material-icons icon-pay">credit_card</span>
-              <span class="text">Paiement</span>
+            <!-- INFOS -->
+            <div class="infos">
+
+              <span class="date">
+                {{ p.datePaiement || 'Avance' }}
+              </span>
+
+              <span class="montant">
+                {{ p.montant }} DT
+              </span>
+
+              <span class="badge-paiement"
+                [ngClass]="{
+                  'paye': p.statut === 'PAYE',
+                  'attente': p.statut === 'EN_ATTENTE'
+                }">
+                {{ p.statut }}
+              </span>
+
             </div>
 
-            <span class="badge-paiement"
-              [ngClass]="{
-                'paye': ins.statutPaiement === 'PAYE',
-                'non-paye': ins.statutPaiement === 'NON_PAYE',
-                'verif': ins.statutPaiement === 'EN_VERIFICATION'
-              }">
-              {{ ins.statutPaiement }}
+            <!-- 🔥 UPLOAD VIREMENT -->
+            <div *ngIf="canUpload(p)" class="upload-box">
+
+              <input type="file"
+                     (change)="onFileSelected($event, p.id)"
+                     accept="application/pdf">
+
+              <button class="btn-upload"
+                      (click)="uploadJustificatif(p.id, ins.id)">
+                📤 Envoyer justificatif
+              </button>
+
+            </div>
+
+            <!-- ✅ DEJA ENVOYÉ -->
+            <span *ngIf="p.justificatifVirement" class="success">
+              ✔ Justificatif envoyé
             </span>
 
           </div>
 
-          <!-- 🔥 UPLOAD DANS LA CARD -->
-          <div *ngIf="ins.statut === 'ACCEPTEE' && ins.modePaiement === 'VIREMENT'"
-     class="upload-box"
-     (click)="$event.stopPropagation()">
-
-  <input type="file"
-         (change)="onFileSelected($event, ins.id)"
-         accept="application/pdf">
-         <p class="upload-info">
-  ⚠️ Veuillez téléverser votre justificatif de virement dans les brefs délais après l'acceptation.<br>
-  Sinon, votre inscription pourra être annulée .
-</p>
-
-  <button class="btn-upload"
-          (click)="uploadJustificatif(ins.id)">
-    Envoyer justificatif
-  </button>
-  <div class="upload-status">
-
-  <span *ngIf="uploadStatus[ins.id] === 'loading'" class="loading">
-    <svg class="icon spin" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.3"/>
-      <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" stroke-width="4" fill="none"/>
-    </svg>
-    Envoi en cours...
-  </span>
-
-  <span *ngIf="uploadStatus[ins.id] === 'success'" class="success">
-    <svg class="icon" viewBox="0 0 24 24">
-      <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" fill="none"/>
-    </svg>
-    Justificatif envoyé
-  </span>
-
-  <span *ngIf="uploadStatus[ins.id] === 'error'" class="error">
-    <svg class="icon" viewBox="0 0 24 24">
-      <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
-      <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
-    </svg>
-    Erreur lors de l'envoi
-  </span>
-
-</div>
-
-</div>
-
         </div>
 
       </div>
 
     </div>
 
-    <!-- EMPTY -->
-    <ng-template #empty>
-      <div class="empty-box">
-        <span class="material-icons empty-icon">event_busy</span>
-        <p>Aucun événement pour le moment</p>
-      </div>
-    </ng-template>
+  </div>
 
-  </ng-template>
+  <!-- EMPTY -->
+  <div *ngIf="!loading && inscriptions.length === 0" class="empty-box">
+    <span class="material-icons empty-icon">event_busy</span>
+    <p>Aucun événement pour le moment</p>
+  </div>
 
 </div>
 
-<!-- MODAL (SANS UPLOAD) -->
+<!-- MODAL -->
 <div class="modal-overlay" *ngIf="selectedInscription" (click)="closeModal()">
 
   <div class="modal-box" (click)="$event.stopPropagation()">
@@ -176,6 +151,7 @@
 
     <div class="modal-content" *ngIf="selectedInscription">
 
+      <!-- EVENT -->
       <div class="section">
         <div class="section-title">
           <span class="material-icons">event</span>
@@ -190,7 +166,9 @@
 
           <div class="row total">
             <span class="material-icons">payments</span>
-            <span class="price">Prix total : {{ selectedInscription?.prix }} DT</span>
+            <span class="price">
+              Prix total : {{ selectedInscription?.prix }} DT
+            </span>
           </div>
         </div>
       </div>
@@ -205,7 +183,9 @@
         <div class="section-card">
           <div class="row">
             <span class="label">Nom</span>
-            <span class="value">{{ selectedInscription?.nom }} {{ selectedInscription?.prenom }}</span>
+            <span class="value">
+              {{ selectedInscription?.nom }} {{ selectedInscription?.prenom }}
+            </span>
           </div>
 
           <div class="row">

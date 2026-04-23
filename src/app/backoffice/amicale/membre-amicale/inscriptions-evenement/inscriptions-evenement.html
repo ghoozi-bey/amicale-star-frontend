@@ -17,7 +17,7 @@
   </div>
 
   <!-- TABLE -->
-  <div class="table-container" *ngIf="!loading && inscriptions.length > 0">
+  <div class="table-container" *ngIf="!loading && inscriptions && inscriptions.length > 0">
 
     <table class="inscriptions-table">
 
@@ -33,7 +33,7 @@
 
       <tbody>
 
-        <tr *ngFor="let insc of inscriptions">
+        <tr *ngFor="let insc of inscriptions; trackBy: trackById">
 
           <!-- NOM -->
           <td>
@@ -46,12 +46,9 @@
 
           <!-- PAIEMENT -->
           <td>
-            <span 
-              class="badge paiement"
-              [ngClass]="insc.modePaiement === 'PAYE' ? 'paye' : 'non-paye'"
-            >
+            <span class="badge paiement">
               <i class="fas fa-wallet"></i>
-              {{ insc.modePaiement }}
+              {{ insc.modePaiement || '---' }}
             </span>
           </td>
 
@@ -66,7 +63,7 @@
               }"
             >
               <i class="fas fa-circle"></i>
-              {{ insc.statut }}
+              {{ insc.statut || '---' }}
             </span>
           </td>
 
@@ -82,7 +79,7 @@
               <i class="fas fa-eye"></i>
             </button>
 
-            <!-- ✅ -->
+            <!-- ✅ ACCEPTER -->
             <button 
               class="btn-action btn-accept"
               *ngIf="insc.statut === 'EN_ATTENTE'"
@@ -91,7 +88,7 @@
               <i class="fas fa-check"></i>
             </button>
 
-            <!-- ❌ -->
+            <!-- ❌ REFUSER -->
             <button 
               class="btn-action btn-refuse"
               *ngIf="insc.statut === 'EN_ATTENTE'"
@@ -111,7 +108,7 @@
   </div>
 
   <!-- EMPTY -->
-  <div *ngIf="!loading && inscriptions.length === 0" class="empty">
+  <div *ngIf="!loading && (!inscriptions || inscriptions.length === 0)" class="empty">
     Aucune inscription trouvée
   </div>
 

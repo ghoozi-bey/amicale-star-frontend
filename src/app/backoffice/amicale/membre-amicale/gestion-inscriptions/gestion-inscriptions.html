@@ -21,17 +21,12 @@
     <p><strong>Email :</strong> {{ data.email }}</p>
     <p><strong>Téléphone :</strong> {{ data.telephone }}</p>
 
-    <!-- PASSEPORT PDF -->
-    <div *ngIf="data.passeport">
-      <p><strong>Passeport :</strong></p>
-      <button 
-  class="btn-pdf"
-  *ngIf="data.passeport"
-  (click)="openPdf(data.passeport)"
->
-  📄 Voir passeport
-</button>
-    </div>
+    <button 
+      class="btn-pdf" 
+      *ngIf="data.passeport"
+      (click)="openPdf(data.passeport)">
+      📄 Voir passeport
+    </button>
   </div>
 
   <!-- EVENT -->
@@ -42,79 +37,84 @@
     <p><strong>Type :</strong> {{ data.typeEvenement }}</p>
   </div>
 
-  <!-- PAYMENT -->
-  <div class="card">
-    <h3>💳 Paiement</h3>
-    <p><strong>Mode :</strong> {{ data.modePaiement }}</p>
-    <p><strong>Statut :</strong> {{ data.statutPaiement }}</p>
-  </div>
-
-  <!-- FAMILY -->
-  <div class="card">
-    <h3>👨‍👩‍👧 Famille</h3>
-
-    <!-- CONJOINT -->
-    <p><strong>Conjoint :</strong> {{ data.conjoint ? 'Oui' : 'Non' }}</p>
-
-    <div *ngIf="data.conjoint">
-      <p>{{ data.conjoint.nom }} {{ data.conjoint.prenom }}</p>
-
-      <div *ngIf="data.conjoint.passeport">
-        <a 
-          [href]="'data:application/pdf;base64,' + data.conjoint.passeport"
-          target="_blank"
-          class="btn-pdf"
-        >
-          📄 Passeport conjoint
-        </a>
-      </div>
-    </div>
-
-    <!-- ENFANTS -->
-    <ul *ngIf="data.enfants && data.enfants.length > 0">
-      <li *ngFor="let e of data.enfants">
-
-        {{ e.nom }} {{ e.prenom }}
-
-        <div *ngIf="e.passeport">
-          <a 
-            [href]="'data:application/pdf;base64,' + e.passeport"
-            target="_blank"
-            class="btn-pdf"
-          >
-            📄 Passeport enfant
-          </a>
-        </div>
-
-      </li>
-    </ul>
-
-    <p *ngIf="!data.enfants || data.enfants.length === 0">
-      Aucun enfant
-    </p>
-
-  </div>
-
-  <!-- PRIX TOTAL -->
+  <!-- TOTAL -->
   <div class="card">
     <h3>💰 Total</h3>
     <p><strong>{{ data.prixTotal }} DT</strong></p>
   </div>
 
-  <!-- ACTIONS -->
-  <div class="actions">
+  <!-- 🔥 ÉCHÉANCIER -->
+  <div class="card">
+    <h3>📊 Échéancier des paiements</h3>
 
-  <button class="btn accept" (click)="valider()">
-    ✅ Valider
-  </button>
+    <table class="table" *ngIf="paiements && paiements.length > 0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date prévue</th>
+          <th>Montant</th>
+          <th>Statut</th>
+          <th>Action</th>
+        </tr>
+      </thead>
 
-  <button class="btn reject" (click)="refuser()">
-    ❌ Refuser
-  </button>
+      <tbody>
+        <tr *ngFor="let p of paiements; let i = index">
+
+          <!-- INDEX -->
+          <td>{{ i + 1 }}</td>
+
+          <!-- DATE -->
+          <td>
+            <span *ngIf="p.datePaiement; else noDate">
+              {{ p.datePaiement | date:'dd/MM/yyyy' }}
+            </span>
+            <ng-template #noDate>
+              <span class="text-muted">Non payé</span>
+            </ng-template>
+          </td>
+
+          <!-- MONTANT -->
+          <td>{{ p.montant | number:'1.2-2' }} DT</td>
+
+          <!-- STATUT -->
+          <td>
+  <span 
+    [ngClass]="{
+      'badge-paye': p.statut === 'PAYE',
+      'badge-attente': p.statut === 'EN_ATTENTE'
+    }"
+  >
+    {{ p.statut ? p.statut : '---' }}
+  </span>
+</td>
+
+          <!-- ACTION -->
+          <td>
+            <button 
+              *ngIf="p.statut === 'EN_ATTENTE'"
+              class="btn accept"
+              (click)="payer(p.id)"
+            >
+              ✔ Valider
+            </button>
+
+            <span *ngIf="p.statut === 'PAYE'" class="text-success">
+              ✔ Déjà payé
+            </span>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+    <p *ngIf="!paiements || paiements.length === 0">
+      Aucun paiement
+    </p>
+  </div>
 
 </div>
 
-<!-- LOADING -->
 <div *ngIf="loading">
   Chargement...
 </div>

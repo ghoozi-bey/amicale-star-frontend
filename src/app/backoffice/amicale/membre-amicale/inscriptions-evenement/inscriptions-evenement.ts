@@ -59,14 +59,50 @@ export class InscriptionsEvenement implements OnInit {
 
   // ✅ UI ONLY (temporaire)
   accepter(inscriptionId: number) {
-    this.inscriptions = this.inscriptions.map(i =>
-      i.id === inscriptionId ? { ...i, statut: 'ACCEPTEE' } : i
-    );
-  }
 
-  refuser(inscriptionId: number) {
-    this.inscriptions = this.inscriptions.map(i =>
-      i.id === inscriptionId ? { ...i, statut: 'REFUSEE' } : i
-    );
-  }
+  if (!confirm("Confirmer validation ?")) return;
+
+  this.http.put(
+    `http://localhost:8080/api/inscriptions/${inscriptionId}/statut?statut=ACCEPTEE`,
+    {}
+  ).subscribe({
+    next: () => {
+
+      // 🔥 update UI direct
+      const insc = this.inscriptions.find(i => i.id === inscriptionId);
+      if (insc) insc.statut = 'ACCEPTEE';
+
+      this.inscriptions = [...this.inscriptions]; // refresh Angular
+    },
+    error: (err) => {
+      console.error("Erreur validation", err);
+    }
+  });
+}
+
+
+refuser(inscriptionId: number) {
+
+  if (!confirm("Confirmer refus ?")) return;
+
+  this.http.put(
+    `http://localhost:8080/api/inscriptions/${inscriptionId}/statut?statut=REFUSEE`,
+    {}
+  ).subscribe({
+    next: () => {
+
+      // 🔥 update UI direct
+      const insc = this.inscriptions.find(i => i.id === inscriptionId);
+      if (insc) insc.statut = 'REFUSEE';
+
+      this.inscriptions = [...this.inscriptions]; // refresh Angular
+    },
+    error: (err) => {
+      console.error("Erreur refus", err);
+    }
+  });
+}
+  trackById(index: number, item: any) {
+  return item.id;
+}
 }

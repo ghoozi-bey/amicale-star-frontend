@@ -13,6 +13,8 @@ import { HttpClient } from '@angular/common/http';
 export class MesEvenementsComponent implements OnInit {
 
   inscriptions: any[] = [];
+  paiementsMap: { [key: number]: any[] } = {}; // 🔥 paiements par inscription
+
   loading = false;
 
   uploadStatus: { [key: number]: 'success' | 'error' | 'loading' | null } = {};
@@ -31,7 +33,7 @@ export class MesEvenementsComponent implements OnInit {
     this.load();
   }
 
-  // 🔥 LOAD DATA
+  // 🔥 LOAD INSCRIPTIONS
   load() {
     this.loading = true;
 
@@ -45,6 +47,12 @@ export class MesEvenementsComponent implements OnInit {
     ).subscribe({
       next: (data) => {
         this.inscriptions = data || [];
+
+        // 🔥 charger paiements pour chaque inscription
+        this.inscriptions.forEach(insc => {
+          this.loadPaiements(insc.id);
+        });
+
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -54,6 +62,20 @@ export class MesEvenementsComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  // 🔥 LOAD PAIEMENTS PAR INSCRIPTION
+  loadPaiements(inscriptionId: number) {
+    this.http.get<any[]>(`http://localhost:8080/api/paiements/inscription/${inscriptionId}`)
+      .subscribe({
+        next: (res) => {
+          this.paiementsMap[inscriptionId] = res;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error("Erreur paiements", err);
+        }
+      });
   }
 
   // 🔥 MODAL
@@ -93,40 +115,63 @@ export class MesEvenementsComponent implements OnInit {
     switch (p) {
       case 'PAYE': return 'ok';
       case 'NON_PAYE': return 'refuse';
-      case 'EN_VERIFICATION': return 'attente';
+      case 'EN_ATTENTE': return 'attente';
       default: return '';
     }
   }
 
-  // 🔥 FILE SELECT
-  onFileSelected(event: any, id: number) {
+  // 🔥 FILE SELECT (par paiementId)
+  onFileSelected(event: any, paiementId: number) {
     const file = event.target.files[0];
     if (file) {
-      this.selectedFiles[id] = file;
+      this.selectedFiles[paiementId] = file;
     }
   }
 
-  // 🔥 UPLOAD JUSTIFICATIF
-  uploadJustificatif(inscriptionId: number) {
+  // 🔥 CONDITIONS AFFICHAGE UPLOAD
+  isVirement(p: any): boolean {
+    return p.modePaiement === 'VIREMENT';
+  }
 
-    const file = this.selectedFiles[inscriptionId];
+  isDansPeriode(p: any): boolean {
+    if (!p.datePaiement) return true; // avance
+
+    const today = new Date();
+    const datePaiement = new Date(p.datePaiement);
+
+    const diff = (datePaiement.getTime() - today.getTime()) / (1000 * 3600 * 24);
+
+    return diff <= 7;
+  }
+
+  canUpload(p: any): boolean {
+    return this.isVirement(p)
+      && this.isDansPeriode(p)
+      && p.statut === 'EN_ATTENTE'
+      && !p.justificatifVirement;
+  }
+
+  // 🔥 UPLOAD PAR ÉCHÉANCE
+  uploadJustificatif(paiementId: number, inscriptionId: number) {
+
+    const file = this.selectedFiles[paiementId];
 
     if (!file) {
-      this.uploadStatus[inscriptionId] = 'error';
+      this.uploadStatus[paiementId] = 'error';
       this.cdr.detectChanges();
       return;
     }
 
-    this.uploadStatus[inscriptionId] = 'loading';
-    this.cdr.detectChanges(); // 🔥 refresh immédiat
+    this.uploadStatus[paiementId] = 'loading';
+    this.cdr.detectChanges();
 
     const formData = new FormData();
     formData.append('file', file);
 
     const token = localStorage.getItem('token');
 
-    this.http.post(
-      `http://localhost:8080/api/inscriptions/${inscriptionId}/upload-justificatif`,
+    this.http.put(
+      `http://localhost:8080/api/paiements/${paiementId}/upload`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -134,22 +179,23 @@ export class MesEvenementsComponent implements OnInit {
       }
     ).subscribe({
       next: () => {
-        this.uploadStatus[inscriptionId] = 'success';
+        this.uploadStatus[paiementId] = 'success';
 
-        // 🔥 reset fichier
-        delete this.selectedFiles[inscriptionId];
+        delete this.selectedFiles[paiementId];
+
+        // 🔥 refresh paiements
+        this.loadPaiements(inscriptionId);
 
         this.cdr.detectChanges();
 
-        // 🔥 reset message après 3s
         setTimeout(() => {
-          this.uploadStatus[inscriptionId] = null;
+          this.uploadStatus[paiementId] = null;
           this.cdr.detectChanges();
         }, 3000);
       },
       error: (err) => {
         console.error(err);
-        this.uploadStatus[inscriptionId] = 'error';
+        this.uploadStatus[paiementId] = 'error';
         this.cdr.detectChanges();
       }
     });

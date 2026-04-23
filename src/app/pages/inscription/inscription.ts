@@ -18,6 +18,10 @@ export class InscriptionComponent implements OnInit {
 
   nbPlaces: number = 0;
   isLoading = false;
+  avance: number = 0;
+modePaiementAvance: string = '';
+nombreMois: number = 1;
+dateDebutPaiement: string = '';
   
 
   // 🔥 PASSEPORT LOGIC
@@ -154,104 +158,116 @@ export class InscriptionComponent implements OnInit {
   // =========================
   inscrire(): void {
 
-    if (this.isLoading) return;
+  if (this.isLoading) return;
 
-    if (this.nbPlaces === 0) {
-      this.modalMessage = "Événement complet ❌";
-      this.isSuccess = false;
-      this.showModal = true;
-      return;
-    }
-
-    // 🔥 VALIDATION PASSEPORT
-    if (this.isPassportRequired && !this.adherentFile) {
-      this.modalMessage = "Passeport obligatoire ❌";
-      this.isSuccess = false;
-      this.showModal = true;
-      return;
-    }
-
-    this.isLoading = true;
-
-    const formData = new FormData();
-
-    const data = {
-      
-      matricule: this.user.matricule,
-      evenementId: this.eventId,
-      modePaiement: this.modePaiement,
-      prixTotal: this.calculatePrix(),
-      conjoint: this.hasWife ? {
-        nom: this.wife.nom,
-        prenom: this.wife.prenom,
-        dateNaissance: this.wife.dateNaissance,
-        cin: this.wife.cin,
-        telephone: this.wife.telephone
-      } : null,
-      enfants: this.hasChildren ? this.children.map(c => ({
-        nom: c.nom,
-        prenom: c.prenom,
-        dateNaissance: c.dateNaissance
-      })) : []
-    };
-    console.log("🔥 DATA INSCRIPTION =", data);
-
-    formData.append("data", new Blob(
-      [JSON.stringify(data)],
-      { type: "application/json" }
-    ));
-
-    if (this.adherentFile) {
-      formData.append("adherentFile", this.adherentFile);
-    }
-
-    if (this.hasWife && this.wife.file) {
-      formData.append("conjointFile", this.wife.file);
-    }
-
-    if (this.hasChildren) {
-      this.children.forEach(c => {
-        if (c.file) formData.append("enfantsFiles", c.file);
-      });
-    }
-
-    this.eventService.createInscription(formData).subscribe({
-      next: () => {
-        this.zone.run(() => {
-          this.modalMessage = "Inscription réussie ✅";
-          this.isSuccess = true;
-          this.showModal = true;
-
-          this.loadNbPlaces();
-
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        });
-      },
-      error: (err) => {
-  this.zone.run(() => {
-    console.error(err);
-
-    let message = "Erreur lors de l'inscription ❌";
-
-    if (typeof err?.error === 'string') {
-      message = err.error;
-    } else if (err?.error?.message) {
-      message = err.error.message;
-    } else if (err?.message) {
-      message = err.message;
-    }
-
-    this.modalMessage = message;
+  if (this.nbPlaces === 0) {
+    this.modalMessage = "Événement complet ❌";
     this.isSuccess = false;
     this.showModal = true;
+    return;
+  }
 
-    this.isLoading = false;
-    this.cdr.detectChanges();
-  });
-}
+  if (this.isPassportRequired && !this.adherentFile) {
+    this.modalMessage = "Passeport obligatoire ❌";
+    this.isSuccess = false;
+    this.showModal = true;
+    return;
+  }
+
+  this.isLoading = true;
+
+  const formData = new FormData();
+
+  const data = {
+
+    matricule: this.user.matricule,
+    evenementId: this.eventId,
+    modePaiement: this.modePaiement,
+
+    // 🔥 PRIX
+    prixTotal: this.calculatePrix(),
+
+    // 🔥 AJOUT IMPORTANT (PAIEMENT)
+    avance: this.avance,
+    modePaiementAvance: this.modePaiementAvance,
+    nombreMois: this.nombreMois,
+    dateDebutPaiement: this.dateDebutPaiement,
+
+    // 👩 conjoint
+    conjoint: this.hasWife ? {
+      nom: this.wife.nom,
+      prenom: this.wife.prenom,
+      dateNaissance: this.wife.dateNaissance,
+      cin: this.wife.cin,
+      telephone: this.wife.telephone
+    } : null,
+
+    // 👶 enfants
+    enfants: this.hasChildren ? this.children.map(c => ({
+      nom: c.nom,
+      prenom: c.prenom,
+      dateNaissance: c.dateNaissance
+    })) : []
+  };
+
+  console.log("🔥 DATA INSCRIPTION =", data);
+
+  formData.append("data", new Blob(
+    [JSON.stringify(data)],
+    { type: "application/json" }
+  ));
+
+  if (this.adherentFile) {
+    formData.append("adherentFile", this.adherentFile);
+  }
+
+  if (this.hasWife && this.wife.file) {
+    formData.append("conjointFile", this.wife.file);
+  }
+
+  if (this.hasChildren) {
+    this.children.forEach(c => {
+      if (c.file) formData.append("enfantsFiles", c.file);
     });
   }
+
+  this.eventService.createInscription(formData).subscribe({
+    next: () => {
+      this.zone.run(() => {
+        this.modalMessage = "Inscription réussie ✅";
+        this.isSuccess = true;
+        this.showModal = true;
+
+        this.loadNbPlaces();
+
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      });
+    },
+    error: (err) => {
+      this.zone.run(() => {
+        console.error(err);
+
+        let message = "Erreur lors de l'inscription ❌";
+
+        if (typeof err?.error === 'string') {
+          message = err.error;
+        } else if (err?.error?.message) {
+          message = err.error.message;
+        } else if (err?.message) {
+          message = err.message;
+        }
+
+        this.modalMessage = message;
+        this.isSuccess = false;
+        this.showModal = true;
+
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      });
+    }
+  });
+}
 
   onWifeChange() {
     if (!this.hasWife) {
