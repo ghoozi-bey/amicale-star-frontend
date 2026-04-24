@@ -7,6 +7,7 @@
       <div>
         <h1>Mes inscriptions</h1>
         <p>Suivi de vos événements en temps réel</p>
+        {{ inscriptions | json }}
       </div>
     </div>
 
@@ -192,6 +193,7 @@
             <span class="label">Email</span>
             <span class="value">{{ selectedInscription?.email }}</span>
           </div>
+          
 
           <div class="row">
             <span class="label">Téléphone</span>

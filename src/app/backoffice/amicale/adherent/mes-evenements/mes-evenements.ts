@@ -14,7 +14,6 @@ export class MesEvenementsComponent implements OnInit {
 
   inscriptions: any[] = [];
   paiementsMap: { [key: number]: any[] } = {}; // 🔥 paiements par inscription
-
   loading = false;
 
   uploadStatus: { [key: number]: 'success' | 'error' | 'loading' | null } = {};
@@ -36,8 +35,10 @@ export class MesEvenementsComponent implements OnInit {
   // 🔥 LOAD INSCRIPTIONS
   load() {
     this.loading = true;
+    
 
     const token = localStorage.getItem('token');
+    
 
     this.http.get<any[]>(
       'http://localhost:8080/api/inscriptions/mes-inscriptions',
@@ -45,22 +46,18 @@ export class MesEvenementsComponent implements OnInit {
         headers: { Authorization: `Bearer ${token}` }
       }
     ).subscribe({
-      next: (data) => {
-        this.inscriptions = data || [];
+      next: (res) => {
+  console.log("DATA BRUT =", res); // ✅ PAS data
+  this.inscriptions = res || [];
 
-        // 🔥 charger paiements pour chaque inscription
-        this.inscriptions.forEach(insc => {
-          this.loadPaiements(insc.id);
-        });
+  this.inscriptions.forEach(insc => {
+    console.log("👉 inscription.id =", insc.id, " | eventId =", insc.evenementId);
+    this.loadPaiements(insc.id);
+  });
 
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error(err);
-        this.loading = false;
-        this.cdr.detectChanges();
-      }
+  this.loading = false;
+  this.cdr.detectChanges();
+}
     });
   }
 
@@ -80,21 +77,24 @@ export class MesEvenementsComponent implements OnInit {
 
   // 🔥 MODAL
   openDetails(id: number) {
-    this.showModal = true;
-    this.selectedInscription = null;
+  console.log("🚨 CLICK ID =", id);
 
-    this.http.get<any>(`http://localhost:8080/api/inscriptions/${id}`)
-      .subscribe({
-        next: (data) => {
-          this.selectedInscription = data;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error(err);
-          this.closeModal();
-        }
-      });
-  }
+  this.showModal = true;
+  this.selectedInscription = null;
+
+  this.http.get<any>(`http://localhost:8080/api/inscriptions/${id}`)
+    .subscribe({
+      next: (data) => {
+        console.log("✅ DETAILS =", data);
+        this.selectedInscription = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error("❌ ERROR DETAILS =", err);
+        this.closeModal();
+      }
+    });
+}
 
   closeModal() {
     this.showModal = false;

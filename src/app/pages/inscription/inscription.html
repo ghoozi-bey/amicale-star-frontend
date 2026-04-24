@@ -53,34 +53,45 @@
       <input type="file" accept="application/pdf"
              (change)="onAdherentFileChange($event)">
     </div>
-
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Méthode de paiement des échéances</label>
-        <select [(ngModel)]="modePaiement">
-          <option value="">-- Sélectionner --</option>
-          <option value="VIREMENT">Virement</option>
-          <option value="CASH">Cash</option>
-          <option value="SALAIRE">Salaire</option>
-        </select>
-      </div>
-    </div>
-    <h3>Paiement avance</h3>
-
-  <label>Avance</label>
-  <input type="number" [(ngModel)]="avance">
-
-  <label>Mode paiement avance</label>
-  <select [(ngModel)]="modePaiementAvance">
-    <option value="CASH">Cash</option>
+    <div class="form-group">
+  <label>Mode paiement des échéances</label>
+  <select [(ngModel)]="modePaiementEcheance">
     <option value="VIREMENT">Virement</option>
+    <option value="CASH">Cash</option>
+    <option value="SALAIRE">Salaire</option>
   </select>
+</div>
 
-  <label>Nombre de mois</label>
-  <input type="number" [(ngModel)]="nombreMois">
+    <div *ngIf="isPaiementComplexe()">
 
-  <label>Date début paiement</label>
-  <input type="date" [(ngModel)]="dateDebutPaiement">
+  <h3>Paiement avance</h3>
+
+  <!-- AVANCE -->
+  <div class="form-group">
+    <label>Avance (TND)</label>
+    <input type="number" [(ngModel)]="avance" />
+  </div>
+
+  <!-- MODE AVANCE -->
+  <div class="form-group">
+    <label>Mode paiement avance</label>
+    <select [(ngModel)]="modePaiementAvance">
+      <option value="CASH">Cash</option>
+      <option value="VIREMENT">Virement</option>
+    </select>
+  </div>
+
+  <!-- NOMBRE MOIS -->
+  <div class="form-group">
+    <label>Nombre de mois</label>
+    <input type="number" [(ngModel)]="nombreMois" />
+  </div>
+
+  <!-- DATE -->
+  <div class="form-group">
+    <label>Date début paiement</label>
+    <input type="date" [(ngModel)]="dateDebutPaiement" />
+  </div>
 
 </div>
 
@@ -199,7 +210,7 @@
     <!-- BUTTON -->
     <button 
       (click)="inscrire()"
-      [disabled]="!modePaiement || nbPlaces === 0 || isLoading"
+      [disabled]="!modePaiementEcheance || nbPlaces === 0 || isLoading"
     >
       {{ isLoading ? 'Envoi en cours...' : 'Confirmer inscription' }}
     </button>

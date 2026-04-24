@@ -22,6 +22,7 @@ export class InscriptionComponent implements OnInit {
 modePaiementAvance: string = '';
 nombreMois: number = 1;
 dateDebutPaiement: string = '';
+modePaiementEcheance: string = '';
   
 
   // 🔥 PASSEPORT LOGIC
@@ -174,6 +175,21 @@ dateDebutPaiement: string = '';
     return;
   }
 
+  // 🔥 NOUVELLE VALIDATION (IMPORTANT)
+  if (!this.modePaiement) {
+    this.modalMessage = "Choisir mode paiement échéancier ❌";
+    this.isSuccess = false;
+    this.showModal = true;
+    return;
+  }
+
+  if (this.avance > 0 && !this.modePaiementAvance) {
+    this.modalMessage = "Choisir mode paiement avance ❌";
+    this.isSuccess = false;
+    this.showModal = true;
+    return;
+  }
+
   this.isLoading = true;
 
   const formData = new FormData();
@@ -182,12 +198,14 @@ dateDebutPaiement: string = '';
 
     matricule: this.user.matricule,
     evenementId: this.eventId,
-    modePaiement: this.modePaiement,
+
+    // 🔥 CORRECTION ICI (IMPORTANT)
+    modePaiementEcheance: this.modePaiement, // <-- ancien modePaiement devient échéancier
 
     // 🔥 PRIX
     prixTotal: this.calculatePrix(),
 
-    // 🔥 AJOUT IMPORTANT (PAIEMENT)
+    // 🔥 PAIEMENT
     avance: this.avance,
     modePaiementAvance: this.modePaiementAvance,
     nombreMois: this.nombreMois,
@@ -217,6 +235,7 @@ dateDebutPaiement: string = '';
     { type: "application/json" }
   ));
 
+  // 🔥 fichiers
   if (this.adherentFile) {
     formData.append("adherentFile", this.adherentFile);
   }
@@ -356,6 +375,17 @@ getRemiseCouple(): string {
   }
 
   return total < 0 ? 0 : total;
+}
+isPaiementComplexe(): boolean {
+  if (!this.event) return false;
+
+  const typeId = this.event.typeEvenement?.id;
+
+  return (
+    typeId === 1 ||
+    typeId === 2 ||
+    this.event.isInternational === true
+  );
 }
   
 }
