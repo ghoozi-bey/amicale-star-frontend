@@ -228,10 +228,8 @@ export class AdminCreateUserComponent {
 
         if (err.error && typeof err.error === 'object') {
           this.validationErrors = err.error; // erreurs de duplication
-          this.cdr.detectChanges();
         } else {
           this.errorMessage = err.error || "Erreur serveur";
-          this.cdr.detectChanges();
         }
 
         this.successMessage = '';

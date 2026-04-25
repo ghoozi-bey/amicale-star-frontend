@@ -54,69 +54,120 @@ export class AdminEditUserComponent {
     }).subscribe(data => this.typesAdherent = data);
   }
 
-  loadTypes() {
+  loadTypes(selectedId?: number) {
     const token = this.authService.getToken();
-    console.log("Loading types...");
 
     this.http.get<any[]>('http://localhost:8080/api/admin/type-evenements', {
       headers: { Authorization: 'Bearer ' + token }
     }).subscribe({
       next: (data) => {
-        console.log("Types loaded:", data);
+
         this.typeEvenements = data;
 
-        // force UI refresh after async load
+        // Set selected value AFTER options exist
+        if (selectedId != null) {
+          setTimeout(() => {
+            this.user.typeEvenementId = Number(selectedId);
+            this.cdr.detectChanges(); // keep your logic
+          });
+        }
+        console.log("OPTIONS:", data);
+        console.log("OPTIONS IDS:", data.map(t => t.id));
+        console.log("OPTIONS TYPES:", data.map(t => typeof t.id));
+
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error("Error loading types:", err);
-        this.cdr.detectChanges();
       }
     });
   }
-
 
   loadUser(matricule: string) {
     this.http.get<any>(`${this.api}/${matricule}`, {
       headers: { Authorization: 'Bearer ' + this.authService.getToken() }
     }).subscribe({
       next: (data) => {
-        this.user = { ...data };
+        console.log("RAW DATA:", data);
+        console.log("TYPE EVENEMENT FROM BACK:", data.typeEvenement);
 
-        // never show encoded password
-        this.user.password = '';
+        this.user = {
+          ...data,
+          password: '',
+          dateNaissance: data.dateNaissance,
+          typeAdherent: data.typeAdherent,
+          typeEvenementId: data.typeEvenementId ?? null
+        };
 
-        // 🔥 mapping
-        this.user.date_naissance = data.dateNaissance;
-        this.user.type_adherent = data.typeAdherent;
-
-        // 🔥 IMPORTANT (this was missing)
-        this.user.type_evenement_id = data.typeEvenement?.id;
-
-        // 🔥 ONLY load types if needed
-        if (this.user.type_adherent === 'MEMBRE_AMICALE') {
-          this.loadTypes();
+        // Load types ONLY if needed and pass selected value
+        if (this.user.typeAdherent === 'MEMBRE_AMICALE') {
+          this.loadTypes(this.user.typeEvenementId);
         }
+        console.log("USER MODEL:", this.user);
+        console.log("user.typeEvenementId:", this.user.typeEvenementId, typeof this.user.typeEvenementId);
 
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Erreur chargement user', err);
+      error: () => {
         this.errorMessage = "Erreur chargement utilisateur";
       }
     });
   }
 
   onTypeChange() {
-    if (this.user.type_adherent !== 'MEMBRE_AMICALE') {
-      this.user.type_evenement_id = null;
+    if (this.user.typeAdherent !== 'MEMBRE_AMICALE') {
+      this.user.typeEvenementId = null;
     } else {
-      // force reload when switching to MEMBRE
       this.loadTypes();
     }
   }
 
+  validateForm(): boolean {
+    this.validationErrors = {};
+
+    if (!this.user.nom || !/^[a-zA-ZÀ-ÿ\s-]+$/.test(this.user.nom)) {
+      this.validationErrors.nom = "Nom invalide";
+    }
+
+    if (!this.user.prenom || !/^[a-zA-ZÀ-ÿ\s-]+$/.test(this.user.prenom)) {
+      this.validationErrors.prenom = "Prénom invalide";
+    }
+
+    if (!this.user.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.user.email)) {
+      this.validationErrors.email = "Email invalide";
+    }
+
+    if (!this.user.cin || !/^\d{8}$/.test(this.user.cin)) {
+      this.validationErrors.cin = "CIN invalide";
+    }
+
+    if (!this.user.telephone || !/^\d{8}$/.test(this.user.telephone)) {
+      this.validationErrors.telephone = "Téléphone invalide";
+    }
+
+    if (!this.user.departement) {
+      this.validationErrors.departement = "Département obligatoire";
+    }
+
+    if (!this.user.typeAdherent) {
+      this.validationErrors.typeAdherent = "Type adhérent obligatoire";
+    }
+
+    if (this.user.typeAdherent === 'MEMBRE_AMICALE' &&
+        !this.user.typeEvenementId) {
+      this.validationErrors.typeEvenementId = "Type événement obligatoire";
+    }
+
+    return Object.keys(this.validationErrors).length === 0;
+  }
+
   updateUser() {
+    // 🔥 FRONT VALIDATION
+    if (!this.validateForm()) {
+      this.errorMessage = "⚠️ Corrige les erreurs du formulaire";
+      return;
+    }
+
     const token = localStorage.getItem('token');
 
     this.validationErrors = {};
@@ -130,13 +181,12 @@ export class AdminEditUserComponent {
       cin: this.user.cin,
       telephone: this.user.telephone,
       departement: this.user.departement,
-      dateNaissance: this.user.date_naissance,
-      typeAdherent: this.user.type_adherent,
-      typeEvenementId: this.user.type_evenement_id,
+      dateNaissance: this.user.dateNaissance,
+      typeAdherent: this.user.typeAdherent,
+      typeEvenementId: this.user.typeEvenementId,
       actif: this.user.actif
     };
 
-    // send password ONLY if filled
     if (this.user.password && this.user.password.trim() !== '') {
       updatedFields.password = this.user.password;
     }
@@ -146,25 +196,22 @@ export class AdminEditUserComponent {
     }).subscribe({
       next: () => {
         this.successMessage = '✅ Utilisateur mis à jour';
-        this.cdr.detectChanges();
 
         setTimeout(() => {
-          this.successMessage = '🔄 Redirection...';
-          this.cdr.detectChanges();
-
-          setTimeout(() => {
-            this.router.navigate(['/admin-users']);
-          }, 2000);
-        }, 3000);
+          this.router.navigate(['/admin-users']);
+        }, 2000);
       },
+
       error: (err) => {
         console.log("ERROR BODY:", err.error);
 
-        this.validationErrors = { ...(err.error || {}) };
-        this.errorMessage = '';
-        this.successMessage = '';
+        if (err.error && typeof err.error === 'object') {
+          this.validationErrors = { ...err.error }; // 🔥 duplicates here
+        } else {
+          this.errorMessage = err.error || "Erreur serveur";
+        }
 
-        this.cdr.detectChanges();
+        this.successMessage = '';
       }
     });
   }

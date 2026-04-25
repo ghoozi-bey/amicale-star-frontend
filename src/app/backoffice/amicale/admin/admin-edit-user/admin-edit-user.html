@@ -73,21 +73,23 @@
 
         <div class="form-group">
             <label>Type Adhérent</label>
-            <select [(ngModel)]="user.type_adherent" (change)="onTypeChange()">
-                <option *ngFor="let t of typesAdherent" [value]="t">
+            <select [(ngModel)]="user.typeAdherent" (change)="onTypeChange()">
+                <option [ngValue]="null">-- Choisir un type --</option>
+                <option *ngFor="let t of typesAdherent" [ngValue]="t">
                 {{ t }}
                 </option>
             </select>
         </div>
 
-        <div *ngIf="user.type_adherent === 'MEMBRE_AMICALE'">
+        <div *ngIf="user.typeAdherent === 'MEMBRE_AMICALE'">
             <div *ngIf="typeEvenements.length === 0" class="loading">
                 Chargement des types...
             </div>
+
             <div *ngIf="typeEvenements.length > 0">
                 <label>Type Événement</label>
-                <select [(ngModel)]="user.type_evenement_id">
-                    <option *ngFor="let t of typeEvenements" [value]="t.id">
+                <select [(ngModel)]="user.typeEvenementId">
+                    <option *ngFor="let t of typeEvenements" [ngValue]="t.id">
                         {{ t.nom }}
                     </option>
                 </select>
