@@ -56,32 +56,75 @@ export class AdminCreateUserComponent {
   validateForm(): boolean {
     this.validationErrors = {};
 
+    // Matricule: STAR + 6 digits
     if (!this.newUser.matricule) {
       this.validationErrors.matricule = "Matricule obligatoire";
+    } else if (!/^STAR\d{6}$/.test(this.newUser.matricule)) {
+      this.validationErrors.matricule = "Format: STAR suivi de 6 chiffres (ex: STAR000001)";
     }
 
+    // Nom: letters only
     if (!this.newUser.nom) {
       this.validationErrors.nom = "Nom obligatoire";
+    } else if (!/^[a-zA-ZÀ-ÿ\s-]+$/.test(this.newUser.nom)) {
+      this.validationErrors.nom = "Nom doit contenir uniquement des lettres";
     }
 
+    // Prénom: letters only
     if (!this.newUser.prenom) {
       this.validationErrors.prenom = "Prénom obligatoire";
+    } else if (!/^[a-zA-ZÀ-ÿ\s-]+$/.test(this.newUser.prenom)) {
+      this.validationErrors.prenom = "Prénom doit contenir uniquement des lettres";
     }
 
-    if (!this.newUser.email || !this.newUser.email.includes("@")) {
+    // Email: valid format
+    if (!this.newUser.email) {
+      this.validationErrors.email = "Email obligatoire";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.newUser.email)) {
       this.validationErrors.email = "Email invalide";
     }
 
-    if (!this.newUser.password || this.newUser.password.length < 6) {
+    // Password
+    if (!this.newUser.password) {
+      this.validationErrors.password = "Mot de passe obligatoire";
+    } else if (this.newUser.password.length < 6) {
       this.validationErrors.password = "Mot de passe min 6 caractères";
     }
 
-    if (!this.newUser.cin || !/^\d{8}$/.test(this.newUser.cin)) {
+    // Date de naissance: must be in the past
+    if (!this.newUser.dateNaissance) {
+      this.validationErrors.dateNaissance = "Date de naissance obligatoire";
+    } else if (new Date(this.newUser.dateNaissance) >= new Date()) {
+      this.validationErrors.dateNaissance = "Date de naissance doit être dans le passé";
+    }
+
+    // CIN: 8 digits
+    if (!this.newUser.cin) {
+      this.validationErrors.cin = "CIN obligatoire";
+    } else if (!/^\d{8}$/.test(this.newUser.cin)) {
       this.validationErrors.cin = "CIN doit contenir 8 chiffres";
     }
 
-    if (!this.newUser.telephone || !/^\d{8}$/.test(this.newUser.telephone)) {
-      this.validationErrors.telephone = "Téléphone invalide";
+    // Téléphone: 8 digits
+    if (!this.newUser.telephone) {
+      this.validationErrors.telephone = "Téléphone obligatoire";
+    } else if (!/^\d{8}$/.test(this.newUser.telephone)) {
+      this.validationErrors.telephone = "Téléphone invalide (8 chiffres)";
+    }
+
+    // Departement required
+    if (!this.newUser.departement) {
+      this.validationErrors.departement = "Département obligatoire";
+    }
+
+    // Type Adherent required
+    if (!this.newUser.typeAdherent) {
+      this.validationErrors.typeAdherent = "Type adhérent obligatoire";
+    }
+
+    // TypeEvenement required only for MEMBRE_AMICALE
+    if (this.newUser.typeAdherent === 'MEMBRE_AMICALE' && !this.newUser.typeEvenementId) {
+      this.validationErrors.typeEvenementId = "Type événement obligatoire pour MEMBRE_AMICALE";
     }
 
     return Object.keys(this.validationErrors).length === 0;
@@ -183,10 +226,12 @@ export class AdminCreateUserComponent {
       error: (err) => {
         console.log("ERROR BODY:", err.error);
 
-        if (typeof err.error === 'object') {
-          this.validationErrors = err.error; // erreurs backend
+        if (err.error && typeof err.error === 'object') {
+          this.validationErrors = err.error; // erreurs de duplication
+          this.cdr.detectChanges();
         } else {
           this.errorMessage = err.error || "Erreur serveur";
+          this.cdr.detectChanges();
         }
 
         this.successMessage = '';

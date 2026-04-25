@@ -1,11 +1,3 @@
-<div *ngIf="successMessage" class="alert success">
-  {{ successMessage }}
-</div>
-
-<div *ngIf="errorMessage" class="alert error">
-  {{ errorMessage }}
-</div>
-
 <div class="card">
 
   <h3>Créer un utilisateur</h3>
@@ -98,6 +90,10 @@
           {{ d }}
         </option>
       </select>
+
+      <small class="error" *ngIf="validationErrors?.departement">
+        {{ validationErrors.departement }}
+      </small>
     </div>
 
     <div class="form-group">
@@ -110,6 +106,10 @@
           {{ t }}
         </option>
       </select>
+
+      <small class="error" *ngIf="validationErrors?.typeAdherent">
+        {{ validationErrors.typeAdherent }}
+      </small>
     </div>
 
     <div class="form-group" *ngIf="newUser.typeAdherent === 'MEMBRE_AMICALE'">
@@ -121,6 +121,18 @@
           {{ t.nom }}
         </option>
       </select>
+      
+      <small class="error" *ngIf="validationErrors?.typeEvenementId">
+        {{ validationErrors.typeEvenementId }}
+      </small>
+    </div>
+
+    <div *ngIf="successMessage" class="alert success">
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessage" class="alert error">
+      {{ errorMessage }}
     </div>
 
     <button class="btn" type="submit">
