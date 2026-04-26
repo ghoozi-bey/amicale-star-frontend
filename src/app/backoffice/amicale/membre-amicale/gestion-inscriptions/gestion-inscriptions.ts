@@ -125,4 +125,21 @@ export class GestionInscriptions implements OnInit {
       }
     });
   }
+  voirJustificatif(paiementId: number) {
+
+  const token = localStorage.getItem('token');
+
+  this.http.get(
+    `http://localhost:8080/api/paiements/${paiementId}/justificatif`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      responseType: 'blob'
+    }
+  ).subscribe(blob => {
+
+    const url = window.URL.createObjectURL(blob);
+    window.open(url);
+
+  });
+}
 }

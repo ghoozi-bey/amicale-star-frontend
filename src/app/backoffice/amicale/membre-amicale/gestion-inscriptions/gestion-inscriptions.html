@@ -92,12 +92,21 @@
           <!-- ACTION -->
           <td>
             <button 
-              *ngIf="p.statut === 'EN_ATTENTE'"
-              class="btn accept"
-              (click)="payer(p.id)"
-            >
-              ✔ Valider
-            </button>
+  *ngIf="['EN_ATTENTE', 'EN_ATTENTE_VALIDATION'].includes(p.statut)"
+  class="btn accept"
+  (click)="payer(p.id)"
+>
+   Valider
+</button>
+            <button 
+  *ngIf="p.hasJustificatif"
+  (click)="voirJustificatif(p.id)">
+  Voir justificatif
+</button>
+
+<span *ngIf="!p.hasJustificatif" style="color: gray;">
+  Aucun justificatif
+</span>
 
             <span *ngIf="p.statut === 'PAYE'" class="text-success">
               ✔ Déjà payé

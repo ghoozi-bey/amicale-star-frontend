@@ -154,51 +154,64 @@ export class MesEvenementsComponent implements OnInit {
   // 🔥 UPLOAD PAR ÉCHÉANCE
   uploadJustificatif(paiementId: number, inscriptionId: number) {
 
-    const file = this.selectedFiles[paiementId];
+  const file = this.selectedFiles[paiementId];
 
-    if (!file) {
+  // 🔒 Vérifier fichier
+  if (!file) {
+    console.error("❌ Aucun fichier sélectionné");
+    this.uploadStatus[paiementId] = 'error';
+    this.cdr.detectChanges();
+    return;
+  }
+
+  console.log("📁 FILE =", file);
+
+  this.uploadStatus[paiementId] = 'loading';
+  this.cdr.detectChanges();
+
+  const formData = new FormData();
+  formData.append('file', file); // ⚠️ DOIT être "file"
+
+  const token = localStorage.getItem('token');
+
+  this.http.put(
+    `http://localhost:8080/api/paiements/${paiementId}/upload`,
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}` // ✅ PAS de Content-Type ici
+      },
+      responseType: 'text'
+    }
+  ).subscribe({
+    next: (res) => {
+      console.log("✅ Upload OK :", res);
+
+      this.uploadStatus[paiementId] = 'success';
+
+      delete this.selectedFiles[paiementId];
+
+      // 🔥 refresh paiements
+      this.loadPaiements(inscriptionId);
+
+      this.cdr.detectChanges();
+
+      setTimeout(() => {
+        this.uploadStatus[paiementId] = null;
+        this.cdr.detectChanges();
+      }, 3000);
+    },
+    error: (err) => {
+      console.error("❌ ERREUR BACK =", err);
+
+      if (err?.error) {
+        console.error("📩 MESSAGE BACK =", err.error);
+      }
+
       this.uploadStatus[paiementId] = 'error';
       this.cdr.detectChanges();
-      return;
     }
-
-    this.uploadStatus[paiementId] = 'loading';
-    this.cdr.detectChanges();
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const token = localStorage.getItem('token');
-
-    this.http.put(
-      `http://localhost:8080/api/paiements/${paiementId}/upload`,
-      formData,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-        responseType: 'text'
-      }
-    ).subscribe({
-      next: () => {
-        this.uploadStatus[paiementId] = 'success';
-
-        delete this.selectedFiles[paiementId];
-
-        // 🔥 refresh paiements
-        this.loadPaiements(inscriptionId);
-
-        this.cdr.detectChanges();
-
-        setTimeout(() => {
-          this.uploadStatus[paiementId] = null;
-          this.cdr.detectChanges();
-        }, 3000);
-      },
-      error: (err) => {
-        console.error(err);
-        this.uploadStatus[paiementId] = 'error';
-        this.cdr.detectChanges();
-      }
-    });
-  }
+  });
+}
 
 }
