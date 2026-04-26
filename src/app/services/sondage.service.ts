@@ -26,19 +26,19 @@ export class SondageService {
   // =========================
   // GET ALL
   // =========================
-  getAll() {
-    return this.http.get<Sondage[]>(this.api);
+  getActiveSondages() {
+    return this.http.get<Sondage[]>(`${this.api}/actifs`);
   }
 
   // =========================
-  // GET BY ID (FIXED TYPING)
+  // GET BY ID
   // =========================
   getById(id: number) {
-    return this.http.get<Sondage>(`${this.api}/public/${id}`);
+    return this.http.get<Sondage>(`${this.api}/actifs/${id}`);
   }
-
+  
   // =========================
-  // UPDATE (🔥 YOU WERE MISSING THIS)
+  // UPDATE
   // =========================
   update(id: number, data: any) {
     return this.http.put(`${this.api}/${id}`, data, {

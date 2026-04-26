@@ -94,17 +94,25 @@ button:last-of-type:hover {
 
 /* Success & error messages */
 .success {
+  background: #e8f5e9;
   color: #2e7d32;
   font-weight: bold;
-  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
 }
 
 .error {
-  color: #f10000;
-  margin: 10px 0;
-  font-weight: bold;
-  font-size: 90%;
+  color: #e53935;
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
 }
+
+.input-error {
+  border: 2px solid #e53935 !important;
+  background-color: #fff5f5;
+}s
 
 /* Loading text */
 .form .loading {

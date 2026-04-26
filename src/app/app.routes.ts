@@ -4,6 +4,7 @@ import { LayoutComponent } from './layout/layout';
 import { DashboardComponent } from './pages/dashboard/dashboard';
 import { GestionEvenementsComponent } from './backoffice/amicale/membre-amicale/gestion-evenements/gestion-evenements';
 
+
 import { authGuard } from './services/auth.guard';
 
 export const routes: Routes = [
@@ -82,6 +83,18 @@ export const routes: Routes = [
       },
 
       {
+        path: 'sondages',
+        loadComponent: () =>
+          import('./pages/sondages/sondages')
+            .then(m => m.SondagesComponent)
+      },
+      {
+        path: 'sondages/:id',
+        loadComponent: () =>
+          import('./pages/sondage-detail/sondage-detail')
+            .then(m => m.SondageDetailComponent)
+      },
+      {
         path: 'gestion-sondages',
         loadComponent: () =>
           import('./backoffice/amicale/membre-amicale/gestion-sondages/list-sondages/list-sondages')
@@ -147,20 +160,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./backoffice/amicale/membre-amicale/inscriptions-evenement/inscriptions-evenement')
             .then(m => m.InscriptionsEvenement)
-    },
-    {
-  path: 'gestion-inscriptions/:id',
-  loadComponent: () =>
-    import('./backoffice/amicale/membre-amicale/gestion-inscriptions/gestion-inscriptions')
-      .then(m => m.GestionInscriptions)
-    },
-    {
-  path: 'gestion-inscriptions/:id',
-  loadComponent: () =>
-    import('./backoffice/amicale/membre-amicale/gestion-inscriptions/gestion-inscriptions')
-      .then(m => m.GestionInscriptions)
-    }
-
+      },
+      {
+        path: 'gestion-inscriptions/:id',
+        loadComponent: () =>
+          import('./backoffice/amicale/membre-amicale/gestion-inscriptions/gestion-inscriptions')
+            .then(m => m.GestionInscriptions)
+      },
 
     ]
   },

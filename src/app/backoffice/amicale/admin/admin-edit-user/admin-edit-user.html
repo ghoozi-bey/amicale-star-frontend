@@ -5,7 +5,8 @@
 
         <div class="form-group">
             <label>Nom</label>
-            <input [(ngModel)]="user.nom" />
+            <input [(ngModel)]="user.nom"
+                [class.input-error]="validationErrors?.nom" />
 
             <div *ngIf="validationErrors.nom" class="error">
                 {{ validationErrors.nom }}
@@ -14,8 +15,9 @@
 
         <div class="form-group">
             <label>Prénom</label>
-            <input [(ngModel)]="user.prenom" />
-            
+            <input [(ngModel)]="user.prenom"
+                [class.input-error]="validationErrors?.prenom" />
+
             <div *ngIf="validationErrors.prenom" class="error">
                 {{ validationErrors.prenom }}
             </div>
@@ -23,7 +25,8 @@
 
         <div class="form-group">
             <label>Email</label>
-            <input [(ngModel)]="user.email" />
+            <input [(ngModel)]="user.email"
+                [class.input-error]="validationErrors?.email" />
             <div *ngIf="validationErrors.email" class="error">
                 {{ validationErrors.email }}
             </div>
@@ -32,7 +35,8 @@
         <div class="form-group">
             <label>Mot de passe</label>
             <input type="password" [(ngModel)]="user.password"
-                placeholder="laisser vide si pas changé" />
+                placeholder="laisser vide si pas changé"
+                [class.input-error]="validationErrors?.password" />
             <div *ngIf="validationErrors.password" class="error">
                 {{ validationErrors.password }}
             </div>
@@ -41,7 +45,8 @@
 
         <div class="form-group">
             <label>CIN</label>
-            <input [(ngModel)]="user.cin" />
+            <input [(ngModel)]="user.cin"
+                [class.input-error]="validationErrors?.cin" />
             <div *ngIf="validationErrors.cin" class="error">
                 {{ validationErrors.cin }}
             </div>
@@ -49,7 +54,8 @@
 
         <div class="form-group">
             <label>Téléphone</label>
-            <input [(ngModel)]="user.telephone" />
+            <input [(ngModel)]="user.telephone"
+                [class.input-error]="validationErrors?.telephone" />
             <div *ngIf="validationErrors.telephone" class="error">
                 {{ validationErrors.telephone }}    
             </div>
@@ -59,7 +65,8 @@
 
         <div class="form-group">
             <label>Département</label>
-            <select [(ngModel)]="user.departement">
+            <select [(ngModel)]="user.departement"
+                [class.input-error]="validationErrors?.departement">
                 <option *ngFor="let d of departements" [value]="d">
                 {{ d }}
                 </option>
@@ -68,12 +75,13 @@
 
         <div class="form-group">
             <label>Date de naissance</label>
-            <input type="date" [(ngModel)]="user.date_naissance" />
+            <input type="date" [(ngModel)]="user.dateNaissance" />
         </div>
 
         <div class="form-group">
             <label>Type Adhérent</label>
-            <select [(ngModel)]="user.typeAdherent" (change)="onTypeChange()">
+            <select [(ngModel)]="user.typeAdherent" (change)="onTypeChange()"
+                [class.input-error]="validationErrors?.typeAdherent">
                 <option [ngValue]="null">-- Choisir un type --</option>
                 <option *ngFor="let t of typesAdherent" [ngValue]="t">
                 {{ t }}
@@ -88,7 +96,8 @@
 
             <div *ngIf="typeEvenements.length > 0">
                 <label>Type Événement</label>
-                <select [(ngModel)]="user.typeEvenementId">
+                <select [(ngModel)]="user.typeEvenementId"
+                    [class.input-error]="validationErrors?.typeEvenementId">
                     <option *ngFor="let t of typeEvenements" [ngValue]="t.id">
                         {{ t.nom }}
                     </option>

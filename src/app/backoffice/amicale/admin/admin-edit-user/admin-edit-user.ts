@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-admin-edit-user',
@@ -206,12 +205,14 @@ export class AdminEditUserComponent {
         console.log("ERROR BODY:", err.error);
 
         if (err.error && typeof err.error === 'object') {
+          this.errorMessage = "⚠️ Corrige les erreurs du formulaire";
           this.validationErrors = { ...err.error }; // 🔥 duplicates here
         } else {
           this.errorMessage = err.error || "Erreur serveur";
         }
 
         this.successMessage = '';
+        this.cdr.detectChanges();
       }
     });
   }

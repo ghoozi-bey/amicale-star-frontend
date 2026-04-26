@@ -1,0 +1,41 @@
+<div class="page">
+
+  <div class="header">
+    <h2>Sondages</h2>
+    <p>Participez aux sondages actifs de l’amicale</p>
+  </div>
+
+  <!-- States -->
+  <div *ngIf="loading" class="state loading">Chargement...</div>
+  <div *ngIf="errorMessage" class="state error">{{ errorMessage }}</div>
+  <div *ngIf="!loading && sondages.length === 0" class="state empty">
+    Aucun sondage actif
+  </div>
+
+  <!-- Grid -->
+  <div class="grid" *ngIf="!loading && sondages.length">
+
+    <div class="card" *ngFor="let s of sondages" (click)="openSondage(s.id)">
+
+      <div class="top">
+        <h3>{{ s.title }}</h3>
+      </div>
+
+      <p class="description">
+        {{ s.description || 'Aucune description' }}
+      </p>
+
+      <div class="dates">
+        <span>📅 {{ s.dateDebut | date:'short' }}</span>
+        <span>⏳ {{ s.dateFin | date:'short' }}</span>
+      </div>
+
+      <button (click)="openSondage(s.id); $event.stopPropagation()">
+        Participer
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
