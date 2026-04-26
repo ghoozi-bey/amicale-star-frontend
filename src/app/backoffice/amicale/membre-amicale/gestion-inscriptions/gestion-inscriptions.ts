@@ -97,10 +97,26 @@ export class GestionInscriptions implements OnInit {
 
   // 🔥 PDF
   openPdf(base64: string) {
-    if (!base64) return;
-    const url = "data:application/pdf;base64," + base64;
-    window.open(url, "_blank");
+  if (!base64) return;
+
+  try {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+
+  } catch (e) {
+    console.error("Erreur PDF:", e);
   }
+}
 
   // 🔥 STATUT INSCRIPTION
   valider() {
@@ -142,4 +158,5 @@ export class GestionInscriptions implements OnInit {
 
   });
 }
+
 }

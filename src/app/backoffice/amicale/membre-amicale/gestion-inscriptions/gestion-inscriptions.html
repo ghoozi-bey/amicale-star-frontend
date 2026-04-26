@@ -16,18 +16,56 @@
 
   <!-- ADHERENT -->
   <div class="card">
-    <h3>👤 Adhérent</h3>
+    <h3> Adhérent</h3>
     <p><strong>Nom :</strong> {{ data.nom }} {{ data.prenom }}</p>
     <p><strong>Email :</strong> {{ data.email }}</p>
     <p><strong>Téléphone :</strong> {{ data.telephone }}</p>
+    <p>{{ data?.passeport?.length }}</p>
+    
 
     <button 
-      class="btn-pdf" 
-      *ngIf="data.passeport"
-      (click)="openPdf(data.passeport)">
-      📄 Voir passeport
-    </button>
+  class="btn-pdf" 
+  *ngIf="data?.passeport"
+  (click)="openPdf(data.passeport)">
+   Voir passeport
+</button>
   </div>
+  <!-- CONJOINT -->
+<div class="card" *ngIf="data?.conjoint">
+  <h3>Conjoint</h3>
+
+  <p><strong>Nom :</strong> {{ data.conjoint.nom }}</p>
+  <p><strong>Prénom :</strong> {{ data.conjoint.prenom }}</p>
+  <p><strong>Téléphone :</strong> {{ data.conjoint.telephone }}</p>
+
+  <button 
+    class="btn-pdf"
+    *ngIf="data.conjoint?.passeport"
+    (click)="openPdf(data.conjoint.passeport)">
+    📄 Voir passeport conjoint
+  </button>
+</div>
+<!-- 👶 ENFANTS -->
+<div class="card" *ngIf="data?.enfants && data.enfants.length > 0">
+  <h3> Enfants</h3>
+
+  <div *ngFor="let enfant of data.enfants; let i = index" class="enfant-box">
+
+    <p><strong>Enfant {{ i + 1 }}</strong></p>
+    <p><strong>Nom :</strong> {{ enfant.nom }}</p>
+    <p><strong>Prénom :</strong> {{ enfant.prenom }}</p>
+    <p><strong>Date naissance :</strong> {{ enfant.dateNaissance }}</p>
+
+    <button 
+      class="btn-pdf"
+      *ngIf="enfant?.passeport"
+      (click)="openPdf(enfant.passeport)">
+       Voir passeport
+    </button>
+
+    <hr>
+  </div>
+</div>
 
   <!-- EVENT -->
   <div class="card">

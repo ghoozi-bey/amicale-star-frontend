@@ -111,14 +111,14 @@
 
               <button class="btn-upload"
                       (click)="uploadJustificatif(p.id, ins.id)">
-                📤 Envoyer justificatif
+                Envoyer justificatif
               </button>
 
             </div>
 
             <!-- ✅ DEJA ENVOYÉ -->
             <span *ngIf="p.justificatifVirement" class="success">
-              ✔ Justificatif envoyé
+              Justificatif envoyé
             </span>
 
           </div>
@@ -144,12 +144,14 @@
 
   <div class="modal-box" (click)="$event.stopPropagation()">
 
+    <!-- HEADER -->
     <div class="modal-header">
       <span>Détails inscription</span>
       <button class="close-btn" (click)="closeModal()">×</button>
     </div>
 
-    <div class="modal-content" *ngIf="selectedInscription">
+    <!-- CONTENT -->
+    <div class="modal-content">
 
       <!-- EVENT -->
       <div class="section">
@@ -192,7 +194,6 @@
             <span class="label">Email</span>
             <span class="value">{{ selectedInscription?.email }}</span>
           </div>
-          
 
           <div class="row">
             <span class="label">Téléphone</span>
@@ -201,8 +202,57 @@
         </div>
       </div>
 
+      <!-- 🔥 CONJOINT (corrigé selon ton JSON réel) -->
+      <div class="section" *ngIf="selectedInscription?.conjointNom">
+        <div class="section-title">
+          <span class="material-icons">favorite</span>
+          Conjoint
+        </div>
+
+        <div class="section-card">
+          <div class="row">
+            <span class="label">Nom</span>
+            <span class="value">
+              {{ selectedInscription?.conjointNom }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔥 ENFANTS -->
+      <div class="section" *ngIf="selectedInscription?.enfants?.length > 0">
+        <div class="section-title">
+          <span class="material-icons">child_care</span>
+          Enfants
+        </div>
+
+        <div class="section-card">
+
+          <div *ngFor="let e of selectedInscription.enfants; let i = index">
+
+            <div class="row">
+              <span class="label">Enfant {{ i + 1 }}</span>
+              <span class="value">
+                {{ e.nom }} {{ e.prenom }}
+              </span>
+            </div>
+
+            <div class="row" *ngIf="e.dateNaissance">
+              <span class="label">Naissance</span>
+              <span class="value">{{ e.dateNaissance }}</span>
+            </div>
+
+            <hr>
+
+          </div>
+
+        </div>
+      </div>
+
     </div>
 
   </div>
 
 </div>
+
+

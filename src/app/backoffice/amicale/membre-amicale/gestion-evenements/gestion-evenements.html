@@ -90,45 +90,51 @@
 
       <div class="remise-box">
 
-        <h3>Remises (optionnel)</h3>
+  <h3>Remises (optionnel)</h3>
 
-        <!-- ENFANT -12 -->
-        <label class="remise-item">
-          <input type="checkbox" formControlName="remiseEnfant12Active">
-          Enfant (-12 ans)
-        </label>
+  <!-- ENFANT -12 -->
+  <div class="remise-row">
+    <label class="remise-item">
+      <input type="checkbox" formControlName="remiseEnfant12Active">
+      <span>Enfant (-12 ans)</span>
+    </label>
 
-        <input type="number"
-               placeholder="Pourcentage %"
-               formControlName="remiseEnfant12Pourcentage"
-               *ngIf="eventForm.get('remiseEnfant12Active')?.value"
-               class="input-remise">
+    <input type="number"
+      placeholder="%"
+      formControlName="remiseEnfant12Pourcentage"
+      *ngIf="eventForm.get('remiseEnfant12Active')?.value"
+      class="input-remise">
+  </div>
 
-        <!-- ENFANT -18 -->
-        <label class="remise-item">
-          <input type="checkbox" formControlName="remiseEnfant18Active">
-          Enfant (-18 ans)
-        </label>
+  <!-- ENFANT -18 -->
+  <div class="remise-row">
+    <label class="remise-item">
+      <input type="checkbox" formControlName="remiseEnfant18Active">
+      <span>Enfant (-18 ans)</span>
+    </label>
 
-        <input type="number"
-               placeholder="Pourcentage %"
-               formControlName="remiseEnfant18Pourcentage"
-               *ngIf="eventForm.get('remiseEnfant18Active')?.value"
-               class="input-remise">
+    <input type="number"
+      placeholder="%"
+      formControlName="remiseEnfant18Pourcentage"
+      *ngIf="eventForm.get('remiseEnfant18Active')?.value"
+      class="input-remise">
+  </div>
 
-        <!-- COUPLE (🔥 FIX ICI) -->
-        <label class="remise-item">
-          <input type="checkbox" formControlName="remiseCoupleActive">
-          Couple
-        </label>
+  <!-- COUPLE -->
+  <div class="remise-row">
+    <label class="remise-item">
+      <input type="checkbox" formControlName="remiseCoupleActive">
+      <span>Couple</span>
+    </label>
 
-        <input type="number"
-               placeholder="Pourcentage %"
-               formControlName="remiseCouplePourcentage"
-               *ngIf="eventForm.get('remiseCoupleActive')?.value"
-               class="input-remise">
+    <input type="number"
+      placeholder="%"
+      formControlName="remiseCouplePourcentage"
+      *ngIf="eventForm.get('remiseCoupleActive')?.value"
+      class="input-remise">
+  </div>
 
-      </div>
+</div>
 
       <!-- ========================= -->
 
