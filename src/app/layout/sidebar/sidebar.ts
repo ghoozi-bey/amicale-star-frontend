@@ -50,10 +50,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.loadProfilePhoto();
 
     this.profileListener = () => {
-      this.zone.run(() => {
-        this.loadProfilePhoto();
-      });
-    };
+  this.zone.run(() => {
+    this.loadProfilePhoto(true); // 🔥 force refresh ici
+  });
+};
 
     window.addEventListener('profileUpdated', this.profileListener);
   }
@@ -62,39 +62,52 @@ export class SidebarComponent implements OnInit, OnDestroy {
     window.removeEventListener('profileUpdated', this.profileListener);
   }
 
-  loadProfilePhoto() {
-    this.loadingPhoto = true;
+  loadProfilePhoto(forceRefresh: boolean = false) {
 
-    this.http.get<any>('http://localhost:8080/api/user/profile')
-      .subscribe({
-        next: (data) => {
+  // 🔥 ne bloque que si pas de refresh ET déjà chargé
+  if (this.photoUrlWithCache && !forceRefresh) return;
 
-          this.zone.run(() => {   // 🔥 THIS IS THE FIX
+  this.loadingPhoto = true;
 
-            if (data?.hasPhoto && data?.photoUrl) {
-              this.userPhoto = data.photoUrl + '?t=' + Date.now();
-              this.photoUrlWithCache = this.userPhoto;
-            } else {
-              this.userPhoto = null;
-              this.photoUrlWithCache = null;
+  this.http.get<any>('http://localhost:8080/api/user/profile')
+    .subscribe({
+      next: (data) => {
+
+        this.zone.run(() => {
+
+          if (data?.hasPhoto && data?.photoUrl) {
+
+            // 🔥 IMPORTANT : toujours reconstruire URL si refresh
+            const newPhoto = forceRefresh
+              ? data.photoUrl + '?t=' + new Date().getTime()
+              : data.photoUrl;
+
+            // 🔥 éviter re-render inutile
+            if (this.photoUrlWithCache !== newPhoto) {
+              this.userPhoto = newPhoto;
+              this.photoUrlWithCache = newPhoto;
+              this.authService.setUserPhoto(newPhoto);
             }
 
-            this.authService.setUserPhoto(this.userPhoto);
-
-            this.loadingPhoto = false;
-
-          });
-
-        },
-        error: () => {
-          this.zone.run(() => {
+          } else {
             this.userPhoto = null;
             this.photoUrlWithCache = null;
-            this.loadingPhoto = false;
-          });
-        }
-      });
-  }
+          }
+
+          this.loadingPhoto = false;
+
+        });
+
+      },
+      error: () => {
+        this.zone.run(() => {
+          this.userPhoto = null;
+          this.photoUrlWithCache = null;
+          this.loadingPhoto = false;
+        });
+      }
+    });
+}
 
   goToProfile(): void {
     this.router.navigate(['/profile']);

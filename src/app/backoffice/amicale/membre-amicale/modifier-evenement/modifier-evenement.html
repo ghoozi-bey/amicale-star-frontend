@@ -1,42 +1,71 @@
 <div class="container">
 
-  <div class="form-container" *ngIf="evenement">
+  <!-- HEADER -->
+  <div class="page-header">
+    <button class="btn-back" (click)="goBack()">
+      <span class="material-icons">arrow_back</span>
+    </button>
 
-    <h2>Modifier événement</h2>
-    
-
-    <!-- 🔥 IMAGE -->
-    <div *ngIf="imageUrl" style="text-align:center;">
-      <img [src]="imageUrl"
-           alt="photo"
-           style="width:200px; height:150px; object-fit:cover; border-radius:10px; margin-bottom:15px;">
+    <div class="header-text">
+      <h1>Modifier événement</h1>
+      <p>Gérer et mettre à jour les informations</p>
     </div>
+  </div>
 
-    <form (ngSubmit)="updateEvent()">
+  <!-- CONTENU -->
+  <div class="content-wrapper">
 
-      <label>Titre</label>
-      <input [(ngModel)]="evenement.titre" name="titre">
+    <!-- FORM -->
+    <form (ngSubmit)="updateEvent()" class="form-section">
 
-      <label>Description</label>
-      <textarea [(ngModel)]="evenement.description" name="description"></textarea>
+      <div class="form-group">
+        <label>Titre</label>
+        <input [(ngModel)]="evenement.titre" name="titre">
+      </div>
 
-      <label>Lieu</label>
-      <input [(ngModel)]="evenement.lieu" name="lieu">
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="description-field"
+                  [(ngModel)]="evenement.description"
+                  name="description"></textarea>
+      </div>
 
-      <label>Prix</label>
-      <input type="number" [(ngModel)]="evenement.prix" name="prix">
+      <div class="form-group">
+        <label>Lieu</label>
+        <input [(ngModel)]="evenement.lieu" name="lieu">
+      </div>
 
-      <label>Date début</label>
-      <input type="date" [(ngModel)]="evenement.dateDebut" name="dateDebut">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Prix</label>
+          <input type="number" [(ngModel)]="evenement.prix" name="prix">
+        </div>
 
-      <label>Date fin</label>
-      <input type="date" [(ngModel)]="evenement.dateFin" name="dateFin">
+        <div class="form-group">
+          <label>Date début</label>
+          <input type="date" [(ngModel)]="evenement.dateDebut" name="dateDebut">
+        </div>
+
+        <div class="form-group">
+          <label>Date fin</label>
+          <input type="date" [(ngModel)]="evenement.dateFin" name="dateFin">
+        </div>
+      </div>
 
       <button class="submit-btn" type="submit">
         Enregistrer
       </button>
 
     </form>
+
+    <!-- IMAGE -->
+    <div class="image-card" *ngIf="imageUrl">
+  <img [src]="imageUrl" alt="photo">
+
+  <div class="image-overlay">
+    <span>Image de l'événement</span>
+  </div>
+</div>
 
   </div>
 

@@ -27,20 +27,20 @@
 <div class="events">
 
   <div class="event-card"
-       *ngFor="let e of evenements; trackBy: trackById"
-       (click)="goToDetails(e)">
+       *ngFor="let event of evenementsActifs; trackBy: trackById"
+       (click)="goToDetails(event)">
 
     <div class="image-container">
       <img 
-        [src]="e.photoUrl"
+        [src]="event.photoUrl"
         (load)="onImageLoad()"
         (error)="onImageError()"
         loading="lazy">
     </div>
 
     <div class="content">
-      <h3>{{ e.titre }}</h3>
-      <p>{{ e.dateDebut }}</p>
+      <h3>{{ event.titre }}</h3>
+      <p>{{ event.dateDebut }}</p>
     </div>
 
   </div>

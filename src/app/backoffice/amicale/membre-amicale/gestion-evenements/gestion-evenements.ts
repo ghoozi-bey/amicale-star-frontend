@@ -23,17 +23,24 @@ export class GestionEvenementsComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit() {
-    this.initForm();
+  today: string = '';
 
-    const token = localStorage.getItem('token');
-    if (token) {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      this.typeEvenementId = payload.type_evenement_id;
-    }
+ngOnInit() {
+  this.initForm();
 
-    this.applyDynamicValidation();
+  // 🔥 récupérer today (format input date)
+  const now = new Date();
+  this.today = now.toISOString().split('T')[0];
+
+  // 🔥 token (inchangé)
+  const token = localStorage.getItem('token');
+  if (token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    this.typeEvenementId = payload.type_evenement_id;
   }
+
+  this.applyDynamicValidation();
+}
 
   initForm() {
   this.eventForm = this.fb.group({
@@ -42,7 +49,7 @@ export class GestionEvenementsComponent implements OnInit {
     destination: [''],
     agence: [''],
     societe: [''],
-    dateDebut: [''],
+    dateDebut: ['', [Validators.required, this.dateNotPastValidator]],
     dateFin: [''],
     nbPlaces: [null],
     prix: [null],
@@ -73,6 +80,10 @@ export class GestionEvenementsComponent implements OnInit {
 
     this.f['titre'].setValidators([Validators.required]);
     this.f['description'].setValidators([Validators.required]);
+    this.f['dateDebut'].setValidators([
+    Validators.required,
+    this.dateNotPastValidator
+  ]);
 
     if (this.typeEvenementId === 2) {
       this.f['destination'].setValidators([Validators.required]);
@@ -104,6 +115,16 @@ export class GestionEvenementsComponent implements OnInit {
     if (!data.remiseEnfant18Active) data.remiseEnfant18Pourcentage = 0;
     if (!data.remiseCoupleActive) data.remiseCouplePourcentage = 0;
   }
+  dateNotPastValidator(control: any) {
+  if (!control.value) return null;
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const inputDate = new Date(control.value);
+
+  return inputDate < today ? { pastDate: true } : null;
+}
 
   createEvent() {
 
@@ -209,4 +230,5 @@ export class GestionEvenementsComponent implements OnInit {
   });
   console.log("DATA =", data);
 }
+
 }

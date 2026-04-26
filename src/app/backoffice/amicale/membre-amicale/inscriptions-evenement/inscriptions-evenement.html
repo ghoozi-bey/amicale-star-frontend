@@ -2,14 +2,21 @@
 
   <!-- HEADER -->
   <div class="page-header">
-    <div class="title-left">
-      <i class="fas fa-users"></i>
-      <div>
-        <h2>Gestion des inscriptions</h2>
-        <p>Liste des participants de cet événement</p>
-      </div>
+
+  <!-- 🔥 BACK BUTTON -->
+  <button class="btn-back" (click)="goBack()">
+    <i class="fas fa-arrow-left"></i>
+  </button>
+
+  <div class="title-left">
+    <i class="fas fa-users"></i>
+    <div>
+      <h2>Gestion des inscriptions</h2>
+      <p>Liste des participants de cet événement</p>
     </div>
   </div>
+
+</div>
 
   <!-- LOADING -->
   <div *ngIf="loading" class="loading">

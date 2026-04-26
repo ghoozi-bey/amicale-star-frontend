@@ -1,22 +1,65 @@
 /* ================= GLOBAL ================= */
 .page {
   padding: 20px;
+  font-family: system-ui;
 }
 
 /* ================= HEADER ================= */
-.header {
+.header-pro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #2e7d32, #43a047);
+  padding: 20px;
+  border-radius: 14px;
+  color: white;
   margin-bottom: 20px;
 }
 
-.header h2 {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 5px;
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.subtitle {
-  color: #777;
-  font-size: 14px;
+.header-left h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.header-left p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.badge-global {
+  background: rgba(255,255,255,0.2);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+/* ================= STATS ================= */
+.stats {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  flex: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.stat-number {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2e7d32;
 }
 
 /* ================= GRID ================= */
@@ -33,12 +76,10 @@
   overflow: hidden;
   box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   transition: 0.3s;
-  cursor: pointer;
 }
 
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+  transform: translateY(-5px);
 }
 
 /* ================= IMAGE ================= */
@@ -77,13 +118,102 @@
 .title {
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
-.info {
+/* ================= 🔥 ECHEANCIER ================= */
+.echeancier {
   display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* LIGNE */
+.ligne-paiement {
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #eef2f7;
+  transition: 0.2s;
+}
+
+.ligne-paiement:hover {
+  background: #f1f5f9;
+}
+
+/* INFOS ALIGNÉES */
+.infos {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  font-size: 14px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* TEXTES */
+.date {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.montant {
+  font-weight: 600;
+  color: #111827;
+}
+
+/* ================= BADGE PAIEMENT ================= */
+.badge-paiement {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.paye {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.attente {
+  background: #fff8e1;
+  color: #f9a825;
+}
+
+/* ================= UPLOAD ================= */
+.upload-box {
+  margin-top: 10px;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+}
+
+.upload-box input {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.btn-upload {
+  width: 100%;
+  padding: 8px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-upload:hover {
+  transform: translateY(-1px);
+}
+
+/* ================= STATUS ================= */
+.success {
+  color: #22c55e;
+  font-size: 13px;
+  margin-top: 5px;
+  display: block;
 }
 
 /* ================= EMPTY ================= */
@@ -93,342 +223,48 @@
   color: #777;
 }
 
-/* ================= STATS ================= */
-.stats {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.stat-card {
-  flex: 1;
-  background: #fff;
-  border-radius: 12px;
-  padding: 15px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.stat-number {
-  font-size: 20px;
-  font-weight: bold;
-  color: #2e7d32;
-}
-
-/* ================= HEADER PRO ================= */
-.header-pro {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: linear-gradient(135deg, #2e7d32, #43a047);
-  padding: 20px;
-  border-radius: 14px;
-  color: white;
-  margin-bottom: 20px;
-}
-
-/* ================= MODAL FINAL CLEAN ================= */
-
-/* OVERLAY */
+/* ================= MODAL ================= */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.4);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
 }
 
-/* BOX */
 .modal-box {
-  width: 520px;
-  max-width: 95%;
-  max-height: 90vh;              /* 🔥 FIX */
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-  display: flex;                 /* 🔥 FIX */
-  flex-direction: column;        /* 🔥 FIX */
+  width: 500px;
+  background: white;
+  border-radius: 14px;
   overflow: hidden;
 }
 
-/* HEADER */
 .modal-header {
-  padding: 18px 22px;
-  font-size: 18px;
-  font-weight: 600;
+  padding: 15px;
   border-bottom: 1px solid #eee;
   display: flex;
   justify-content: space-between;
 }
 
-/* CONTENT */
 .modal-content {
-  padding: 20px;
-  overflow-y: auto;              /* 🔥 FIX SCROLL */
-  flex: 1;
+  padding: 15px;
 }
 
-/* SECTION */
-.section {
-  margin-bottom: 25px;
-}
-
-/* TITLE */
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #2e7d32;
-}
-
-/* CARD */
-.section-card {
-  background: #f5f6f7;
-  border-radius: 12px;
-  padding: 16px;
-}
-
-/* ROW */
 .row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
-/* LABEL */
 .label {
   color: #888;
-  font-size: 13px;
-}
-
-/* VALUE */
-.value {
-  font-weight: 500;
-}
-
-/* TOTAL */
-.total {
-  margin-top: 15px;
-  padding-top: 10px;
-  border-top: 1px solid #ddd;
-  display: flex;
-  justify-content: space-between;
 }
 
 .price {
-  font-size: 20px;
   font-weight: bold;
   color: #2e7d32;
-}
-
-/* CHILD */
-.child {
-  background: #e0e0e0;
-  padding: 8px;
-  border-radius: 8px;
-  margin-bottom: 6px;
-}
-
-/* ANIMATION */
-@keyframes modalFade {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-/* CONTAINER */
-.paiement {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #555;
-  font-size: 14px;
-}
-
-/* ICON */
-.icon-pay {
-  font-size: 18px;
-  color: #2e7d32;
-}
-
-/* BADGE */
-.badge-paiement {
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-/* PAYE */
-.paye {
-  background: #e8f5e9;
-  color: #2e7d32;
-}
-
-/* NON PAYE */
-.non-paye {
-  background: #ffebee;
-  color: #d32f2f;
-}
-
-/* EN VERIFICATION */
-.verif {
-  background: #fff8e1;
-  color: #f9a825;
-}
-/* 🔥 UPLOAD CONTAINER */
-.upload-box {
-  margin-top: 12px;
-  padding: 10px;
-  background: #f8fafc;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
-}
-
-/* INPUT FILE CUSTOM */
-.upload-box input[type="file"] {
-  width: 100%;
-  font-size: 13px;
-  margin-bottom: 8px;
-}
-
-/* BOUTON MODERNE */
-.btn-upload {
-  width: 100%;
-  padding: 8px;
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-weight: 500;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-/* HOVER */
-.btn-upload:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3);
-}
-
-/* DISABLED STYLE */
-.btn-upload:disabled {
-  background: #cbd5e1;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* PAIEMENT ALIGN FIX */
-.info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.upload-info {
-  font-size: 12px;
-  color: #64748b;
-  margin-bottom: 8px;
-  line-height: 1.4;
-  background: #f1f5f9;
-  padding: 8px;
-  border-radius: 6px;
-  border-left: 3px solid #f59e0b;
-}
-.upload-status {
-  margin-top: 8px;
-  font-size: 13px;
-}
-
-.upload-status .loading {
-  color: #0ea5e9;
-}
-
-.upload-status .success {
-  color: #22c55e;
-  font-weight: 500;
-}
-
-.upload-status .error {
-  color: #ef4444;
-}
-
-/* animation */
-.upload-status span {
-  display: inline-block;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.upload-status {
-  margin-top: 8px;
-  font-size: 13px;
-}
-
-.upload-status span {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  animation: fadeIn 0.3s ease;
-}
-
-.icon {
-  width: 16px;
-  height: 16px;
-}
-
-/* couleurs */
-.loading {
-  color: #0ea5e9;
-}
-
-.success {
-  color: #22c55e;
-  font-weight: 500;
-}
-
-.error {
-  color: #ef4444;
-}
-
-/* animation spinner */
-.spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }

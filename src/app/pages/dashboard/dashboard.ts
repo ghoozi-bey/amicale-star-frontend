@@ -14,6 +14,8 @@ import { Router } from '@angular/router';
 export class DashboardComponent {
 
   evenements: any[] = [];
+  evenementsActifs: any[] = []; // 🔥 ajout
+
   selectedEvent: any = null;
 
   totalImages = 0;
@@ -32,7 +34,7 @@ export class DashboardComponent {
 
     this.loadingService.reset();
 
-    setTimeout(() => { // 🔥 évite erreur Angular NG0100
+    setTimeout(() => {
       this.loadingService.show();
     });
 
@@ -41,10 +43,16 @@ export class DashboardComponent {
 
         this.evenements = events;
 
-        this.totalImages = events.length;
+        // 🔥 FILTRAGE IMPORTANT
+        this.evenementsActifs = events.filter(
+          (e: any) => e.statut === 'ACTIF'
+        );
+
+        // 🔥 utiliser seulement les actifs pour images
+        this.totalImages = this.evenementsActifs.length;
         this.loadedImages = 0;
 
-        this.cd.detectChanges(); // 🔥 FIX
+        this.cd.detectChanges();
 
         if (this.totalImages === 0) {
           this.loadingService.hide();
@@ -59,7 +67,7 @@ export class DashboardComponent {
 
     if (this.loadedImages >= this.totalImages) {
       this.loadingService.hide();
-      this.cd.detectChanges(); // 🔥 FIX
+      this.cd.detectChanges();
     }
   }
 
@@ -68,7 +76,7 @@ export class DashboardComponent {
 
     if (this.loadedImages >= this.totalImages) {
       this.loadingService.hide();
-      this.cd.detectChanges(); // 🔥 FIX
+      this.cd.detectChanges();
     }
   }
 
@@ -81,6 +89,6 @@ export class DashboardComponent {
   }
 
   goToDetails(event: any): void {
-  this.router.navigate(['/evenement', event.id]);
-}
+    this.router.navigate(['/evenement', event.id]);
+  }
 }

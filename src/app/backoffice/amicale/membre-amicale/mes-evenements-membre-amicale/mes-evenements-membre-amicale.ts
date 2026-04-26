@@ -54,4 +54,15 @@ export class MesEvenementsMembreAmicaleComponent implements OnInit {
   goToInscriptions(id: number) {
   this.router.navigate(['/inscriptions-evenement', id]);
 }
+archiver(id: number) {
+  if (confirm("Archiver cet événement ?")) {
+    this.eventService.archiverEvent(id).subscribe({
+      next: () => {
+        alert("✅ Événement archivé");
+        location.reload(); // ou refresh propre si tu veux
+      },
+      error: () => alert("❌ Erreur archivage")
+    });
+  }
+}
 }

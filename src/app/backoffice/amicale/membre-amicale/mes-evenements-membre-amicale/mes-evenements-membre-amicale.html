@@ -1,4 +1,5 @@
 <div class="events-container" *ngIf="events$ | async as events; else noData">
+  
 
   <div class="event-card" *ngFor="let event of events">
 
@@ -10,15 +11,21 @@
         class="event-image"
       />
 
-      <span 
-        class="status-badge"
-        [ngClass]="{
-          'active': event.statut !== 'ARCHIVE',
-          'archived': event.statut === 'ARCHIVE'
-        }"
-      >
-        {{ event.statut === 'ARCHIVE' ? 'ARCHIVÉ' : 'ACTIF' }}
-      </span>
+      <span class="status-badge"
+  [ngClass]="{
+    'active': event.statut === 'ACTIF',
+    'termine': event.statut === 'TERMINE',
+    'archived': event.statut === 'ARCHIVE'
+  }">
+
+  {{ 
+    event.statut === 'ACTIF' ? 'ACTIF' :
+    event.statut === 'TERMINE' ? 'TERMINÉ' :
+    event.statut === 'ARCHIVE' ? 'ARCHIVÉ' :
+    'INCONNU'
+  }}
+
+</span>
     </div>
 
     <!-- 🔥 CONTENT -->
@@ -65,7 +72,7 @@
 
       <!-- ACTIONS -->
       <div class="event-actions">
-        <button class="btn btn-edit" (click)="editEvent(event.id)">
+        <button class="btn btn-edit" (click)="editEvent(event.id)" [disabled]="event.statut === 'ARCHIVE'">
           <i class="fas fa-pen"></i> Modifier
         </button>
 
@@ -78,7 +85,13 @@
           <i class="fas fa-trash"></i> Supprimer
         </button>
         <button class="btn btn-view" (click)="goToInscriptions(event.id)">
-        📋 Inscriptions
+        <i class="fas fa-list"></i> Inscriptions
+        </button>
+        <button 
+        class="btn btn-archive"
+        *ngIf="event.statut !== 'ARCHIVE'"
+        (click)="archiver(event.id)">
+        <i class="fas fa-box-archive"></i> Archiver
         </button>
       </div>
 

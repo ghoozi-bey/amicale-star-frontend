@@ -105,4 +105,7 @@ refuser(inscriptionId: number) {
   trackById(index: number, item: any) {
   return item.id;
 }
+goBack() {
+  window.history.back();
+}
 }

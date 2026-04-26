@@ -1,23 +1,154 @@
-.submit-btn {
-  width: 100%;
-  margin-top: 15px;
-  padding: 14px;
+.container {
+  padding: 30px;
+}
 
+/* HEADER */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.btn-back {
+  background: #f1f3f5;
   border: none;
-  border-radius: 12px;
-
-  background: linear-gradient(135deg, #2e7d32, #4caf50);
-  color: white;
-
-  font-size: 15px;
-  font-weight: 500;
-
+  border-radius: 50%;
+  padding: 10px;
   cursor: pointer;
   transition: 0.3s;
 }
 
-/* Hover */
+.btn-back:hover {
+  background: #e0e0e0;
+}
+
+.header-text h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.header-text p {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+/* LAYOUT */
+.content-wrapper {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+/* FORM */
+.form-section {
+  flex: 2;
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+input, textarea {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  transition: 0.3s;
+}
+
+input:focus, textarea:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+.description-field {
+  min-height: 120px;
+}
+
+/* ROW */
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+/* IMAGE */
+.image-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.image-section img {
+  width: 100%;
+  max-width: 280px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* BUTTON */
+.submit-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4CAF50, #2e7d32);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
 .submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+}
+.image-card {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  transition: 0.4s;
+}
+
+.image-card:hover {
+  transform: translateY(-5px) scale(1.02);
+}
+
+.image-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Overlay moderne */
+.image-overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
 }

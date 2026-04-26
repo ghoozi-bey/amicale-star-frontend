@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EvenementService } from '../../../../services/evenement';
 import { FormsModule } from '@angular/forms';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-modifier-evenement',
@@ -25,7 +26,8 @@ export class ModifierEvenementComponent implements OnInit {
     private route: ActivatedRoute,
     private eventService: EvenementService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -93,4 +95,7 @@ export class ModifierEvenementComponent implements OnInit {
       }
     });
   }
+  goBack() {
+  this.location.back();
+}
 }

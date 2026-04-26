@@ -66,10 +66,10 @@ export class EvenementService {
   }
 
   updateEvenement(id: number, evenement: any): Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/${id}`, evenement, {
-      headers: this.getHeaders()
-    });
-  }
+  return this.http.put<any>(`${this.apiUrl}/${id}`, evenement, {
+    headers: this.getHeaders()
+  });
+}
 
   deleteEvenement(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`, {
@@ -114,5 +114,8 @@ createInscription(formData: FormData) {
 }
 getNbPlaces(eventId: number) {
   return this.http.get<number>(`http://localhost:8080/api/evenements/${eventId}/places`);
+}
+archiverEvent(id: number) {
+  return this.http.put(`http://localhost:8080/api/evenements/${id}/archive`, {});
 }
 }

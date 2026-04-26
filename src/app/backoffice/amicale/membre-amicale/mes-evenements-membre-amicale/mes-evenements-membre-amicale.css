@@ -99,61 +99,109 @@
   font-size: 12px;
 }
 
-/* ACTIONS */
+/* ================= ACTIONS ================= */
 .event-actions {
   display: flex;
-  justify-content: space-between;
+  gap: 8px;
   margin-top: 15px;
+  flex-wrap: wrap; /* 🔥 IMPORTANT */
 }
 
-/* BUTTON BASE */
+/* BASE BUTTON */
 .btn {
+  flex: 1 1 calc(50% - 4px); /* 🔥 2 boutons par ligne */
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 8px 14px;
-  border-radius: 10px;
+  padding: 9px;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
-/* EDIT */
+/* 🔥 bouton inscriptions prend toute la ligne */
+.btn-view {
+  flex: 1 1 100%;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+}
+
+/* ICON */
+.btn i {
+  font-size: 14px;
+}
+
+/* ================= EDIT ================= */
 .btn-edit {
-  background: #3b82f6;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
 }
 
 .btn-edit:hover {
-  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
 }
 
-/* DELETE */
+/* ================= DELETE ================= */
 .btn-delete {
-  background: #ef4444;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
   color: white;
 }
 
 .btn-delete:hover {
-  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(220, 38, 38, 0.3);
 }
 
 /* DISABLED */
-.btn-delete.disabled-btn {
-  background: #fca5a5;
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
+.btn-delete.disabled-btn,
 .btn-delete:disabled {
-  pointer-events: none;
+  background: #fca5a5;
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
-/* NO DATA */
-.no-data {
-  text-align: center;
-  padding: 20px;
-  color: #777;
+/* ================= VIEW (INSCRIPTIONS) ================= */
+.btn-view {
+  background: linear-gradient(135deg, #22c55e, #16a34a); /* 🔥 VERT */
+  color: white;
+}
+
+.btn-view:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(22, 163, 74, 0.3);
+}
+.description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 🔥 nombre de lignes affichées */
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.btn-archive {
+  background: linear-gradient(135deg, #6b7280, #374151);
+  color: white;
+}
+
+.btn-archive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(55, 65, 81, 0.3);
+}
+.status-badge.active {
+  background: #22c55e;
+}
+
+.status-badge.termine {
+  background: #6b7280;
+}
+
+.status-badge.archived {
+  background: #f59e0b;
 }
