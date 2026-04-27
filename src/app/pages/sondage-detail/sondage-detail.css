@@ -1,6 +1,6 @@
 .page {
-  padding: 40px 20px;
-  background: #f9fafb;
+  padding: 50px 20px;
+  background: linear-gradient(135deg, #f9fafb, #eef2ff);
   min-height: 100vh;
 }
 
@@ -8,64 +8,204 @@
   max-width: 800px;
   margin: auto;
   background: white;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  padding: 35px;
+  border-radius: 18px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
 }
 
-h2 {
-  margin-bottom: 10px;
+/* HEADER */
+.header {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.description {
-  color: #6b7280;
-  margin-bottom: 25px;
+/* TITLE */
+.header h2 {
+  display: block;
+  width: calc(100% + 70px); /* 35px left + 35px right */
+  margin-left: -35px;
+  margin-right: -35px;
+  margin-top: -35px;
+
+  background: linear-gradient(135deg, #065b25, #0a8136);
+  color: white;
+  padding: 40px 20px;
+
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
+/* DESCRIPTION */
+p .description {
+  font-size: 24px;
+  color: #000000;
+  margin: 0 auto;
+}
+
+/* REQUIRED INFO */
+.required-info {
+  font-size: 13px;
+  color: #ef4444;
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+/* QUESTIONS */
 .question {
-  margin-bottom: 25px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  position: relative;
+}
+
+.question::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 5px;
+  border-radius: 14px 0 0 14px;
+  background: linear-gradient(135deg, #065b25, #0a8136);
+}
+
+.question:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border-color: #d1d5db;
 }
 
 .question h4 {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
 }
 
+/* REQUIRED STAR */
 .required {
-  color: rgb(230, 0, 0);
+  color: #ef4444;
   margin-left: 4px;
   font-weight: bold;
-  font-size: 80%;
+  font-size: 90%;
 }
 
+/* LABELS */
 label {
-  display: block;
-  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+label:hover {
+  color: #2563eb;
+}
+
+/* INPUTS */
+input[type="radio"],
+input[type="checkbox"] {
+  margin-right: 8px;
+  accent-color: #2563eb;
   cursor: pointer;
 }
 
+/* TEXTAREA */
 textarea {
   width: 100%;
-  min-height: 80px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+  min-height: 100px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  transition: all 0.2s ease;
+  margin-top: 8px;
 }
 
+textarea:focus {
+  outline: none;
+  border-color: #065b25;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* DISABLED */
+input:disabled,
+textarea:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+}
+
+/* SUBMIT BUTTON */
 .submit-btn {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   border: none;
-  border-radius: 10px;
-  background: #2563eb;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #065b25, #0a8136);
   color: white;
   font-weight: 600;
+  font-size: 15px;
   cursor: pointer;
+  transition: all 0.25s ease;
+  margin-top: 10px;
 }
 
 .submit-btn:hover {
-  background: #1e40af;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
 }
 
+.submit-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* STATES */
 .state {
   text-align: center;
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.state.error {
+  color: #ef4444;
+}
+
+.msg {
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.msg.success {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.msg.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
 }

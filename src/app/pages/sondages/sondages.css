@@ -60,7 +60,7 @@
   height: 4px;
   width: 100%;
   border-radius: 20px 20px 0 0;
-  background: linear-gradient(90deg, #6366f1, #3b82f6);
+  background: linear-gradient(135deg, #065b25, #0a8136);
   opacity: 0;
   transition: 0.3s;
 }
@@ -113,7 +113,7 @@ button {
   border: none;
   border-radius: 12px;
 
-  background: #6366f1;
+  background: linear-gradient(135deg, #065b25, #0a8136);
   color: white;
 
   font-weight: 600;
@@ -125,8 +125,9 @@ button {
 
 /* hover */
 button:hover {
-  background: #4f46e5;
-  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.3);
+  background: linear-gradient(135deg, #076b2c, #0b8f3c);
+  box-shadow: 0 6px 14px #076b2c;
+  transform: translateY(-1px);
 }
 
 /* click */

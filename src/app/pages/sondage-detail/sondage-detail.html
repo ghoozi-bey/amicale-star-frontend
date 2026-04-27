@@ -11,51 +11,90 @@
     <!-- Content -->
     <div *ngIf="!loading && sondage" class="container">
 
-        <h2>{{ sondage.title }}</h2>
+        <div class="header">
+            <h2>{{ sondage.title }}</h2>
+        </div>
+
+        <br>
         <p class="description">{{ sondage.description }}</p>
+        <br>
+
+
+        <p class="required-info">*  champs obligatoires</p>
 
         <!-- Questions -->
         <div class="questions">
 
-        <div *ngFor="let q of sondage.questions" class="question">
+            <div *ngFor="let q of sondage.questions" class="question">
 
-            <h4>{{ q.text }} <span *ngIf="q.required" class="required">*</span> </h4>
+                <h4>{{ q.text }} <span *ngIf="q.required" class="required">*</span> </h4>
 
-            <!-- CHOIX UNIQUE -->
-            <div *ngIf="q.type === 'CHOIX_UNIQUE'">
-            <label *ngFor="let c of q.choixList">
-                <input type="radio"
-                    name="q{{q.id}}"
-                    (change)="selectUnique(q.id, c.id)">
-                {{ c.label }}
-            </label>
-            </div>
+                <!-- CHOIX UNIQUE -->
+                <div *ngIf="normalizeType(q.type) === 'SINGLE'">
+                <label *ngFor="let c of q.choixList">
+                    <input type="radio"
+                        name="q{{q.id}}"
+                        [checked]="isCheckedSingle(q.id, c.id)"
+                        (change)="selectUnique(q.id, c.id)"
+                        [disabled]="hasParticipated && !isEditing">
+                    {{ c.label }}
+                </label>
+                </div>
 
-            <!-- CHOIX MULTIPLE -->
-            <div *ngIf="q.type === 'CHOIX_MULTIPLE'">
-            <label *ngFor="let c of q.choixList">
-                <input type="checkbox"
-                    (change)="toggleMultiple(q.id, c.id)">
-                {{ c.label }}
-            </label>
-            </div>
+                <!-- CHOIX MULTIPLE -->
+                <div *ngIf="normalizeType(q.type) === 'MULTIPLE'"> 
+                <label *ngFor="let c of q.choixList">
+                    <input type="checkbox"
+                        [checked]="isCheckedMultiple(q.id, c.id)"
+                        (change)="toggleMultiple(q.id, c.id)"
+                        [disabled]="hasParticipated && !isEditing">
+                    {{ c.label }}
+                </label>
+                </div>
 
-            <!-- TEXTE -->
-            <div *ngIf="q.type === 'TEXTE'">
-            <textarea
-                placeholder="Votre réponse..."
-                (input)="setText(q.id, $any($event.target).value)">
-            </textarea>
+                <!-- TEXTE -->
+                <div *ngIf="normalizeType(q.type) === 'TEXT'">
+                    <textarea
+                        [value]="responses[q.id] || ''"
+                        (input)="setText(q.id, $any($event.target).value)"
+                        [disabled]="hasParticipated && !isEditing"
+                        placeholder="Votre réponse...">
+                    </textarea>
+                </div>
+
             </div>
 
         </div>
 
-        </div>
 
-        <!-- Submit -->
-        <button class="submit-btn" (click)="submit()">
-        Envoyer mes réponses
+        <!-- SUCCESS -->
+        <p *ngIf="successMessage" class="msg success">
+            {{ successMessage }}
+        </p>
+
+        <!-- ERROR -->
+        <p *ngIf="errorMessageSubmit" class="msg error">
+            {{ errorMessageSubmit }}
+        </p>
+
+
+
+        <!-- SUMBIT -->
+        <button 
+            class="submit-btn"
+            (click)="hasParticipated && !isEditing ? enableEdit() : submit()"
+            [disabled]="isSubmitting || isExpired">
+
+            {{
+                isExpired
+                ? 'Sondage terminé'
+                : hasParticipated && !isEditing
+                    ? 'Modifier mes réponses'
+                    : (isSubmitting ? 'Envoi...' : 'Envoyer mes réponses')
+            }}
+
         </button>
+        
 
     </div>
 
