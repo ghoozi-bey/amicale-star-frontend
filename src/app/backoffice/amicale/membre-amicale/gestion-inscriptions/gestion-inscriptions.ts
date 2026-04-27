@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-gestion-inscriptions',
@@ -16,6 +18,8 @@ export class GestionInscriptions implements OnInit {
   data: any;
   paiements: any[] = [];
   loading = true;
+  facture: any;
+  today = new Date();
 
   constructor(
     private route: ActivatedRoute,
@@ -30,21 +34,26 @@ export class GestionInscriptions implements OnInit {
 
   // 🔥 LOAD GLOBAL
   loadAll() {
-    this.loading = true;
+  this.loading = true;
 
-    this.http.get(`http://localhost:8080/api/inscriptions/${this.inscriptionId}/full`)
-      .subscribe({
-        next: (res) => {
-          this.data = res;
-          this.loadPaiements();
-        },
-        error: (err) => {
-          console.error("Erreur details", err);
-          this.loading = false;
-          this.cd.detectChanges();
-        }
-      });
-  }
+  this.http.get(`http://localhost:8080/api/inscriptions/${this.inscriptionId}/full`)
+    .subscribe({
+      next: (res) => {
+        this.data = res;
+
+        this.loadFacture();
+        this.loadPaiements();
+
+        this.loading = false; // 🔥 IMPORTANT
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error("Erreur details", err);
+        this.loading = false;
+        this.cd.detectChanges();
+      }
+    });
+}
 
   // 🔥 LOAD PAIEMENTS
   loadPaiements() {
@@ -156,6 +165,47 @@ export class GestionInscriptions implements OnInit {
     const url = window.URL.createObjectURL(blob);
     window.open(url);
 
+  });
+}
+loadFacture() {
+  this.http.get(`http://localhost:8080/api/inscriptions/${this.inscriptionId}/facture`)
+    .subscribe({
+      next: (res) => {
+        this.facture = res;
+        console.log("FACTURE:", res);
+        this.cd.detectChanges(); // 🔥 important ici
+      }
+    });
+}
+exportPDF() {
+  const element = document.querySelector('.facture-card') as HTMLElement;
+
+  html2canvas(element).then(canvas => {
+    const imgData = canvas.toDataURL('image/png');
+
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    const imgWidth = 190;
+    const pageHeight = 295;
+    const imgHeight = canvas.height * imgWidth / canvas.width;
+
+    pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+    pdf.save('facture.pdf');
+  });
+}
+downloadPDF() {
+  const element = document.getElementById('invoice');
+
+  html2canvas(element!).then(canvas => {
+    const imgData = canvas.toDataURL('image/png');
+
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    const width = 190;
+    const height = canvas.height * width / canvas.width;
+
+    pdf.addImage(imgData, 'PNG', 10, 10, width, height);
+    pdf.save(`facture-${this.inscriptionId}.pdf`);
   });
 }
 

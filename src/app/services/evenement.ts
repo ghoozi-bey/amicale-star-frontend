@@ -118,4 +118,7 @@ getNbPlaces(eventId: number) {
 archiverEvent(id: number) {
   return this.http.put(`http://localhost:8080/api/evenements/${id}/archive`, {});
 }
+getFacture(id: number) {
+  return this.http.get<any>(`http://localhost:8080/api/inscriptions/${id}/facture`);
+}
 }

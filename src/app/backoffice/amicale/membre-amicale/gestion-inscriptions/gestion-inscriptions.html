@@ -20,7 +20,7 @@
     <p><strong>Nom :</strong> {{ data.nom }} {{ data.prenom }}</p>
     <p><strong>Email :</strong> {{ data.email }}</p>
     <p><strong>Téléphone :</strong> {{ data.telephone }}</p>
-    <p>{{ data?.passeport?.length }}</p>
+    
     
 
     <button 
@@ -73,12 +73,6 @@
     <p><strong>Titre :</strong> {{ data.titre }}</p>
     <p><strong>Prix :</strong> {{ data.prix }} DT</p>
     <p><strong>Type :</strong> {{ data.typeEvenement }}</p>
-  </div>
-
-  <!-- TOTAL -->
-  <div class="card">
-    <h3>💰 Total</h3>
-    <p><strong>{{ data.prixTotal }} DT</strong></p>
   </div>
 
   <!-- 🔥 ÉCHÉANCIER -->
@@ -159,6 +153,196 @@
       Aucun paiement
     </p>
   </div>
+  <div *ngIf="facture && data" class="invoice" id="invoice">
+
+  <!-- HEADER -->
+  <div *ngIf="facture && data" class="invoice" id="invoice">
+
+  <!-- HEADER -->
+  <div class="invoice-header">
+    <div class="left">
+      <h2>STAR Assurances</h2>
+      <span class="subtitle">Facture</span>
+    </div>
+
+    <div class="right">
+      <p>{{ today | date:'dd/MM/yyyy' }}</p>
+      <p>#INS-{{ inscriptionId }}</p>
+    </div>
+  </div>
+
+  <!-- INFOS -->
+  <div class="grid">
+
+    <!-- ADHERENT -->
+    <div class="box">
+      <div class="title">
+        <span class="material-icons">person</span>
+        Adhérent
+      </div>
+      <p>{{ data.nom }} {{ data.prenom }}</p>
+      <p>{{ data.email }}</p>
+      <p>CIN : {{ data.cin }}</p>
+    </div>
+
+    <!-- CONJOINT -->
+    <div class="box" *ngIf="data.conjoint">
+      <div class="title">
+        <span class="material-icons">favorite</span>
+        Conjoint
+      </div>
+      <p>{{ data.conjoint.nom }} {{ data.conjoint.prenom }}</p>
+      <p>{{ data.conjoint.dateNaissance }}</p>
+      <p>CIN : {{ data.conjoint.cin }}</p>
+    </div>
+
+  </div>
+
+  <!-- ENFANTS -->
+  <div class="box" *ngIf="facture.enfants?.length > 0">
+    <div class="title">
+      <span class="material-icons">child_care</span>
+      Enfants
+    </div>
+
+    <div class="children">
+      <div *ngFor="let e of facture.enfants" class="child">
+        {{ e.nom }} {{ e.prenom }} - {{ e.dateNaissance }}
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENT -->
+  <div class="box">
+    <div class="title">
+      <span class="material-icons">event</span>
+      Événement
+    </div>
+    <p>{{ data.titre }}</p>
+    <p class="muted">{{ data.typeEvenement }}</p>
+  </div>
+
+  <table class="invoice-table">
+
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Qté</th>
+      <th>Prix Unitaire</th>
+      <th>Remise</th>
+      <th>Total Net</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <!-- ADHERENT -->
+    <tr>
+      <td>Adhérent</td>
+      <td>1</td>
+      <td>{{ facture.prixUnitaire }} DT</td>
+      <td>—</td>
+      <td>{{ facture.prixUnitaire }} DT</td>
+    </tr>
+
+    <!-- CONJOINT -->
+    <tr *ngIf="facture.nbAdultes > 1">
+      <td>Conjoint</td>
+      <td>1</td>
+      <td>{{ facture.prixUnitaire }} DT</td>
+
+      <td class="remise">
+        <span *ngIf="facture.remiseCouple > 0">
+          -{{ facture.remiseCouple }} DT (remise couple)
+        </span>
+        <span *ngIf="facture.remiseCouple === 0">—</span>
+      </td>
+
+      <td>
+        {{ facture.prixUnitaire - facture.remiseCouple }} DT
+      </td>
+    </tr>
+
+    <!-- ENFANTS -12 -->
+    <tr *ngIf="facture.nbEnfantsMoins12 > 0">
+      <td>Enfants (-12 ans)</td>
+      <td>{{ facture.nbEnfantsMoins12 }}</td>
+      <td>{{ facture.prixUnitaire }} DT</td>
+
+      <td class="remise">
+        <span *ngIf="facture.remiseEnfants > 0">
+          incluse
+        </span>
+        <span *ngIf="facture.remiseEnfants === 0">—</span>
+      </td>
+
+      <td>
+        {{ facture.nbEnfantsMoins12 * facture.prixUnitaire }} DT
+      </td>
+    </tr>
+
+    <!-- ENFANTS -18 -->
+    <tr *ngIf="facture.nbEnfantsMoins18 > 0">
+      <td>Enfants (-18 ans)</td>
+      <td>{{ facture.nbEnfantsMoins18 }}</td>
+      <td>{{ facture.prixUnitaire }} DT</td>
+
+      <td class="remise">
+        <span *ngIf="facture.remiseEnfants > 0">
+          incluse
+        </span>
+        <span *ngIf="facture.remiseEnfants === 0">—</span>
+      </td>
+
+      <td>
+        {{ facture.nbEnfantsMoins18 * facture.prixUnitaire }} DT
+      </td>
+    </tr>
+
+    <!-- ENFANTS +18 -->
+    <tr *ngIf="facture.nbEnfantsTotal - facture.nbEnfantsMoins12 - facture.nbEnfantsMoins18 > 0">
+      <td>Enfants (+18 ans)</td>
+
+      <td>
+        {{ facture.nbEnfantsTotal - facture.nbEnfantsMoins12 - facture.nbEnfantsMoins18 }}
+      </td>
+
+      <td>{{ facture.prixUnitaire }} DT</td>
+
+      <td>—</td>
+
+      <td>
+        {{
+          (facture.nbEnfantsTotal - facture.nbEnfantsMoins12 - facture.nbEnfantsMoins18)
+          * facture.prixUnitaire
+        }} DT
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+
+  <!-- TOTAL -->
+  <div class="total">
+    <div>
+      <span>Total</span>
+      <strong>{{ facture.totalFinal }} DT</strong>
+    </div>
+
+    <div class="remise" *ngIf="facture.remiseCouple > 0">
+      -{{ facture.remiseCouple }} DT (couple)
+    </div>
+
+    <div class="remise" *ngIf="facture.remiseEnfants > 0">
+      -{{ facture.remiseEnfants }} DT (enfants)
+    </div>
+  </div>
+
+  <!-- PDF -->
+  <button class="btn" (click)="downloadPDF()">
+    <span class="material-icons">picture_as_pdf</span>
+    Export PDF
+  </button>
 
 </div>
 

@@ -84,3 +84,146 @@
 .btn-pdf:hover {
   background-color: #2980b9;
 }
+.facture-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.facture-title {
+  margin-bottom: 15px;
+  color: #2e7d32;
+}
+
+.facture-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+}
+
+.facture-table th {
+  background: #f5f5f5;
+  padding: 10px;
+  text-align: left;
+}
+
+.facture-table td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.remise {
+  color: #e53935;
+  font-weight: bold;
+}
+
+.facture-summary .row {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 0;
+}
+
+.total-final {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.btn-pdf {
+  margin-top: 15px;
+  padding: 10px 15px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.invoice {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 700px;
+  margin: auto;
+  font-size: 14px;
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: gray;
+  font-size: 12px;
+}
+
+.grid {
+  display: flex;
+  gap: 10px;
+}
+
+.box {
+  flex: 1;
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+.children {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.child {
+  background: #e3f2fd;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.invoice-table th {
+  background: #f1f3f5;
+  text-align: left;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.invoice-table td {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.remise {
+  color: #e53935;
+  font-weight: 500;
+}
+
+.btn {
+  margin-top: 10px;
+  padding: 8px;
+  border: none;
+  background: #1976d2;
+  color: white;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

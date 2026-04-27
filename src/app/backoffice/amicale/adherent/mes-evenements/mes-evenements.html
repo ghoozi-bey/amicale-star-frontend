@@ -221,33 +221,28 @@
 
       <!-- 🔥 ENFANTS -->
       <div class="section" *ngIf="selectedInscription?.enfants?.length > 0">
-        <div class="section-title">
-          <span class="material-icons">child_care</span>
-          Enfants
-        </div>
+  <div class="section-title">
+    <span class="material-icons">child_care</span>
+    Enfants
+  </div>
 
-        <div class="section-card">
+  <div class="section-card">
 
-          <div *ngFor="let e of selectedInscription.enfants; let i = index">
+    <div *ngFor="let e of selectedInscription.enfants; let i = index">
 
-            <div class="row">
-              <span class="label">Enfant {{ i + 1 }}</span>
-              <span class="value">
-                {{ e.nom }} {{ e.prenom }}
-              </span>
-            </div>
-
-            <div class="row" *ngIf="e.dateNaissance">
-              <span class="label">Naissance</span>
-              <span class="value">{{ e.dateNaissance }}</span>
-            </div>
-
-            <hr>
-
-          </div>
-
-        </div>
+      <div class="row">
+        <span class="label">Enfant {{ i + 1 }}</span>
+        <span class="value">
+          {{ e }}
+        </span>
       </div>
+
+      <hr>
+
+    </div>
+
+  </div>
+</div>
 
     </div>
 
