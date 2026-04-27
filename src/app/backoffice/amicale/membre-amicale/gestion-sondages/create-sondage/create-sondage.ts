@@ -79,6 +79,7 @@ export class CreateSondageComponent {
     const question = this.fb.group({
       text: ['', Validators.required],
       type: ['CHOIX_UNIQUE'],
+      required: [true],
       choix: this.fb.array([
         this.fb.control(''),
         this.fb.control('')
@@ -200,6 +201,7 @@ export class CreateSondageComponent {
       questions: raw.questions.map((q: any) => ({
         text: q.text,
         type: q.type,
+        required: q.required ?? true,
         choix: q.type === 'TEXTE'
           ? []
           : q.choix.filter((c: string) => c.trim() !== '')

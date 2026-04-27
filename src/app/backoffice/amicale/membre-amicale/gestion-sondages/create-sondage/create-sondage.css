@@ -136,6 +136,29 @@ button {
   transform: translateY(-1px);
 }
 
+.required-toggle {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.required-toggle input[type="checkbox"] {
+  accent-color: #6366f1;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.required-toggle label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
 /* ===== ADD CHOICE ===== */
 .add-choice-btn {
   background: transparent;

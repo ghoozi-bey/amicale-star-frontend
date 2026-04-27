@@ -1,1 +1,62 @@
-<p>sondage-detail works!</p>
+<div class="page">
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="state">Chargement...</div>
+
+    <!-- Error -->
+    <div *ngIf="errorMessage" class="state error">
+        {{ errorMessage }}
+    </div>
+
+    <!-- Content -->
+    <div *ngIf="!loading && sondage" class="container">
+
+        <h2>{{ sondage.title }}</h2>
+        <p class="description">{{ sondage.description }}</p>
+
+        <!-- Questions -->
+        <div class="questions">
+
+        <div *ngFor="let q of sondage.questions" class="question">
+
+            <h4>{{ q.text }} <span *ngIf="q.required" class="required">*</span> </h4>
+
+            <!-- CHOIX UNIQUE -->
+            <div *ngIf="q.type === 'CHOIX_UNIQUE'">
+            <label *ngFor="let c of q.choixList">
+                <input type="radio"
+                    name="q{{q.id}}"
+                    (change)="selectUnique(q.id, c.id)">
+                {{ c.label }}
+            </label>
+            </div>
+
+            <!-- CHOIX MULTIPLE -->
+            <div *ngIf="q.type === 'CHOIX_MULTIPLE'">
+            <label *ngFor="let c of q.choixList">
+                <input type="checkbox"
+                    (change)="toggleMultiple(q.id, c.id)">
+                {{ c.label }}
+            </label>
+            </div>
+
+            <!-- TEXTE -->
+            <div *ngIf="q.type === 'TEXTE'">
+            <textarea
+                placeholder="Votre réponse..."
+                (input)="setText(q.id, $any($event.target).value)">
+            </textarea>
+            </div>
+
+        </div>
+
+        </div>
+
+        <!-- Submit -->
+        <button class="submit-btn" (click)="submit()">
+        Envoyer mes réponses
+        </button>
+
+    </div>
+
+</div>

@@ -102,6 +102,14 @@
         <option value="TEXTE">Réponse libre</option>
       </select>
 
+      <!-- REQUIRED -->
+      <div class="required-toggle">
+        <label>
+          <input type="checkbox" formControlName="required" />
+          Question obligatoire
+        </label>
+      </div>
+
       <!-- Choices -->
       <div *ngIf="q.get('type')?.value !== 'TEXTE'" formArrayName="choix" class="choices">
 

@@ -87,6 +87,7 @@
     <h4>
       {{ q.text }} 
       <span class="question-type">({{ formatType(q.type) }})</span>
+      <span *ngIf="q.required" class="required"> *</span>
     </h4>
 
     <!-- SINGLE -->

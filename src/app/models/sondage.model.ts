@@ -11,6 +11,7 @@ export interface Sondage {
 export interface Question {
   text: string;
   type: string;
+  required: boolean;
   choixList: Choix[];
 }
 

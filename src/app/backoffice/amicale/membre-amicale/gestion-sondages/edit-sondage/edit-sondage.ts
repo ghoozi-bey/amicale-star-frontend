@@ -105,6 +105,7 @@ export class EditSondageComponent implements OnInit {
     return this.fb.group({
       text: [q?.text || '', Validators.required],
       type: [q?.type || 'CHOIX_UNIQUE', Validators.required],
+      required: [q?.required ?? true],
       choix: this.fb.array(
         q?.type === 'TEXTE'
           ? []
@@ -171,6 +172,7 @@ export class EditSondageComponent implements OnInit {
       questions: formValue.questions.map((q: any) => ({
         text: q.text,
         type: q.type,
+        required: q.required ?? true,
         choix: q.type === 'TEXTE'
           ? []
           : q.choix.map((c: string) => c)

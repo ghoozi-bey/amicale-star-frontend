@@ -220,6 +220,12 @@
   margin-left: 6px;
 }
 
+.required {
+  color: rgb(230, 0, 0);
+  margin-left: 4px;
+  font-weight: bold;
+}
+
 /* ===== CHOICES ===== */
 .choices {
   display: flex;

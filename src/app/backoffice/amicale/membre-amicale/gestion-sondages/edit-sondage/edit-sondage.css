@@ -130,6 +130,22 @@ select:disabled {
   background: #f3f4f6;
 }
 
+.required-toggle {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.required-toggle input[type="checkbox"] {
+  accent-color: #6366f1;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
 /* ===== QUESTION HEADER ===== */
 .question-header {
   display: flex;

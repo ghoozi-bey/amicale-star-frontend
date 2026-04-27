@@ -24,16 +24,31 @@ export class SondageService {
   }
 
   // =========================
-  // GET ALL
+  // MY SONDAGES
+  // =========================
+  getMySondages() {
+    return this.http.get<Sondage[]>(`${this.api}/me`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+  }
+
+  // =========================
+  // GET ALL ACTIVE
   // =========================
   getActiveSondages() {
     return this.http.get<Sondage[]>(`${this.api}/actifs`);
   }
 
   // =========================
-  // GET BY ID
+  // GET BY ACTIVE BY ID
   // =========================
   getById(id: number) {
+    return this.http.get<Sondage>(`${this.api}/${id}`);
+  }
+
+  getActiveSondageById(id: number) {
     return this.http.get<Sondage>(`${this.api}/actifs/${id}`);
   }
   
@@ -99,15 +114,5 @@ export class SondageService {
     });
   }
 
-  // =========================
-  // MY SONDAGES
-  // =========================
-  getMySondages() {
-    return this.http.get<Sondage[]>(`${this.api}/me`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-  }
   
 }
