@@ -290,15 +290,24 @@ export class SondageDetailComponent implements OnInit {
         // preload answers
         res.answers.forEach((a: any) => {
 
-          if (a.texte) {
-            this.responses[a.questionId] = a.texte;
-          } 
-          else if (a.choixIds?.length === 1) {
-            this.responses[a.questionId] = a.choixIds[0];
-          } 
-          else {
-            this.responses[a.questionId] = a.choixIds;
+          const question = this.sondage.questions.find((q: any) => q.id === a.questionId);
+          const type = this.normalizeType(question.type);
+
+          // TEXT
+          if (type === 'TEXT') {
+            this.responses[a.questionId] = a.texte || '';
           }
+
+          // SINGLE
+          else if (type === 'SINGLE') {
+            this.responses[a.questionId] = a.choixIds?.[0] ?? null;
+          }
+
+          // MULTIPLE
+          else if (type === 'MULTIPLE') {
+            this.responses[a.questionId] = a.choixIds || []; // ✅ ALWAYS array
+          }
+
         });
 
         this.cdr.detectChanges();
