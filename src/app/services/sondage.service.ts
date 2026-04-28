@@ -114,5 +114,16 @@ export class SondageService {
     });
   }
 
+  getStats(id: number) {
+    return this.http.get(
+      `${this.api}/${id}/stats`
+    );
+  }
+
+  getParticipations(id: number) {
+    return this.http.get<any[]>(
+      `${this.api}/${id}/participations`
+    );
+  }
   
 }

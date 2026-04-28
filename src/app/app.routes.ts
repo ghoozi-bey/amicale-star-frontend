@@ -123,6 +123,13 @@ export const routes: Routes = [
       },
 
       {
+        path: 'gestion-sondages/:id/resultats',
+        loadComponent: () =>
+          import('./backoffice/amicale/membre-amicale/gestion-sondages/sondage-results/sondage-results')
+            .then(m => m.SondageResultsComponent)
+      },
+
+      {
         path: 'profile',
         loadComponent: () =>
           import('./pages/profile/profile').then(m => m.ProfileComponent)

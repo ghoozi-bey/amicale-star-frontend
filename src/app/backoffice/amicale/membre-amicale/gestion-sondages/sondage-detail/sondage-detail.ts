@@ -178,4 +178,12 @@ export class SondageDetailComponent implements OnInit {
       }
     });
   }
+
+  viewResults(): void {
+    this.router.navigate([
+      '/gestion-sondages',
+      this.sondage.id,
+      'resultats'
+    ]);
+  }
 }

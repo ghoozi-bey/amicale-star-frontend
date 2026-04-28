@@ -1,0 +1,209 @@
+<div class="container" *ngIf="!loading">
+
+  <h2>Résultats du sondage</h2>
+
+  <!-- TABS -->
+  <div class="tabs">
+
+    <button
+      [class.active]="activeTab === 'stats'"
+      (click)="activeTab = 'stats'">
+
+      Statistiques
+    </button>
+
+    <button
+      [class.active]="activeTab === 'participations'"
+      (click)="activeTab = 'participations'">
+
+      Participations
+    </button>
+
+  </div>
+
+  <!-- ========================= -->
+  <!-- STATS -->
+  <!-- ========================= -->
+
+  <div *ngIf="activeTab === 'stats'">
+
+    <div class="total-box">
+        Total participants : {{ stats?.totalParticipants }}
+    </div>
+
+    <div
+      class="question-card"
+      *ngFor="let q of stats?.questions">
+
+      <h4>{{ q.questionText }}</h4>
+
+      <!-- Questions with choices -->
+      <div *ngIf="q.choix.length > 0">
+
+        <div
+          class="choice"
+          *ngFor="let c of q.choix">
+
+          <span>
+            {{ c.label }}
+          </span>
+
+          <span>
+            {{ c.percentage }}%
+            ({{ c.count }} votes)
+          </span>
+
+        </div>
+
+      </div>
+
+      <button
+        *ngIf="q.choix.length > 0"
+        class="chart-btn"
+        (click)="toggleChart(q.questionId)">
+
+        {{
+            openedCharts[q.questionId]
+            ? 'Masquer graphique'
+            : 'Voir graphique'
+        }}
+
+      </button>
+
+      <button
+        *ngIf="q.choix.length > 0"
+        class="pie-btn"
+        (click)="togglePieChart(q.questionId)">
+
+        {{
+            openedPieCharts[q.questionId]
+            ? 'Masquer diagramme circulaire'
+            : 'Voir diagramme circulaire'
+        }}
+
+      </button>
+
+      <div *ngIf="openedCharts[q.questionId]">
+
+        <canvas
+            [id]="'chart-' + q.questionId"
+            class="chart-canvas">
+        </canvas>
+
+      </div>
+
+      <div *ngIf="openedPieCharts[q.questionId]">
+
+        <canvas
+            [id]="'pie-chart-' + q.questionId"
+            class="pie-chart-canvas">
+        </canvas>
+
+      </div>
+
+      <!-- Open question -->
+        <div
+        *ngIf="q.choix.length === 0"
+        class="open-question-section">
+
+        <button
+            class="open-btn"
+            (click)="toggleOpenQuestion(q.questionId)">
+
+            {{
+            openedQuestions[q.questionId]
+                ? 'Masquer les réponses'
+                : 'Voir les réponses'
+            }}
+
+        </button>
+
+        <div
+            *ngIf="openedQuestions[q.questionId]"
+            class="open-responses">
+
+            <!-- HAS RESPONSES -->
+            <div *ngIf="getOpenResponses(q.questionText).length > 0">
+
+            <div
+                class="response-card"
+                *ngFor="let r of getOpenResponses(q.questionText)">
+
+                <strong>{{ r.nom + ' ' + r.prenom }}</strong>
+
+                <p>{{ r.reponse }}</p>
+
+            </div>
+
+            </div>
+
+            <!-- NO RESPONSES -->
+            <div
+            *ngIf="getOpenResponses(q.questionText).length === 0"
+            class="no-response">
+
+            Aucune réponse pour cette question.
+
+            </div>
+
+        </div>
+
+        </div>
+
+    </div>
+
+  </div>
+
+  <!-- ========================= -->
+  <!-- PARTICIPATIONS -->
+  <!-- ========================= -->
+
+  <div *ngIf="activeTab === 'participations'">
+
+    <div
+      class="participant-card"
+      *ngFor="let p of participations">
+
+      <div class="participant-header">
+
+        <h3>{{ p.nom + ' ' + p.prenom }}</h3>
+
+        <p>{{ p.email }}</p>
+
+      </div>
+
+      <div *ngFor="let q of stats?.questions">
+
+        <strong>{{ q.questionText }}</strong>
+
+        <!-- HAS ANSWERS -->
+        <ul
+            *ngIf="getParticipantResponses(p, q.questionText).length > 0">
+
+            <li
+            *ngFor="
+                let r of getParticipantResponses(p, q.questionText)
+            ">
+
+            {{ r }}
+
+            </li>
+
+        </ul>
+
+        <!-- NO ANSWER -->
+        <div
+            *ngIf="getParticipantResponses(p, q.questionText).length === 0"
+            class="no-answer">
+
+            Pas de réponse
+
+        </div>
+
+        </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -44,7 +44,7 @@
       Rejeter
     </button>
 
-    <!-- PUBLISHED -->
+    <!-- PUBLISHED actions -->
     <button 
       *ngIf="sondage?.statut === 'PUBLISHED'"
       class="unpublish-btn"
@@ -60,12 +60,20 @@
       Modifier
     </button>
 
-    <!-- DELETE -->
+    <!-- REJECTED actions -->
     <button 
       *ngIf="sondage.statut === 'REJECTED'"
       class="delete-btn"
       (click)="deleteSondage()">
       Supprimer
+    </button>
+
+    
+    <button
+      *ngIf="sondage?.statut === 'ACTIF' || sondage?.statut === 'TERMINE'"
+      class="stats-btn"
+      (click)="viewResults()">
+      Voir résultats
     </button>
 
   </div>

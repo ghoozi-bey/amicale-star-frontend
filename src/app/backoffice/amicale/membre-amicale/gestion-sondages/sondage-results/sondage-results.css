@@ -1,0 +1,431 @@
+.container {
+  max-width: 950px;
+  margin: 30px auto;
+  padding: 25px;
+}
+
+/* ===== TITLE ===== */
+
+h2 {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #1e293b;
+}
+
+/* ===== TABS ===== */
+
+.tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.tabs button {
+  border: none;
+  padding: 12px 22px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+
+  background: #e2e8f0;
+  color: #334155;
+
+  transition: all 0.25s ease;
+}
+
+.tabs button:hover {
+  transform: translateY(-2px);
+}
+
+.tabs button.active {
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: white;
+  box-shadow: 0 8px 20px rgba(99,102,241,0.25);
+}
+
+/* ===== TOTAL ===== */
+
+.total-box {
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: white;
+
+  padding: 18px 22px;
+  border-radius: 18px;
+
+  font-size: 17px;
+  font-weight: 600;
+
+  margin-bottom: 25px;
+
+  box-shadow: 0 10px 25px rgba(37,99,235,0.25);
+}
+
+/* ===== QUESTION CARDS ===== */
+
+.question-card {
+  background: white;
+
+  padding: 24px;
+  border-radius: 22px;
+
+  margin-bottom: 24px;
+
+  box-shadow:
+    0 10px 30px rgba(15,23,42,0.06);
+
+  border: 1px solid #eef2ff;
+
+  transition: all 0.25s ease;
+}
+
+.question-card:hover {
+  transform: translateY(-3px);
+}
+
+.question-card h4 {
+  margin-bottom: 18px;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  color: #1e293b;
+}
+
+/* ===== CHOICES ===== */
+
+.choice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+
+  border-radius: 14px;
+
+  background: #f8fafc;
+
+  transition: 0.2s ease;
+}
+
+.choice:hover {
+  background: #eef2ff;
+}
+
+.choice span:first-child {
+  font-weight: 600;
+  color: #334155;
+}
+
+.choice span:last-child {
+  font-weight: 700;
+  color: #2563eb;
+}
+
+/* ===== CHART ===== */
+
+.chart-btn {
+  margin-top: 10px;
+
+  border: none;
+
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+
+  color: white;
+
+  padding: 10px 16px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: 0.25s ease;
+}
+
+.chart-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(99,102,241,0.25);
+}
+
+.chart-canvas {
+  margin-top: 20px;
+  max-height: 320px;
+}
+
+.pie-btn {
+  margin-top: 12px;
+  margin-left: 12px;
+
+  border: none;
+
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+
+  color: white;
+
+  padding: 10px 16px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: 0.25s ease;
+}
+
+.pie-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(20,184,166,0.25);
+}
+
+.pie-chart-canvas {
+  margin-top: 20px;
+  max-height: 340px;
+}
+
+/* ===== OPEN QUESTIONS ===== */
+
+.open-question-section {
+  margin-top: 15px;
+}
+
+.open-btn {
+  border: none;
+
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
+  color: white;
+
+  padding: 10px 18px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: 0.25s ease;
+}
+
+.open-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(245,158,11,0.25);
+}
+
+.open-responses {
+  margin-top: 18px;
+}
+
+.response-card {
+  background: #fff7ed;
+
+  border-left: 5px solid #f59e0b;
+
+  padding: 14px 16px;
+
+  border-radius: 12px;
+
+  margin-bottom: 12px;
+}
+
+.response-card strong {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #9a3412;
+}
+
+.response-card p {
+  margin: 0;
+
+  color: #444;
+}
+
+.no-response {
+  margin-top: 15px;
+
+  padding: 14px;
+
+  border-radius: 12px;
+
+  background: #f8fafc;
+
+  color: #64748b;
+
+  font-weight: 500;
+
+  text-align: center;
+
+  border: 1px dashed #cbd5e1;
+}
+
+/* ===== ANIMATION ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.open-responses,
+.chart-canvas,
+.pie-chart-canvas {
+  animation: fadeIn 0.3s ease;
+}
+
+
+
+/* ===== PARTICIPATIONS ===== */
+
+.participant-card {
+  background: #ffffff;
+
+  padding: 24px;
+  border-radius: 22px;
+
+  margin-bottom: 24px;
+
+  border: 1px solid #e2e8f0;
+
+  box-shadow:
+    0 8px 24px rgba(15, 23, 42, 0.05);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.participant-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #cbd5e1;
+
+  box-shadow:
+    0 14px 32px rgba(15, 23, 42, 0.08);
+}
+
+/* ===== HEADER ===== */
+
+.participant-header {
+  background:
+    linear-gradient(
+      135deg,
+      #f8fafc,
+      #eef2ff
+    );
+
+  padding: 16px 20px;
+
+  border-radius: 18px;
+
+  margin-bottom: 20px;
+
+  border: 1px solid #e0e7ff;
+}
+
+/* ===== NAME ===== */
+
+.participant-card h3 {
+  margin-bottom: 4px;
+
+  font-size: 21px;
+  font-weight: 700;
+
+  color: #0f172a;
+
+  text-align: center;
+}
+
+/* ===== EMAIL ===== */
+
+.participant-card p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+
+  text-align: center;
+}
+
+/* ===== QUESTIONS ===== */
+
+.participant-card strong {
+  display: block;
+
+  margin-top: 20px;
+  margin-bottom: 10px;
+
+  color: #312e81;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* ===== ANSWERS ===== */
+
+.participant-card ul {
+  padding-left: 18px;
+  margin: 0;
+}
+
+.participant-card li {
+  margin-bottom: 10px;
+
+  color: #334155;
+
+  line-height: 1.5;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+
+  padding: 10px 14px;
+
+  border-radius: 14px;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.participant-card li:hover {
+  background: #f1f5f9;
+
+  border-color: #cbd5e1;
+
+  transform: translateX(2px);
+}
+
+/* ===== EMPTY ANSWER ===== */
+
+.no-answer {
+  margin-top: 8px;
+
+  color: #94a3b8;
+
+  font-style: italic;
+
+  background: #f8fafc;
+
+  border: 1px dashed #cbd5e1;
+
+  padding: 10px 14px;
+
+  border-radius: 12px;
+}
