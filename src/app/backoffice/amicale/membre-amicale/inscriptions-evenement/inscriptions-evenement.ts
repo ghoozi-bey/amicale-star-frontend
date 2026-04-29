@@ -10,6 +10,7 @@ import { ChangeDetectorRef } from '@angular/core';
   imports: [CommonModule],
   templateUrl: './inscriptions-evenement.html',
   styleUrls: ['./inscriptions-evenement.css'],
+  
 })
 export class InscriptionsEvenement implements OnInit {
 

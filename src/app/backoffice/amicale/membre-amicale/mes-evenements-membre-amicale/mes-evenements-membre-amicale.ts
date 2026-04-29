@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { EvenementService } from '../../../../services/evenement';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-mes-evenements-membre-amicale',
@@ -25,20 +26,48 @@ export class MesEvenementsMembreAmicaleComponent implements OnInit {
     this.loadEvents();
   }
 
-  loadEvents() {
-    this.loading = true;
+  
 
-    // ✅ FIX ICI 🔥
-    this.events$ = this.eventService.getEvenementsCrees();
+loadEvents() {
+  this.loading = true;
 
-    this.events$.subscribe({
-      next: () => this.loading = false,
-      error: (err) => {
-        console.error(err); // 🔥 debug
-        this.loading = false;
-      }
-    });
-  }
+  this.events$ = this.eventService.getEvenementsCrees().pipe(
+    map((events: any[]) => {
+
+      const statutOrder: any = {
+        'ACTIF': 1,
+        'EN_ATTENTE': 2,
+        'TERMINE': 3,
+        'ARCHIVE': 4
+      };
+
+      // ✅ TRI
+      const sorted = events.sort((a, b) => {
+
+        if (statutOrder[a.statut] !== statutOrder[b.statut]) {
+          return statutOrder[a.statut] - statutOrder[b.statut];
+        }
+
+        return new Date(b.dateDebut).getTime() - new Date(a.dateDebut).getTime();
+      });
+
+      // ✅ BADGE RECENT
+      let count = 0;
+      sorted.forEach(e => {
+        if (e.statut === 'ACTIF' && count < 3) {
+          e.isRecent = true;
+          count++;
+        } else {
+          e.isRecent = false;
+        }
+      });
+
+      return sorted;
+    })
+  );
+
+  this.loading = false;
+}
 
   deleteEvent(id: number) {
     if (confirm("Supprimer cet événement ?")) {

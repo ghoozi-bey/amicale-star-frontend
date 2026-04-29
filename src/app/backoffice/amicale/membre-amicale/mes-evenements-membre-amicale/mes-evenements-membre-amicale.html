@@ -10,6 +10,9 @@
         [src]="event.photoUrl"
         class="event-image"
       />
+      <div class="badge-recent" *ngIf="event.isRecent">
+      Récent
+      </div>
 
       <span class="status-badge"
   [ngClass]="{
