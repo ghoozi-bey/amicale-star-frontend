@@ -195,6 +195,7 @@ export class AdminEditUserComponent {
     }).subscribe({
       next: () => {
         this.successMessage = '✅ Utilisateur mis à jour';
+        this.cdr.detectChanges();
 
         setTimeout(() => {
           this.router.navigate(['/admin-users']);
