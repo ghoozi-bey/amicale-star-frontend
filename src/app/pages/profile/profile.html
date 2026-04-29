@@ -4,6 +4,7 @@
 </div>
 
 <!-- PAGE -->
+ 
 <div class="profile-container">
 
   <h2>Modifier mon profil</h2>
@@ -33,6 +34,7 @@
         </span>
 
         <input 
+          #fileInput
           type="file"
           (change)="onFileSelected($event)"
           class="file-input"

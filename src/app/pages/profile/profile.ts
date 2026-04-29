@@ -21,6 +21,7 @@ export class ProfileComponent implements OnInit {
   userPhoto: string | null = null;
   selectedFile: File | null = null;
   preview: string | null = null;
+  avatarVersion: number = Date.now();
 
   // 🔥 FIX SUPPRESSION
   removePhotoFlag = false;
@@ -138,6 +139,8 @@ export class ProfileComponent implements OnInit {
     if (this.selectedFile) {
       reader.readAsDataURL(this.selectedFile);
     }
+    // 🔥 IMPORTANT : reset input
+    event.target.value = '';
   }
 
   update() {
@@ -249,9 +252,13 @@ export class ProfileComponent implements OnInit {
   }
 
   getAvatarUrl(): string {
-    if (this.preview) return this.preview;
-    if (this.userPhoto) return this.userPhoto;
-    return 'assets/default-pfp.jpg';
+  if (this.preview) return this.preview;
+
+  if (this.userPhoto) {
+    return this.userPhoto + '?v=' + this.avatarVersion;
   }
+
+  return 'assets/default-pfp.jpg';
+}
 
 }
