@@ -1,0 +1,26 @@
+<!-- Bouton flottant -->
+<div class="chatbot-button" (click)="toggleChat()">
+  🤖
+</div>
+
+<!-- Fenêtre chatbot -->
+<div class="chatbot-window" *ngIf="isOpen">
+  <div class="chat-header">
+    Assistant STAR
+    <span class="close-btn" (click)="toggleChat()">✖</span>
+  </div>
+
+  <div class="chat-body">
+    <div *ngFor="let msg of messages"
+         [ngClass]="msg.sender === 'user' ? 'user-msg' : 'bot-msg'">
+      {{ msg.text }}
+    </div>
+  </div>
+
+  <div class="chat-footer">
+    <input [(ngModel)]="userInput"
+           (keyup.enter)="sendMessage()"
+           placeholder="Écrire un message..." />
+    <button (click)="sendMessage()">➤</button>
+  </div>
+</div>
