@@ -16,6 +16,9 @@ export class InscriptionsEvenement implements OnInit {
   inscriptions: any[] = [];
   eventId!: number;
   loading = true;
+  currentPage = 0;
+pageSize = 5;
+totalPages = 0;
 
   constructor(
   private route: ActivatedRoute,
@@ -36,46 +39,60 @@ export class InscriptionsEvenement implements OnInit {
 }
 
   loadInscriptions() {
-    this.loading = true;
+  this.loading = true;
 
-    this.http.get<any[]>(`http://localhost:8080/api/inscriptions/event/${this.eventId}`)
-      .subscribe({
-        next: (data) => {
-          this.inscriptions = data;
-          this.loading = false;
-          this.cdr.detectChanges(); // 🔥
-        },
-        error: (err) => {
-          console.error(err);
-          this.loading = false;
-        }
-      });
-  }
+  this.http.get<any>(
+    `http://localhost:8080/api/inscriptions/event/${this.eventId}?page=${this.currentPage}&size=${this.pageSize}`
+  ).subscribe({
+    next: (data) => {
+
+      // 🔥 compatible pagination Spring
+      if (data.content) {
+        this.inscriptions = data.content;
+        this.totalPages = data.totalPages;
+      } 
+      // 🔥 fallback (si jamais backend sans pagination)
+      else {
+        this.inscriptions = data;
+        this.totalPages = 1;
+      }
+
+      this.loading = false;
+      this.cdr.detectChanges(); // tu peux garder 👍
+    },
+    error: (err) => {
+      console.error(err);
+      this.loading = false;
+    }
+  });
+}
 
   // 👁️ DETAILS INSCRIPTION (IMPORTANT FIX)
   voirDetails(inscriptionId: number) {
   this.router.navigate(['/gestion-inscriptions', inscriptionId]);
 }
 
-  // ✅ UI ONLY (temporaire)
   accepter(inscriptionId: number) {
 
   if (!confirm("Confirmer validation ?")) return;
+
+  // 🔥 optimistic update (instantané)
+  this.inscriptions = this.inscriptions.map(i =>
+    i.id === inscriptionId ? { ...i, statut: 'ACCEPTEE' } : i
+  );
 
   this.http.put(
     `http://localhost:8080/api/inscriptions/${inscriptionId}/statut?statut=ACCEPTEE`,
     {}
   ).subscribe({
     next: () => {
-
-      // 🔥 update UI direct
-      const insc = this.inscriptions.find(i => i.id === inscriptionId);
-      if (insc) insc.statut = 'ACCEPTEE';
-
-      this.inscriptions = [...this.inscriptions]; // refresh Angular
+      // rien à faire (déjà mis à jour)
     },
     error: (err) => {
       console.error("Erreur validation", err);
+
+      // 🔁 rollback si erreur
+      this.loadInscriptions();
     }
   });
 }
@@ -85,20 +102,23 @@ refuser(inscriptionId: number) {
 
   if (!confirm("Confirmer refus ?")) return;
 
+  // 🔥 optimistic update (instantané)
+  this.inscriptions = this.inscriptions.map(i =>
+    i.id === inscriptionId ? { ...i, statut: 'REFUSEE' } : i
+  );
+
   this.http.put(
     `http://localhost:8080/api/inscriptions/${inscriptionId}/statut?statut=REFUSEE`,
     {}
   ).subscribe({
     next: () => {
-
-      // 🔥 update UI direct
-      const insc = this.inscriptions.find(i => i.id === inscriptionId);
-      if (insc) insc.statut = 'REFUSEE';
-
-      this.inscriptions = [...this.inscriptions]; // refresh Angular
+      // rien à faire
     },
     error: (err) => {
       console.error("Erreur refus", err);
+
+      // 🔁 rollback si erreur
+      this.loadInscriptions();
     }
   });
 }
@@ -107,5 +127,18 @@ refuser(inscriptionId: number) {
 }
 goBack() {
   window.history.back();
+}
+nextPage() {
+  if (this.currentPage < this.totalPages - 1) {
+    this.currentPage++;
+    this.loadInscriptions();
+  }
+}
+
+prevPage() {
+  if (this.currentPage > 0) {
+    this.currentPage--;
+    this.loadInscriptions();
+  }
 }
 }
