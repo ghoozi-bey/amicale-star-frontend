@@ -1,26 +1,65 @@
 <!-- Bouton flottant -->
 <div class="chatbot-button" (click)="toggleChat()">
-  🤖
+  <img src="assets/chatbotimg.png" alt="chatbot">
 </div>
 
 <!-- Fenêtre chatbot -->
-<div class="chatbot-window" *ngIf="isOpen">
+<div class="chatbot-window" *ngIf="isOpen" (click)="$event.stopPropagation()">
+
+  <!-- HEADER -->
   <div class="chat-header">
-    Assistant STAR
+    <div class="header-left">
+      <img src="assets/chatbotimg.png" alt="bot">
+      <span>Assistant STAR</span>
+    </div>
     <span class="close-btn" (click)="toggleChat()">✖</span>
   </div>
 
-  <div class="chat-body">
-    <div *ngFor="let msg of messages"
-         [ngClass]="msg.sender === 'user' ? 'user-msg' : 'bot-msg'">
-      {{ msg.text }}
+  <!-- BODY -->
+  <div class="chat-body" #chatBody>
+
+    <div *ngFor="let msg of messages">
+
+      <!-- ✅ MESSAGE TEXTE -->
+      <div *ngIf="msg.type === 'text'"
+           [ngClass]="msg.sender === 'user' ? 'user-msg' : 'bot-msg'">
+        {{ msg.text }}
+      </div>
+
+      <!-- ✅ CARTES EVENEMENTS -->
+      <div *ngIf="msg.type === 'events'" class="events-container">
+
+  <div *ngFor="let event of msg.events"
+       class="event-card"
+       (click)="goToEvent(event.id)">
+
+    <img [src]="event.imageUrl ? event.imageUrl : 'assets/default-event.jpg'" />
+
+    <div class="event-info">
+      <h4>{{ event.nom || event.titre || 'Événement' }}</h4>
+      <p>📅 {{ event.dateDebut }}</p>
+      <p>💰 {{ event.prix }} DT</p>
     </div>
+
   </div>
 
+</div>
+
+    </div>
+
+    <!-- TYPING -->
+    <div *ngIf="isTyping" class="bot-msg typing">
+      <span></span><span></span><span></span>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
   <div class="chat-footer">
     <input [(ngModel)]="userInput"
            (keyup.enter)="sendMessage()"
            placeholder="Écrire un message..." />
     <button (click)="sendMessage()">➤</button>
   </div>
+
 </div>

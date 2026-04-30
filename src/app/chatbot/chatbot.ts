@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../chat';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chatbot',
@@ -12,12 +13,25 @@ import { ChatService } from '../chat';
 })
 export class ChatbotComponent {
 
-  // ✅ PAS besoin de @Inject ici
-  constructor(private chatService: ChatService) {}
+  constructor(
+    private chatService: ChatService,
+    private cd: ChangeDetectorRef,
+    private router: Router
+  ) {}
 
   isOpen = false;
-  messages: { text: string; sender: 'user' | 'bot' }[] = [];
+
+  messages: {
+    text?: string;
+    sender: 'user' | 'bot';
+    type: 'text' | 'events';
+    events?: any[];
+  }[] = [];
+
   userInput: string = '';
+  isTyping = false;
+
+  @ViewChild('chatBody') chatBody!: ElementRef;
 
   toggleChat() {
     this.isOpen = !this.isOpen;
@@ -26,22 +40,85 @@ export class ChatbotComponent {
   sendMessage() {
     if (!this.userInput.trim()) return;
 
-    // message utilisateur
-    this.messages.push({ text: this.userInput, sender: 'user' });
+    // 🔥 USER MESSAGE (immutable update)
+    this.messages = [
+      ...this.messages,
+      {
+        text: this.userInput,
+        sender: 'user',
+        type: 'text'
+      }
+    ];
 
-    // appel backend
-    this.chatService.sendMessage(this.userInput).subscribe({
-      next: (res: string) => {
-        this.messages.push({ text: res, sender: 'bot' });
+    this.isTyping = true;
+
+    const msg = this.userInput;
+    this.userInput = '';
+
+    this.chatService.sendMessage(msg).subscribe({
+
+      next: (res: any) => {
+
+        this.isTyping = false;
+
+        // 🔥 EVENTS
+        if (res.type === 'events') {
+          this.messages = [
+            ...this.messages,
+            {
+              sender: 'bot',
+              type: 'events',
+              events: res.events
+            }
+          ];
+        }
+
+        // 🔥 TEXT
+        else if (res.type === 'text') {
+          this.messages = [
+            ...this.messages,
+            {
+              text: res.message,
+              sender: 'bot',
+              type: 'text'
+            }
+          ];
+        }
+
+        // ✅ FORCE REFRESH UI
+        this.cd.detectChanges();
+
+        this.scrollToBottom();
       },
+
       error: () => {
-        this.messages.push({
-          text: "Erreur serveur ❌",
-          sender: 'bot'
-        });
+
+        this.isTyping = false;
+
+        this.messages = [
+          ...this.messages,
+          {
+            text: "Erreur serveur ❌",
+            sender: 'bot',
+            type: 'text'
+          }
+        ];
+
+        this.cd.detectChanges();
       }
     });
+  }
 
-    this.userInput = '';
+  scrollToBottom() {
+    setTimeout(() => {
+      if (this.chatBody) {
+        this.chatBody.nativeElement.scrollTop =
+          this.chatBody.nativeElement.scrollHeight;
+      }
+    }, 50);
+  }
+
+  goToEvent(id: number) {
+    this.router.navigate(['/evenement', id]);
   }
 }
