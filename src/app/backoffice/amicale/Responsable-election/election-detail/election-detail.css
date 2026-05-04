@@ -1,0 +1,304 @@
+/* ===== PAGE ===== */
+
+.detail-card {
+  max-width: 850px;
+
+  margin: 40px auto;
+
+  padding: 32px;
+
+  background: #ffffff;
+
+  border-radius: 24px;
+
+  border: 1px solid #e2e8f0;
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.06);
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 24px;
+}
+
+/* ===== STATUS ===== */
+
+.status {
+  align-self: flex-start;
+
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  background: #dbeafe;
+
+  color: #1d4ed8;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+/* ===== ACTIONS ===== */
+
+.actions {
+  display: flex;
+
+  gap: 14px;
+
+  flex-wrap: wrap;
+
+  margin-top: 24px;
+}
+
+/* ===== BUTTON BASE ===== */
+
+.actions button {
+  border: none;
+
+  padding: 12px 18px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+/* ===== HOVER ===== */
+
+.actions button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+/* ===== EDIT ===== */
+
+.edit-btn {
+  background: #e0e7ff;
+
+  color: #4338ca;
+}
+
+.edit-btn:hover {
+  background: #c7d2fe;
+}
+
+/* ===== PUBLISH ===== */
+
+.publish-btn {
+  background: linear-gradient(
+    135deg,
+    #10b981,
+    #059669
+  );
+
+  color: white;
+}
+
+.publish-btn:hover {
+  box-shadow:
+    0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+/* ===== UNPUBLISH ===== */
+
+.unpublish-btn {
+  background: #fee2e2;
+
+  color: #dc2626;
+}
+
+.unpublish-btn:hover {
+  background: #fecaca;
+}
+
+/* ===== STATS ===== */
+
+.stats-btn {
+  background: #dbeafe;
+
+  color: #2563eb;
+}
+
+.stats-btn:hover {
+  background: #bfdbfe;
+}
+
+/* ===== ROLE ===== */
+
+.role-btn {
+  background: #fef3c7;
+
+  color: #d97706;
+}
+
+/* ===== DELETE ===== */
+
+.delete-btn {
+  background: #dc2626;
+
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #b91c1c;
+}
+
+/* ===== SUCCESS ===== */
+
+.success-msg {
+  margin-top: 18px;
+
+  padding: 14px;
+
+  border-radius: 14px;
+
+  background: #dcfce7;
+
+  color: #166534;
+
+  border-left: 4px solid #22c55e;
+
+  font-size: 14px;
+
+  font-weight: 500;
+}
+
+/* ===== ERROR ===== */
+
+.error-msg {
+  margin-top: 18px;
+
+  padding: 14px;
+
+  border-radius: 14px;
+
+  background: #fee2e2;
+
+  color: #991b1b;
+
+  border-left: 4px solid #ef4444;
+
+  font-size: 14px;
+
+  font-weight: 500;
+}
+
+/* ===== DISABLED ===== */
+
+.actions button:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+/* ===== TITLE ===== */
+
+h2 {
+  margin: 0;
+
+  font-size: 30px;
+
+  font-weight: 700;
+
+  color: #0f172a;
+
+  line-height: 1.2;
+}
+
+/* ===== DESCRIPTION ===== */
+
+.description {
+  margin: 0;
+
+  color: #475569;
+
+  font-size: 15px;
+
+  line-height: 1.8;
+
+  white-space: pre-line;
+}
+
+/* ===== DATES ===== */
+
+.dates {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  padding: 20px;
+
+  border-radius: 18px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+}
+
+.dates p {
+  margin: 0;
+
+  color: #334155;
+
+  font-size: 14px;
+
+  font-weight: 500;
+}
+
+/* ===== CREATOR ===== */
+
+.creator {
+  padding-top: 10px;
+
+  border-top: 1px solid #e2e8f0;
+
+  color: #64748b;
+
+  font-size: 14px;
+
+  font-weight: 500;
+}
+
+/* ===== LOADING ===== */
+
+.loading {
+  max-width: 850px;
+
+  margin: 40px auto;
+
+  padding: 18px;
+
+  border-radius: 16px;
+
+  background: #eff6ff;
+
+  color: #2563eb;
+
+  font-weight: 600;
+
+  text-align: center;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+
+  .detail-card {
+    margin: 20px;
+
+    padding: 24px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+}

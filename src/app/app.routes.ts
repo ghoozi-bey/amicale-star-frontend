@@ -7,6 +7,9 @@ import { GestionEvenementsComponent } from './backoffice/amicale/membre-amicale/
 
 import { authGuard } from './services/auth.guard';
 import { CreateElection } from './backoffice/amicale/Responsable-election/create-election/create-election';
+import { ListElections } from './backoffice/amicale/Responsable-election/list-elections/list-elections';
+import { ElectionDetail } from './backoffice/amicale/Responsable-election/election-detail/election-detail';
+import { EditElection } from './backoffice/amicale/Responsable-election/edit-election/edit-election';
 
 export const routes: Routes = [
 
@@ -178,6 +181,18 @@ export const routes: Routes = [
       {
         path: 'gestion-election/create',
         component: CreateElection
+      },
+      {
+        path: 'gestion-election',
+        component: ListElections
+      },
+      {
+        path: 'gestion-election/:id',
+        component: ElectionDetail
+      },
+      {
+        path: 'gestion-election/edit/:id',
+        component: EditElection
       },
 
     ]

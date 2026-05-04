@@ -1,0 +1,218 @@
+/* ===== FORM ===== */
+
+form {
+  max-width: 860px;
+
+  margin: 40px auto;
+
+  padding: 32px;
+
+  background: #ffffff;
+
+  border-radius: 22px;
+
+  border: 1px solid #f1f5f9;
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.05);
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 24px;
+}
+
+/* ===== HEADER ===== */
+
+.header h2 {
+  margin: 0;
+
+  font-size: 26px;
+
+  font-weight: 700;
+
+  color: #0f172a;
+}
+
+.subtitle {
+  margin-top: 4px;
+
+  font-size: 14px;
+
+  color: #64748b;
+}
+
+/* ===== LABELS ===== */
+
+label {
+  font-size: 13px;
+
+  color: #475569;
+
+  font-weight: 600;
+
+  margin-bottom: -14px;
+}
+
+/* ===== INPUTS ===== */
+
+input,
+textarea {
+  width: 100%;
+
+  padding: 14px;
+
+  border-radius: 14px;
+
+  border: 1px solid #e2e8f0;
+
+  background: #ffffff;
+
+  font-size: 14px;
+
+  transition: all 0.2s ease;
+}
+
+textarea {
+  min-height: 150px;
+
+  resize: vertical;
+}
+
+/* ===== FOCUS ===== */
+
+input:focus,
+textarea:focus {
+  outline: none;
+
+  border-color: #6366f1;
+
+  box-shadow:
+    0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+/* ===== INVALID ===== */
+
+input.invalid,
+textarea.invalid {
+  border: 1px solid #ef4444;
+
+  background: #fef2f2;
+}
+
+/* ===== DATES ===== */
+
+.date-group {
+  display: flex;
+
+  gap: 18px;
+}
+
+.date-group div {
+  flex: 1;
+}
+
+/* ===== BUTTON ===== */
+
+.submit-btn {
+  border: none;
+
+  padding: 14px;
+
+  border-radius: 14px;
+
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8
+  );
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 24px rgba(37, 99, 235, 0.25);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+
+  cursor: not-allowed;
+}
+
+/* ===== SUCCESS ===== */
+
+.success-msg {
+  padding: 14px;
+
+  border-radius: 14px;
+
+  background: #dcfce7;
+
+  color: #166534;
+
+  border-left: 4px solid #22c55e;
+
+  font-size: 14px;
+
+  font-weight: 500;
+}
+
+/* ===== ERROR ===== */
+
+.error-msg {
+  padding: 14px;
+
+  border-radius: 14px;
+
+  background: #fee2e2;
+
+  color: #991b1b;
+
+  border-left: 4px solid #ef4444;
+
+  font-size: 14px;
+
+  font-weight: 500;
+}
+
+/* ===== FIELD ERROR ===== */
+
+.field-error {
+  color: #dc2626;
+
+  font-size: 12px;
+
+  margin-top: 6px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+
+  form {
+    margin: 20px;
+
+    padding: 24px;
+  }
+
+  .date-group {
+    flex-direction: column;
+  }
+
+  .header h2 {
+    font-size: 22px;
+  }
+}

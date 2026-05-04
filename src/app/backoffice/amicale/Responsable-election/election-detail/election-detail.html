@@ -1,0 +1,145 @@
+<div *ngIf="loading">
+  Chargement...
+</div>
+
+<div
+  *ngIf="!loading"
+  class="detail-card"
+>
+
+  <div class="status">
+    {{ election.statut }}
+  </div>
+
+  <div class="actions">
+
+    <!-- ===== BROUILLON ===== -->
+
+    <ng-container *ngIf="election.statut === 'BROUILLON'">
+
+      <button
+        class="edit-btn"
+        [routerLink]="['/gestion-election/edit', election.id]"
+      >
+        ✏️ Modifier
+      </button>
+
+      <button
+        class="publish-btn"
+        (click)="publishElection()"
+      >
+        🚀 Publier
+      </button>
+
+    </ng-container>
+
+    <!-- ===== PUBLISHED ===== -->
+
+    <ng-container *ngIf="election.statut === 'PUBLIEE'">
+
+      <button
+        class="unpublish-btn"
+        (click)="unpublishElection()"
+      >
+        ❌ Annuler publication
+      </button>
+
+    </ng-container>
+
+    <!-- ===== ACTIF ===== -->
+
+    <ng-container *ngIf="election.statut === 'ACTIF'">
+
+      <button
+        class="stats-btn"
+        (click)="goToStats()"
+      >
+        📊 Voir statistiques
+      </button>
+
+    </ng-container>
+
+    <!-- ===== TERMINEE ===== -->
+
+    <ng-container *ngIf="election.statut === 'TERMINEE'">
+
+      <button
+        class="role-btn"
+        disabled
+      >
+        🏆 Accorder rôle
+      </button>
+
+      <button
+        class="stats-btn"
+        disabled
+      >
+        📊 Voir statistiques
+      </button>
+
+    </ng-container>
+
+    <!-- ===== REJECTED ===== -->
+
+    <ng-container *ngIf="election.statut === 'REJETEE'">
+
+      <button
+        class="delete-btn"
+        (click)="deleteElection()"
+      >
+        🗑️ Supprimer
+      </button>
+
+    </ng-container>
+
+  </div>
+
+  <!-- SUCCESS -->
+
+  <div
+    class="success-msg"
+    *ngIf="successMessage"
+  >
+    {{ successMessage }}
+  </div>
+
+  <!-- ERROR -->
+
+  <div
+    class="error-msg"
+    *ngIf="errorMessage"
+  >
+    {{ errorMessage }}
+  </div>
+
+  <h2>
+    {{ election.title }}
+  </h2>
+
+  <p class="description">
+    {{ election.description }}
+  </p>
+
+  <div class="dates">
+
+    <p>
+      Début:
+      {{ election.dateDebut | date:'dd/MM/yyyy HH:mm' }}
+    </p>
+
+    <p>
+      Fin:
+      {{ election.dateFin | date:'dd/MM/yyyy HH:mm' }}
+    </p>
+
+  </div>
+
+  <div class="creator">
+
+    Créée par
+    {{ election.createdByPrenom }}
+    {{ election.createdByNom }}
+
+  </div>
+
+</div>

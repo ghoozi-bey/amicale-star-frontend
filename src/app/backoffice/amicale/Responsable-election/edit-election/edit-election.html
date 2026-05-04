@@ -1,0 +1,179 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+>
+
+  <!-- ===== HEADER ===== -->
+
+  <div class="header">
+
+    <h2>Modifier une élection</h2>
+
+    <p class="subtitle">
+      Modifiez les informations de l’élection
+    </p>
+
+  </div>
+
+  <!-- ===== TITLE ===== -->
+
+  <label>Titre *</label>
+
+  <input
+    type="text"
+    placeholder="Titre de l'élection"
+    formControlName="title"
+    [class.invalid]="form.get('title')?.invalid && form.get('title')?.touched"
+  >
+
+  <div
+    class="field-error"
+    *ngIf="form.get('title')?.touched && form.get('title')?.errors"
+  >
+
+    <span *ngIf="form.get('title')?.errors?.['required']">
+      Le titre est obligatoire
+    </span>
+
+    <span *ngIf="form.get('title')?.errors?.['minlength']">
+      Le titre doit contenir au moins 5 caractères
+    </span>
+
+    <span *ngIf="form.get('title')?.errors?.['maxlength']">
+      Le titre ne doit pas dépasser 100 caractères
+    </span>
+
+  </div>
+
+  <!-- ===== DESCRIPTION ===== -->
+
+  <label>Description *</label>
+
+  <textarea
+    placeholder="Description"
+    formControlName="description"
+    [class.invalid]="form.get('description')?.invalid && form.get('description')?.touched"
+  ></textarea>
+
+  <div
+    class="field-error"
+    *ngIf="form.get('description')?.touched && form.get('description')?.errors"
+  >
+
+    <span *ngIf="form.get('description')?.errors?.['required']">
+      La description est obligatoire
+    </span>
+
+    <span *ngIf="form.get('description')?.errors?.['minlength']">
+      La description doit contenir au moins 10 caractères
+    </span>
+
+    <span *ngIf="form.get('description')?.errors?.['maxlength']">
+      La description ne doit pas dépasser 1000 caractères
+    </span>
+
+  </div>
+
+  <!-- ===== DATES ===== -->
+
+  <div class="date-group">
+
+    <!-- DATE DEBUT -->
+
+    <div>
+
+      <label>Date début *</label>
+
+      <input
+        type="datetime-local"
+        formControlName="dateDebut"
+        [class.invalid]="form.get('dateDebut')?.invalid && form.get('dateDebut')?.touched"
+      >
+
+      <div
+        class="field-error"
+        *ngIf="form.get('dateDebut')?.touched && form.get('dateDebut')?.errors"
+      >
+
+        <span *ngIf="form.get('dateDebut')?.errors?.['required']">
+          La date début est obligatoire
+        </span>
+
+        <span *ngIf="form.get('dateDebut')?.errors?.['tooEarly']">
+          La date début doit être à partir de demain
+        </span>
+
+      </div>
+
+    </div>
+
+    <!-- DATE FIN -->
+
+    <div>
+
+      <label>Date fin *</label>
+
+      <input
+        type="datetime-local"
+        formControlName="dateFin"
+        [class.invalid]="form.get('dateFin')?.invalid && form.get('dateFin')?.touched"
+      >
+
+      <div
+        class="field-error"
+        *ngIf="form.get('dateFin')?.touched && form.get('dateFin')?.errors"
+      >
+
+        <span *ngIf="form.get('dateFin')?.errors?.['required']">
+          La date fin est obligatoire
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ===== DATE LOGIC ===== -->
+
+  <div
+    class="field-error"
+    *ngIf="
+      form.get('dateDebut')?.errors?.['invalidDate']
+      || form.get('dateFin')?.errors?.['invalidDate']
+    "
+  >
+    La date début doit être avant la date fin
+  </div>
+
+  <!-- ===== BUTTON ===== -->
+
+  <button
+    type="submit"
+    class="submit-btn"
+    [disabled]="isLoading"
+  >
+
+    {{ isLoading ? 'Modification...' : 'Modifier l’élection' }}
+
+  </button>
+
+  <!-- ===== SUCCESS ===== -->
+
+  <div
+    class="success-msg"
+    *ngIf="successMessage"
+  >
+    {{ successMessage }}
+  </div>
+
+  <!-- ===== ERROR ===== -->
+
+  <div
+    class="error-msg"
+    *ngIf="errorMessage"
+  >
+    {{ errorMessage }}
+  </div>
+
+</form>

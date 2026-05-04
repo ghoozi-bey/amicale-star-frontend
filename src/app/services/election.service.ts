@@ -28,10 +28,9 @@ export class ElectionService {
   }
 
   // GET ALL
-  getAllElections(): Observable<Election[]> {
-
+  getAllElections() {
     return this.http.get<Election[]>(
-      this.apiUrl
+      `${this.apiUrl}`
     );
   }
 
@@ -48,12 +47,11 @@ export class ElectionService {
   // UPDATE
   updateElection(
     id: number,
-    request: Election
-  ): Observable<Election> {
-
-    return this.http.put<Election>(
+    data: any
+  ) {
+    return this.http.put(
       `${this.apiUrl}/${id}`,
-      request
+      data
     );
   }
 
@@ -66,4 +64,25 @@ export class ElectionService {
       `${this.apiUrl}/${id}`
     );
   }
+
+  publishElection(id: number) {
+
+    return this.http.put(
+      `${this.apiUrl}/${id}/publish`,
+      {}
+    );
+  }
+
+  unpublishElection(id: number) {
+
+    return this.http.put(
+      `${this.apiUrl}/${id}/unpublish`,
+      {}
+    );
+  }
+
+  goToStats() {
+
+  }
+
 }

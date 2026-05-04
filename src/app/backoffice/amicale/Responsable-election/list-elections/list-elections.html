@@ -1,0 +1,72 @@
+<div class="page">
+
+  <h2>Liste des élections</h2>
+
+  <div
+    *ngIf="loading"
+    class="loading"
+  >
+    Chargement...
+  </div>
+
+  <div
+    *ngIf="errorMessage"
+    class="error-msg"
+  >
+    {{ errorMessage }}
+  </div>
+
+  <div
+    *ngIf="!loading && elections.length === 0"
+    class="empty"
+  >
+    Aucune élection trouvée
+  </div>
+
+  <div class="elections-grid">
+
+    <div
+      class="election-card"
+      *ngFor="let election of elections"
+      [routerLink]="['/gestion-election', election.id]"
+    >
+
+      <div class="status">
+        {{ election.statut }}
+      </div>
+
+      <h3>
+        {{ election.title }}
+      </h3>
+
+      <p class="description">
+        {{ election.description }}
+      </p>
+
+      <div class="dates">
+
+        <span>
+          Début:
+          {{ election.dateDebut | date:'dd/MM/yyyy HH:mm' }}
+        </span>
+
+        <span>
+          Fin:
+          {{ election.dateFin | date:'dd/MM/yyyy HH:mm' }}
+        </span>
+
+      </div>
+
+      <div class="creator">
+
+        Créée par:
+        {{ election.createdByPrenom }}
+        {{ election.createdByNom }}
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
