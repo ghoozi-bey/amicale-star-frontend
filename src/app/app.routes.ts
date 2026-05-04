@@ -6,6 +6,7 @@ import { GestionEvenementsComponent } from './backoffice/amicale/membre-amicale/
 
 
 import { authGuard } from './services/auth.guard';
+import { CreateElection } from './backoffice/amicale/Responsable-election/create-election/create-election';
 
 export const routes: Routes = [
 
@@ -173,6 +174,10 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./backoffice/amicale/membre-amicale/gestion-inscriptions/gestion-inscriptions')
             .then(m => m.GestionInscriptions)
+      },
+      {
+        path: 'gestion-election/create',
+        component: CreateElection
       },
 
     ]
