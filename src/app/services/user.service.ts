@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { AdherentLite } from '../models/adherent-lite.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -28,4 +29,12 @@ export class UserService {
   getProfile() {
     return this.http.get('http://localhost:8080/api/user/profile');
   }
+  
+  getAllLite() {
+
+    return this.http.get<AdherentLite[]>(
+      'http://localhost:8080/api/adherents/lite'
+    );
+  }
+  
 }

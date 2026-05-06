@@ -17,4 +17,6 @@ export interface Election {
   createdByNom?: string;
 
   createdByPrenom?: string;
+
+  candidats?: string[];
 }

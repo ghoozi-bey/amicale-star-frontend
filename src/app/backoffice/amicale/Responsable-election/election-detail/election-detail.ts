@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 
 import { ElectionService } from '../../../../services/election.service';
 
@@ -28,6 +28,7 @@ export class ElectionDetail implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private electionService: ElectionService,
+    private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -52,6 +53,10 @@ export class ElectionDetail implements OnInit {
 
   publishElection() {
 
+    this.successMessage = '';
+
+    this.errorMessage = '';
+
     this.electionService
       .publishElection(this.election.id!)
       .subscribe({
@@ -72,6 +77,10 @@ export class ElectionDetail implements OnInit {
 
         error: (err) => {
 
+          this.errorMessage =
+            err.error?.message ||
+            'Erreur lors de la publication';
+
           console.log(err);
 
           this.cdr.detectChanges();
@@ -80,6 +89,10 @@ export class ElectionDetail implements OnInit {
   }
 
   unpublishElection() {
+
+    this.successMessage = '';
+
+    this.errorMessage = '';
 
     this.electionService
       .unpublishElection(this.election.id!)
@@ -101,6 +114,102 @@ export class ElectionDetail implements OnInit {
 
         error: (err) => {
 
+          this.errorMessage =
+            err.error?.message ||
+            'Erreur lors de l’annulation de publication';
+
+          console.log(err);
+
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+  rejectElection() {
+
+    const confirmed = confirm(
+      'Cette action est irréversible. Êtes-vous sûr de vouloir rejeter cette élection ?'
+    );
+
+    if(!confirmed) {
+      return;
+    }
+
+    this.successMessage = '';
+
+    this.errorMessage = '';
+
+    this.electionService
+      .rejectElection(this.election.id!)
+      .subscribe({
+
+        next: () => {
+
+          this.successMessage =
+            'Election rejetée avec succès';
+
+          this.cdr.detectChanges();
+
+          setTimeout(() => {
+
+            window.location.reload();
+
+          }, 1500);
+        },
+
+        error: (err) => {
+
+          this.errorMessage =
+            err.error?.message ||
+            'Erreur lors du rejet';
+
+          console.log(err);
+
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+  deleteElection() {
+
+    const confirmed = confirm(
+      'Cette action est irréversible. Êtes-vous sûr de vouloir supprimer cette élection ?'
+    );
+
+    if(!confirmed) {
+      return;
+    }
+
+    this.successMessage = '';
+
+    this.errorMessage = '';
+
+    this.electionService
+      .deleteElection(this.election.id!)
+      .subscribe({
+
+        next: () => {
+
+          this.successMessage =
+            'Election supprimée avec succès';
+
+          this.cdr.detectChanges();
+
+          setTimeout(() => {
+
+            this.router.navigate([
+              '/gestion-election'
+            ]);
+
+          }, 1500);
+        },
+
+        error: (err) => {
+
+          this.errorMessage =
+            err.error?.message ||
+            'Erreur lors de la suppression';
+
           console.log(err);
 
           this.cdr.detectChanges();
@@ -112,7 +221,4 @@ export class ElectionDetail implements OnInit {
 
   }
 
-  deleteElection() {
-
-  }
 }

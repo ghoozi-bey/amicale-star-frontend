@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Election } from '../models/election.model';
+import { AdherentLite } from '../models/adherent-lite.model';
 
 @Injectable({
   providedIn: 'root'
@@ -78,6 +79,23 @@ export class ElectionService {
     return this.http.put(
       `${this.apiUrl}/${id}/unpublish`,
       {}
+    );
+  }
+
+  rejectElection(id: number) {
+
+    return this.http.put(
+      `${this.apiUrl}/${id}/reject`,
+      {}
+    );
+  }
+
+  getEligibleAdherents(
+    electionId: number
+  ) {
+
+    return this.http.get<AdherentLite[]>(
+      `${this.apiUrl}/${electionId}/eligible-adherents`
     );
   }
 

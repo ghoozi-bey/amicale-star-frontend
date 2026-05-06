@@ -1,14 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
   Validators,
   ReactiveFormsModule
 } from '@angular/forms';
 
 import { ElectionService } from '../../../../services/election.service';
+import { AdherentLite } from '../../../../models/adherent-lite.model';
+import { UserService } from '../../../../services/user.service';
 
 @Component({
   selector: 'app-create-election',
@@ -17,12 +21,17 @@ import { ElectionService } from '../../../../services/election.service';
   styleUrls: ['./create-election.css'],
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ]
 })
-export class CreateElection {
+export class CreateElection implements OnInit{
 
   form: FormGroup;
+
+  adherents: AdherentLite[] = [];
+
+  selectedCandidats: string[] = [];
 
   successMessage = '';
 
@@ -32,7 +41,8 @@ export class CreateElection {
 
   constructor(
     private fb: FormBuilder,
-    private electionService: ElectionService
+    private electionService: ElectionService,
+    private userService: UserService
   ) {
 
     const defaultDates = this.initDefaultDates();
@@ -67,6 +77,11 @@ export class CreateElection {
         Validators.required
       ]
     });
+  }
+
+  ngOnInit(): void {
+
+    this.loadAdherents();
   }
 
   // ================= DATES =================
@@ -107,6 +122,24 @@ export class CreateElection {
       n.toString().padStart(2, '0');
 
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  }
+
+  loadAdherents() {
+
+    this.userService
+      .getAllLite()
+      .subscribe({
+
+        next: (data) => {
+
+          this.adherents = data;
+        },
+
+        error: (err) => {
+
+          console.log(err);
+        }
+      });
   }
 
   // ================= SUBMIT =================
@@ -186,7 +219,10 @@ export class CreateElection {
         this.form.value.dateDebut + ':00',
 
       dateFin:
-        this.form.value.dateFin + ':00'
+        this.form.value.dateFin + ':00',
+
+      candidats:
+        this.selectedCandidats
     };
 
     this.isLoading = true;

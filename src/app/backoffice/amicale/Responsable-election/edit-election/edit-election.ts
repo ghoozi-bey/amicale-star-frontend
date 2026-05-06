@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
   Validators,
   ReactiveFormsModule
 } from '@angular/forms';
@@ -12,13 +13,16 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ElectionService } from '../../../../services/election.service';
+import { AdherentLite } from '../../../../models/adherent-lite.model';
+import { UserService } from '../../../../services/user.service';
 
 @Component({
   selector: 'app-edit-election',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   templateUrl: './edit-election.html',
   styleUrls: ['./edit-election.css']
@@ -26,6 +30,10 @@ import { ElectionService } from '../../../../services/election.service';
 export class EditElection implements OnInit {
 
   form!: FormGroup;
+
+  adherents: AdherentLite[] = [];
+
+  selectedCandidats: string[] = [];
 
   electionId!: number;
 
@@ -39,7 +47,8 @@ export class EditElection implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private electionService: ElectionService
+    private electionService: ElectionService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -79,6 +88,7 @@ export class EditElection implements OnInit {
     });
 
     this.loadElection();
+    this.loadAdherents();
   }
 
   // ================= LOAD =================
@@ -90,6 +100,10 @@ export class EditElection implements OnInit {
       .subscribe({
 
         next: (res: any) => {
+
+          // PRELOAD CANDIDATS
+          this.selectedCandidats =
+            res.candidats || [];
 
           this.form.patchValue({
 
@@ -106,6 +120,25 @@ export class EditElection implements OnInit {
         },
 
         error: (err) => {
+
+          console.log(err);
+        }
+      });
+  }
+
+  loadAdherents() {
+
+    this.userService
+      .getAllLite()
+      .subscribe({
+
+        next: (data) => {
+
+          this.adherents = data;
+        },
+
+        error: (err) => {
+
           console.log(err);
         }
       });
@@ -177,7 +210,10 @@ export class EditElection implements OnInit {
         this.form.value.dateDebut + ':00',
 
       dateFin:
-        this.form.value.dateFin + ':00'
+        this.form.value.dateFin + ':00',
+
+      candidats:
+        this.selectedCandidats
     };
 
     this.isLoading = true;

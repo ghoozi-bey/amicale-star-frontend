@@ -106,6 +106,18 @@
     0 8px 20px rgba(16, 185, 129, 0.3);
 }
 
+/* ===== REJECT ===== */
+
+.reject-btn {
+  background: #fee2e2;
+
+  color: #dc2626;
+}
+
+.reject-btn:hover {
+  background: #fecaca;
+}
+
 /* ===== UNPUBLISH ===== */
 
 .unpublish-btn {
