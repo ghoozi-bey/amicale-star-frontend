@@ -14,6 +14,10 @@ export interface Election {
 
   statut?: string;
 
+  nombreCandidats?: number;
+
+  nombreGagnants?: number;
+
   createdByNom?: string;
 
   createdByPrenom?: string;

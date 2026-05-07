@@ -146,6 +146,97 @@
     La date début doit être avant la date fin
   </div>
 
+  <!-- ===== CANDIDATS ===== -->
+
+  <div class="candidat-container">
+
+    <!-- AVAILABLE USERS -->
+
+    <div class="list">
+
+      <h3>
+        Utilisateurs disponibles
+      </h3>
+
+      <div
+        *ngFor="let a of availableUsers"
+        class="user-row"
+      >
+
+        <div class="user-info">
+
+          <strong>
+            {{ a.prenom }} {{ a.nom }}
+          </strong>
+
+          <small>
+            {{ a.departement }}
+            —
+            {{ a.role }}
+          </small>
+
+        </div>
+
+        <button
+          type="button"
+          class="add-btn"
+          (click)="addCandidat(a.matricule)"
+        >
+          ➕
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- SELECTED CANDIDATES -->
+
+    <div class="list">
+
+      <h3>
+        Candidats sélectionnés
+      </h3>
+
+      <div
+        *ngIf="selectedUsers.length === 0"
+        class="empty"
+      >
+        Aucun candidat sélectionné
+      </div>
+
+      <div
+        *ngFor="let a of selectedUsers"
+        class="user-row selected"
+      >
+
+        <div class="user-info">
+
+          <strong>
+            {{ a.prenom }} {{ a.nom }}
+          </strong>
+
+          <small>
+            {{ a.departement }}
+            —
+            {{ a.role }}
+          </small>
+
+        </div>
+
+        <button
+          type="button"
+          class="remove-btn"
+          (click)="removeCandidat(a.matricule)"
+        >
+          ❌
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
   <!-- ===== BUTTON ===== -->
 
   <button

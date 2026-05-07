@@ -115,6 +115,83 @@ textarea.invalid {
   gap: 2px;
 }
 
+/* ===== CANDIDATS ===== */
+
+.candidats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ===== MULTISELECT ===== */
+
+.candidats select {
+  width: 100%;
+
+  min-height: 220px;
+
+  padding: 12px;
+
+  margin-top: 10px;
+
+  border-radius: 16px;
+
+  border: 1.5px solid #cbd5e1;
+
+  background: #f8fafc;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition: all 0.25s ease;
+}
+
+/* focus */
+
+.candidats select:focus {
+  border-color: #2563eb;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+/* ===== OPTIONS ===== */
+
+.candidats option {
+  padding: 10px;
+
+  border-radius: 8px;
+
+  margin-bottom: 4px;
+
+  font-size: 14px;
+}
+
+/* selected option */
+
+.candidats option:checked {
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8
+  );
+
+  color: white;
+}
+
+/* ===== HELP TEXT ===== */
+
+.candidats small {
+  color: #64748b;
+
+  font-size: 12px;
+
+  margin-top: 2px;
+}
+
 /* ===== BUTTON ===== */
 
 button {

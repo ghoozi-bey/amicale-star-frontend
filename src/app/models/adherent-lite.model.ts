@@ -5,4 +5,8 @@ export interface AdherentLite {
   nom: string;
 
   prenom: string;
+
+  departement: string;
+
+  role: string;
 }

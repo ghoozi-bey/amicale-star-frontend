@@ -62,6 +62,90 @@
 
   </div>
 
+  <!-- NOMBRE CANDIDATS -->
+
+  <label>Nombre maximum de candidats *</label>
+
+  <input
+    type="number"
+    min="2"
+    formControlName="nombreCandidats"
+    (change)="onMaxCandidatesChange()"
+    [class.invalid]="
+      form.get('nombreCandidats')?.invalid
+      &&
+      form.get('nombreCandidats')?.touched
+    "
+  >
+
+  <div
+    class="field-error"
+    *ngIf="
+      form.get('nombreCandidats')?.touched
+      &&
+      form.get('nombreCandidats')?.errors
+    "
+  >
+
+    <span *ngIf="
+      form.get('nombreCandidats')?.errors?.['required']
+    ">
+      Le nombre maximum de candidats est obligatoire
+    </span>
+
+    <span *ngIf="
+      form.get('nombreCandidats')?.errors?.['min']
+    ">
+      Le nombre maximum doit être supérieur à 1
+    </span>
+
+  </div>
+
+  <!-- NOMBRE GAGNANTS -->
+
+  <label>Nombre de gagnants *</label>
+
+  <input
+    type="number"
+    min="1"
+    formControlName="nombreGagnants"
+    [class.invalid]="
+      form.get('nombreGagnants')?.invalid
+      &&
+      form.get('nombreGagnants')?.touched
+    "
+  >
+
+  <div
+    class="field-error"
+    *ngIf="
+      form.get('nombreGagnants')?.touched
+      &&
+      form.get('nombreGagnants')?.errors
+    "
+  >
+
+    <span *ngIf="
+      form.get('nombreGagnants')?.errors?.['required']
+    ">
+      Le nombre de gagnants est obligatoire
+    </span>
+
+    <span *ngIf="
+      form.get('nombreGagnants')?.errors?.['min']
+    ">
+      Le nombre de gagnants doit être supérieur à 0
+    </span>
+
+    <span *ngIf="
+      form.get('nombreGagnants')?.errors?.['tooManyWinners']
+    ">
+      Le nombre de gagnants doit être inférieur au nombre de candidats
+    </span>
+
+  </div>
+
+
   <!-- DATE DEBUT -->
   <label>Date début *</label>
 
@@ -115,6 +199,49 @@
     "
   >
     La date début doit être avant la date fin
+  </div>
+
+  <!-- ===== CANDIDATS ===== -->
+
+  <div class="candidats">
+
+    <label>Candidats</label>
+
+    <div class="counter">
+
+      {{ selectedCandidats.length }}
+      /
+      {{ form.value.nombreCandidats }}
+      sélectionnés
+
+    </div>
+
+    <select
+      multiple
+      [(ngModel)]="selectedCandidats"
+      [ngModelOptions]="{ standalone: true }"
+    >
+
+      <option
+        *ngFor="let a of adherents"
+        [value]="a.matricule"
+      >
+
+        {{ a.prenom }}
+        {{ a.nom }}
+        —
+        {{ a.departement }}
+        —
+        {{ a.role }}
+
+      </option>
+
+    </select>
+
+    <small>
+      Maintenez CTRL pour sélectionner plusieurs candidats
+    </small>
+
   </div>
 
   <!-- BUTTON -->

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
@@ -48,7 +48,8 @@ export class EditElection implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private electionService: ElectionService,
-    private userService: UserService
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -134,14 +135,58 @@ export class EditElection implements OnInit {
 
         next: (data) => {
 
-          this.adherents = data;
+          this.adherents = data.filter(a => a.role !== 'RESPONSABLE_ELECTION');
+
+          this.cdr.detectChanges();
         },
 
         error: (err) => {
 
           console.log(err);
+
+          this.cdr.detectChanges();
         }
       });
+  }
+
+  get availableUsers(): AdherentLite[] {
+
+    return this.adherents.filter(
+      a => !this.selectedCandidats.includes(
+        a.matricule
+      )
+    );
+  }
+
+  get selectedUsers(): AdherentLite[] {
+
+    return this.adherents.filter(
+      a => this.selectedCandidats.includes(
+        a.matricule
+      )
+    );
+  }
+
+  addCandidat(matricule: string) {
+
+    if(
+      !this.selectedCandidats.includes(
+        matricule
+      )
+    ) {
+
+      this.selectedCandidats.push(
+        matricule
+      );
+    }
+  }
+
+  removeCandidat(matricule: string) {
+
+    this.selectedCandidats =
+      this.selectedCandidats.filter(
+        m => m !== matricule
+      );
   }
 
   // ================= SUBMIT =================
@@ -153,6 +198,18 @@ export class EditElection implements OnInit {
     this.successMessage = '';
 
     this.errorMessage = '';
+
+    this.form.get('dateDebut')
+    ?.setErrors(null);
+
+    this.form.get('dateFin')
+      ?.setErrors(null);
+
+    this.form.get('dateDebut')
+      ?.updateValueAndValidity();
+
+    this.form.get('dateFin')
+      ?.updateValueAndValidity();
 
     if(this.form.invalid) {
 
@@ -234,10 +291,7 @@ export class EditElection implements OnInit {
 
           setTimeout(() => {
 
-            this.router.navigate([
-              '/gestion-election',
-              this.electionId
-            ]);
+            window.location.reload();
 
           }, 1200);
         },
@@ -250,7 +304,7 @@ export class EditElection implements OnInit {
             err.error?.message ||
             '❌ Erreur serveur';
 
-          console.log(err);
+          console.log(err.error);
         }
       });
   }

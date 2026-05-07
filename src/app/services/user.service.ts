@@ -33,7 +33,7 @@ export class UserService {
   getAllLite() {
 
     return this.http.get<AdherentLite[]>(
-      'http://localhost:8080/api/adherents/lite'
+      'http://localhost:8080/api/user/lite'
     );
   }
   

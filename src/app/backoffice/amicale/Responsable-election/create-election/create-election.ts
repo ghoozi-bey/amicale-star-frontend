@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 
@@ -42,7 +42,8 @@ export class CreateElection implements OnInit{
   constructor(
     private fb: FormBuilder,
     private electionService: ElectionService,
-    private userService: UserService
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
   ) {
 
     const defaultDates = this.initDefaultDates();
@@ -75,7 +76,23 @@ export class CreateElection implements OnInit{
       dateFin: [
         defaultDates.dateFin,
         Validators.required
-      ]
+      ],
+
+      nombreCandidats: [
+        2,
+        [
+          Validators.required,
+          Validators.min(2)
+        ]
+      ],
+
+      nombreGagnants: [
+        1,
+        [
+          Validators.required,
+          Validators.min(1)
+        ]
+      ],
     });
   }
 
@@ -131,15 +148,35 @@ export class CreateElection implements OnInit{
       .subscribe({
 
         next: (data) => {
+          this.adherents = data.filter(a => a.role !== 'RESPONSABLE_ELECTION');
 
-          this.adherents = data;
+          this.cdr.detectChanges();
         },
 
         error: (err) => {
 
           console.log(err);
+
+          this.cdr.detectChanges();
         }
       });
+  }
+
+  onMaxCandidatesChange() {
+
+    const max =
+      this.form.value.nombreCandidats;
+
+    if (
+      this.selectedCandidats.length > max
+    ) {
+
+      this.selectedCandidats =
+        this.selectedCandidats.slice(
+          0,
+          max
+        );
+    }
   }
 
   // ================= SUBMIT =================
@@ -179,6 +216,12 @@ export class CreateElection implements OnInit{
 
     let hasError = false;
 
+    const nombreCandidats =
+      this.form.value.nombreCandidats;
+
+    const nombreGagnants =
+      this.form.value.nombreGagnants;
+
     // DATE LOGIC
     if (debut >= fin) {
 
@@ -196,6 +239,42 @@ export class CreateElection implements OnInit{
 
       this.form.get('dateDebut')
         ?.setErrors({ tooEarly: true });
+
+      hasError = true;
+    }
+
+    // WINNERS <= MAX CANDIDATES
+    if (
+      nombreGagnants >= nombreCandidats
+    ) {
+
+      this.form.get('nombreGagnants')
+        ?.setErrors({
+          tooManyWinners: true
+        });
+
+      hasError = true;
+    }
+
+    // SELECTED CANDIDATES <= MAX
+    if (
+      this.selectedCandidats.length >
+      nombreCandidats
+    ) {
+
+      this.errorMessage =
+        'Le nombre de candidats dépasse la limite autorisée';
+
+      hasError = true;
+    }
+
+    // AT LEAST ONE CANDIDATE
+    if (
+      this.selectedCandidats.length === 0
+    ) {
+
+      this.errorMessage =
+        'Veuillez sélectionner au moins un candidat';
 
       hasError = true;
     }
@@ -220,6 +299,12 @@ export class CreateElection implements OnInit{
 
       dateFin:
         this.form.value.dateFin + ':00',
+
+      nombreCandidats:
+        this.form.value.nombreCandidats,
+
+      nombreGagnants:
+        this.form.value.nombreGagnants,
 
       candidats:
         this.selectedCandidats
@@ -250,10 +335,15 @@ export class CreateElection implements OnInit{
               defaultDates.dateDebut,
 
             dateFin:
-              defaultDates.dateFin
+              defaultDates.dateFin,
+              
+            nombreCandidats: 2,
+            nombreGagnants: 1
           });
 
           this.form.markAsUntouched();
+
+          this.selectedCandidats = [];
         },
 
         error: (err) => {
