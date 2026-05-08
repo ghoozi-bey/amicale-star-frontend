@@ -77,6 +77,22 @@ export class EditElection implements OnInit {
         ]
       ],
 
+      nombreCandidats: [
+        2,
+        [
+          Validators.required,
+          Validators.min(2)
+        ]
+      ],
+
+      nombreGagnants: [
+        1,
+        [
+          Validators.required,
+          Validators.min(1)
+        ]
+      ],
+
       dateDebut: [
         '',
         Validators.required
@@ -112,12 +128,18 @@ export class EditElection implements OnInit {
 
             description: res.description,
 
+            nombreCandidats: res.nombreCandidats,
+
+            nombreGagnants: res.nombreGagnants,
+
             dateDebut:
               res.dateDebut?.slice(0,16),
 
             dateFin:
               res.dateFin?.slice(0,16)
           });
+
+          this.cdr.detectChanges();
         },
 
         error: (err) => {
@@ -169,11 +191,22 @@ export class EditElection implements OnInit {
 
   addCandidat(matricule: string) {
 
-    if(
-      !this.selectedCandidats.includes(
-        matricule
-      )
-    ) {
+    if( !this.selectedCandidats.includes(matricule)) {
+
+      if(this.selectedCandidats.length >= this.form.value.nombreCandidats) {
+
+        this.form.get('nombreCandidats')
+          ?.setErrors({
+            maxReached: true
+          });
+
+        this.form.get('nombreCandidats')
+          ?.markAsTouched();
+
+        return;
+      }
+
+      this.errorMessage = '';
 
       this.selectedCandidats.push(
         matricule
@@ -187,6 +220,34 @@ export class EditElection implements OnInit {
       this.selectedCandidats.filter(
         m => m !== matricule
       );
+  }
+
+  onMaxCandidatesChange() {
+
+    const max =
+      this.form.value.nombreCandidats;
+
+    if (
+      this.selectedCandidats.length > max
+    ) {
+
+      this.form.patchValue({
+        nombreCandidats:
+          this.selectedCandidats.length
+      });
+
+      setTimeout(() => {
+
+        this.form.get('nombreCandidats')
+          ?.setErrors({
+            tooSmall: true
+          });
+
+        this.form.get('nombreCandidats')
+          ?.markAsTouched();
+
+      });
+    }
   }
 
   // ================= SUBMIT =================
@@ -214,7 +275,7 @@ export class EditElection implements OnInit {
     if(this.form.invalid) {
 
       this.errorMessage =
-        'Formulaire invalide';
+        'Veuillez corriger les erreurs du formulaire';
 
       return;
     }
@@ -225,23 +286,20 @@ export class EditElection implements OnInit {
     const fin =
       new Date(this.form.value.dateFin);
 
+    const nombreCandidats =
+      this.form.value.nombreCandidats;
+
+    const nombreGagnants =
+      this.form.value.nombreGagnants;
+
     // ===== DATE >= TOMORROW =====
 
-    const tomorrow = new Date();
+    const now = new Date();
 
-    tomorrow.setDate(
-      tomorrow.getDate() + 1
-    );
-
-    tomorrow.setHours(0,0,0,0);
-
-    if (debut < tomorrow) {
+    if (debut <= now) {
 
       this.form.get('dateDebut')
-        ?.setErrors({ tooEarly: true });
-
-      this.errorMessage =
-        'La date début doit être à partir de demain';
+        ?.setErrors({ pastDate: true });
 
       return;
     }
@@ -257,11 +315,40 @@ export class EditElection implements OnInit {
       return;
     }
 
+    // WINNERS > MAX
+    if(nombreGagnants >= nombreCandidats) {
+
+      this.form.get('nombreGagnants')
+        ?.setErrors({
+          tooManyWinners: true
+        });
+
+      this.errorMessage =
+        'Nombre de gagnants invalide';
+
+      return;
+    }
+
+    // TOO MANY SELECTED
+    if(this.selectedCandidats.length > nombreCandidats) {
+
+      this.errorMessage =
+        'Le nombre de candidats dépasse la limite autorisée';
+
+      return;
+    }
+
     const payload = {
 
       title: this.form.value.title,
 
       description: this.form.value.description,
+
+      nombreCandidats:
+        this.form.value.nombreCandidats,
+
+      nombreGagnants:
+        this.form.value.nombreGagnants,
 
       dateDebut:
         this.form.value.dateDebut + ':00',
@@ -291,7 +378,8 @@ export class EditElection implements OnInit {
 
           setTimeout(() => {
 
-            window.location.reload();
+            this.loadElection();
+
 
           }, 1200);
         },

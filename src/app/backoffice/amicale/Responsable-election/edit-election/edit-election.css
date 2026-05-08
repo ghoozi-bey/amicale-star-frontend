@@ -214,6 +214,7 @@ textarea.invalid {
   font-size: 12px;
 }
 
+
 /* ===== EMPTY ===== */
 
 .empty {
@@ -362,6 +363,14 @@ textarea.invalid {
   font-size: 12px;
 
   margin-top: 6px;
+}
+
+/* ===== CANDIDAT SECTION ERROR ===== */
+
+.candidat-section-error {
+  margin-top: -20px;
+
+  margin-left: 10px; 
 }
 
 /* ===== RESPONSIVE ===== */

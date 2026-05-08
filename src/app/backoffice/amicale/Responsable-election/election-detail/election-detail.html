@@ -74,7 +74,7 @@
         class="role-btn"
         disabled
       >
-        🏆 Accorder rôle
+        🏆 Accorder rôles
       </button>
 
       <button
@@ -126,6 +126,46 @@
   <p class="description">
     {{ election.description }}
   </p>
+
+  <div class="numbers">
+
+    <div class="number-box">
+
+      <span class="number-value">
+        {{ election.nombreCandidats }}
+      </span>
+
+      <span class="number-label">
+        candidats max
+      </span>
+
+    </div>
+
+    <div class="number-box winners">
+
+      <span class="number-value">
+        {{ election.nombreGagnants }}
+      </span>
+
+      <span class="number-label">
+        gagnants
+      </span>
+
+    </div>
+
+    <div class="number-box selected">
+
+      <span class="number-value">
+        {{ election.candidats?.length || 0 }}
+      </span>
+
+      <span class="number-label">
+        sélectionnés
+      </span>
+
+    </div>
+
+  </div>
 
   <div class="dates">
 

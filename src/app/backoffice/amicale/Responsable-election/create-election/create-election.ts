@@ -268,16 +268,6 @@ export class CreateElection implements OnInit{
       hasError = true;
     }
 
-    // AT LEAST ONE CANDIDATE
-    if (
-      this.selectedCandidats.length === 0
-    ) {
-
-      this.errorMessage =
-        'Veuillez sélectionner au moins un candidat';
-
-      hasError = true;
-    }
 
     // GLOBAL VALIDATION
     if (this.form.invalid || hasError) {

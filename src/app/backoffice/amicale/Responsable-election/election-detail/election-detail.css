@@ -1,26 +1,51 @@
 /* ===== PAGE ===== */
 
 .detail-card {
-  max-width: 850px;
+  max-width: 920px;
 
   margin: 40px auto;
 
-  padding: 32px;
+  padding: 36px;
 
   background: #ffffff;
 
-  border-radius: 24px;
+  border-radius: 28px;
 
   border: 1px solid #e2e8f0;
 
   box-shadow:
-    0 10px 30px rgba(15, 23, 42, 0.06);
+    0 20px 45px rgba(15, 23, 42, 0.06);
 
   display: flex;
 
   flex-direction: column;
 
-  gap: 24px;
+  gap: 28px;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+/* subtle top accent */
+
+.detail-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 5px;
+
+  background: linear-gradient(
+    90deg,
+    #2563eb,
+    #4f46e5,
+    #7c3aed
+  );
 }
 
 /* ===== STATUS ===== */
@@ -28,17 +53,21 @@
 .status {
   align-self: flex-start;
 
-  padding: 8px 16px;
+  padding: 9px 18px;
 
   border-radius: 999px;
 
-  background: #dbeafe;
+  background: #eff6ff;
 
   color: #1d4ed8;
 
+  border: 1px solid #bfdbfe;
+
   font-size: 13px;
 
-  font-weight: 600;
+  font-weight: 700;
+
+  letter-spacing: 0.3px;
 }
 
 /* ===== ACTIONS ===== */
@@ -49,8 +78,6 @@
   gap: 14px;
 
   flex-wrap: wrap;
-
-  margin-top: 24px;
 }
 
 /* ===== BUTTON BASE ===== */
@@ -60,7 +87,7 @@
 
   padding: 12px 18px;
 
-  border-radius: 12px;
+  border-radius: 14px;
 
   font-size: 14px;
 
@@ -68,16 +95,35 @@
 
   cursor: pointer;
 
-  transition: all 0.25s ease;
-}
+  transition: all 0.22s ease;
 
-/* ===== HOVER ===== */
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+}
 
 .actions button:hover:not(:disabled) {
   transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 24px rgba(15, 23, 42, 0.08);
 }
 
-/* ===== EDIT ===== */
+.actions button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.actions button:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
+}
+
+/* ===== BUTTON COLORS ===== */
 
 .edit-btn {
   background: #e0e7ff;
@@ -88,8 +134,6 @@
 .edit-btn:hover {
   background: #c7d2fe;
 }
-
-/* ===== PUBLISH ===== */
 
 .publish-btn {
   background: linear-gradient(
@@ -103,34 +147,20 @@
 
 .publish-btn:hover {
   box-shadow:
-    0 8px 20px rgba(16, 185, 129, 0.3);
+    0 12px 24px rgba(16, 185, 129, 0.28);
 }
 
-/* ===== REJECT ===== */
-
-.reject-btn {
-  background: #fee2e2;
-
-  color: #dc2626;
-}
-
-.reject-btn:hover {
-  background: #fecaca;
-}
-
-/* ===== UNPUBLISH ===== */
-
+.reject-btn,
 .unpublish-btn {
   background: #fee2e2;
 
   color: #dc2626;
 }
 
+.reject-btn:hover,
 .unpublish-btn:hover {
   background: #fecaca;
 }
-
-/* ===== STATS ===== */
 
 .stats-btn {
   background: #dbeafe;
@@ -142,40 +172,41 @@
   background: #bfdbfe;
 }
 
-/* ===== ROLE ===== */
-
 .role-btn {
   background: #fef3c7;
 
   color: #d97706;
 }
 
-/* ===== DELETE ===== */
-
 .delete-btn {
-  background: #dc2626;
+  background: linear-gradient(
+    135deg,
+    #dc2626,
+    #b91c1c
+  );
 
   color: white;
 }
 
 .delete-btn:hover {
-  background: #b91c1c;
+  box-shadow:
+    0 12px 24px rgba(220, 38, 38, 0.24);
 }
 
 /* ===== SUCCESS ===== */
 
 .success-msg {
-  margin-top: 18px;
+  padding: 15px 16px;
 
-  padding: 14px;
-
-  border-radius: 14px;
+  border-radius: 16px;
 
   background: #dcfce7;
 
   color: #166534;
 
-  border-left: 4px solid #22c55e;
+  border: 1px solid #bbf7d0;
+
+  border-left: 5px solid #22c55e;
 
   font-size: 14px;
 
@@ -185,29 +216,21 @@
 /* ===== ERROR ===== */
 
 .error-msg {
-  margin-top: 18px;
+  padding: 15px 16px;
 
-  padding: 14px;
-
-  border-radius: 14px;
+  border-radius: 16px;
 
   background: #fee2e2;
 
   color: #991b1b;
 
-  border-left: 4px solid #ef4444;
+  border: 1px solid #fecaca;
+
+  border-left: 5px solid #ef4444;
 
   font-size: 14px;
 
   font-weight: 500;
-}
-
-/* ===== DISABLED ===== */
-
-.actions button:disabled {
-  opacity: 0.6;
-
-  cursor: not-allowed;
 }
 
 /* ===== TITLE ===== */
@@ -215,13 +238,15 @@
 h2 {
   margin: 0;
 
-  font-size: 30px;
+  font-size: 34px;
 
-  font-weight: 700;
+  font-weight: 800;
 
   color: #0f172a;
 
-  line-height: 1.2;
+  line-height: 1.15;
+
+  letter-spacing: -0.5px;
 }
 
 /* ===== DESCRIPTION ===== */
@@ -233,9 +258,80 @@ h2 {
 
   font-size: 15px;
 
-  line-height: 1.8;
+  line-height: 1.9;
 
   white-space: pre-line;
+}
+
+/* ===== NUMBERS ===== */
+
+.numbers {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 16px;
+}
+
+.number-box {
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 20px;
+
+  padding: 22px 18px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  transition: all 0.2s ease;
+}
+
+.number-box:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 22px rgba(15, 23, 42, 0.05);
+}
+
+.number-box.winners {
+  background: #eff6ff;
+
+  border-color: #bfdbfe;
+}
+
+.number-box.selected {
+  background: #f0fdf4;
+
+  border-color: #bbf7d0;
+}
+
+.number-value {
+  font-size: 34px;
+
+  font-weight: 800;
+
+  color: #0f172a;
+
+  line-height: 1;
+}
+
+.number-label {
+  margin-top: 8px;
+
+  font-size: 13px;
+
+  color: #64748b;
+
+  font-weight: 600;
+
+  text-align: center;
 }
 
 /* ===== DATES ===== */
@@ -245,11 +341,11 @@ h2 {
 
   flex-direction: column;
 
-  gap: 10px;
+  gap: 14px;
 
-  padding: 20px;
+  padding: 22px;
 
-  border-radius: 18px;
+  border-radius: 20px;
 
   background: #f8fafc;
 
@@ -263,13 +359,19 @@ h2 {
 
   font-size: 14px;
 
-  font-weight: 500;
+  font-weight: 600;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
 }
 
 /* ===== CREATOR ===== */
 
 .creator {
-  padding-top: 10px;
+  padding-top: 18px;
 
   border-top: 1px solid #e2e8f0;
 
@@ -283,24 +385,33 @@ h2 {
 /* ===== LOADING ===== */
 
 .loading {
-  max-width: 850px;
+  max-width: 920px;
 
   margin: 40px auto;
 
-  padding: 18px;
+  padding: 20px;
 
-  border-radius: 16px;
+  border-radius: 18px;
 
   background: #eff6ff;
 
+  border: 1px solid #bfdbfe;
+
   color: #2563eb;
 
-  font-weight: 600;
+  font-weight: 700;
 
   text-align: center;
 }
 
 /* ===== RESPONSIVE ===== */
+
+@media (max-width: 900px) {
+
+  .numbers {
+    grid-template-columns: 1fr;
+  }
+}
 
 @media (max-width: 768px) {
 
@@ -311,6 +422,18 @@ h2 {
   }
 
   h2 {
-    font-size: 24px;
+    font-size: 28px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+
+  .number-value {
+    font-size: 28px;
   }
 }

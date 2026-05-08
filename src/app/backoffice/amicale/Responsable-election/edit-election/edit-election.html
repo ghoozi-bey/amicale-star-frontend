@@ -74,6 +74,81 @@
 
   </div>
 
+  <!-- ===== CONFIG ===== -->
+
+  <div class="config-grid">
+
+    <!-- MAX CANDIDATS -->
+
+    <div>
+
+      <label>Nombre maximum de candidats *</label>
+
+      <input
+        type="number"
+        min="1"
+        formControlName="nombreCandidats"
+        (change)="onMaxCandidatesChange()"
+        [class.invalid]="form.get('nombreCandidats')?.invalid && form.get('nombreCandidats')?.touched"
+      >
+
+      <div
+        class="field-error"
+        *ngIf="form.get('nombreCandidats')?.touched && form.get('nombreCandidats')?.errors"
+      >
+
+        <span *ngIf="form.get('nombreCandidats')?.errors?.['required']">
+          Le nombre maximum de candidats est obligatoire
+        </span>
+
+        <span *ngIf="form.get('nombreCandidats')?.errors?.['min']">
+          Minimum 1 candidat
+        </span>
+
+        <span *ngIf="form.get('nombreCandidats')?.errors?.['tooSmall']">
+          Réduisez les candidats sélectionnés avant de diminuer la limite
+        </span>
+
+      </div>
+
+    </div>
+
+    <!-- WINNERS -->
+
+    <div>
+
+      <label>Nombre de gagnants *</label>
+
+      <input
+        type="number"
+        min="1"
+        formControlName="nombreGagnants"
+        [class.invalid]="form.get('nombreGagnants')?.invalid && form.get('nombreGagnants')?.touched"
+      >
+
+      <div
+        class="field-error"
+        *ngIf="form.get('nombreGagnants')?.touched && form.get('nombreGagnants')?.errors"
+      >
+
+        <span *ngIf="form.get('nombreGagnants')?.errors?.['required']">
+          Le nombre de gagnants est obligatoire
+        </span>
+
+        <span *ngIf="form.get('nombreGagnants')?.errors?.['min']">
+          Minimum 1 gagnant
+        </span>
+
+        <span *ngIf="form.get('nombreGagnants')?.errors?.['tooManyWinners']">
+          Le nombre de gagnants dépasse la limite des candidats
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
   <!-- ===== DATES ===== -->
 
   <div class="date-group">
@@ -99,8 +174,8 @@
           La date début est obligatoire
         </span>
 
-        <span *ngIf="form.get('dateDebut')?.errors?.['tooEarly']">
-          La date début doit être à partir de demain
+        <span *ngIf="form.get('dateDebut')?.errors?.['pastDate']">
+          La date début doit être dans le futur
         </span>
 
       </div>
@@ -146,6 +221,17 @@
     La date début doit être avant la date fin
   </div>
 
+  <!-- ===== COUNTER ===== -->
+
+  <div class="counter">
+
+    {{ selectedCandidats.length }}
+    /
+    {{ form.value.nombreCandidats }}
+    candidats sélectionnés
+
+  </div>
+
   <!-- ===== CANDIDATS ===== -->
 
   <div class="candidat-container">
@@ -157,6 +243,13 @@
       <h3>
         Utilisateurs disponibles
       </h3>
+
+      <div
+        *ngIf="availableUsers.length === 0"
+        class="empty"
+      >
+        Aucun utilisateur disponible
+      </div>
 
       <div
         *ngFor="let a of availableUsers"
@@ -235,6 +328,13 @@
 
     </div>
 
+  </div>
+
+  <div
+    class="field-error candidat-section-error"
+    *ngIf="form.get('nombreCandidats')?.errors?.['maxReached']"
+  >
+    Nombre maximum de candidats atteint
   </div>
 
   <!-- ===== BUTTON ===== -->

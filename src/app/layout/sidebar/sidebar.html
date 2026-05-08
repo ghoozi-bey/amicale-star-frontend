@@ -60,7 +60,7 @@
         </a>
       </li>
       <li>
-        <a routerLink="/mes-evenements-amicale" routerLinkActive="active" class="sidebar-item">
+        <a routerLink="/mes-evenements-amicale" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="sidebar-item">
           Mes événements
         </a>
       </li>
@@ -71,7 +71,6 @@
       Gestion sondages
     </button>
 
-    <!-- 🔥 FIX ici aussi -->
     <ul *ngIf="showSondagesMenu" class="submenu">
       <li>
         <a routerLink="/gestion-sondages/create" routerLinkActive="active">
@@ -79,7 +78,7 @@
         </a>
       </li>
       <li>
-        <a routerLink="/gestion-sondages" routerLinkActive="active">
+        <a routerLink="/gestion-sondages" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           Liste sondages
         </a>
       </li>
@@ -99,7 +98,7 @@
         <a routerLink="/gestion-election/create" routerLinkActive="active"> Créer </a>
       </li>
       <li>
-        <a routerLink="/gestion-election" routerLinkActive="active"> Liste </a>
+        <a routerLink="/gestion-election" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"> Liste </a>
       </li>
     </ul>
   </div>
@@ -119,7 +118,7 @@
         </a>
       </li>
       <li>
-        <a routerLink="/admin-users" routerLinkActive="active" class="sidebar-item">
+        <a routerLink="/admin-users" routerLinkActive="active" class="sidebar-item" [routerLinkActiveOptions]="{ exact: true }">
           Liste
         </a>
       </li>
