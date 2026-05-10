@@ -1,6 +1,7 @@
-import { Candidat } from './candidat.model';
+import { Candidat }
+from './candidat.model';
 
-export interface Election {
+export interface ElectionPublic {
 
   id?: number;
 
@@ -24,5 +25,5 @@ export interface Election {
 
   createdByPrenom?: string;
 
-  candidats?: String[];
+  candidats?: Candidat[];
 }

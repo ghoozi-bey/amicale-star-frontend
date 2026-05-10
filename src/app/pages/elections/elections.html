@@ -1,0 +1,106 @@
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+
+    <h1>
+      Élections Actives
+    </h1>
+
+    <p>
+      Consultez les élections en cours et participez au vote.
+    </p>
+
+  </div>
+
+  <!-- LOADING -->
+  <div
+    class="loading"
+    *ngIf="loading"
+  >
+    Chargement...
+  </div>
+
+  <!-- EMPTY -->
+  <div
+    class="empty"
+    *ngIf="!loading && elections.length === 0"
+  >
+    Aucune élection active.
+  </div>
+
+  <!-- LIST -->
+  <div
+    class="elections-grid"
+    *ngIf="!loading && elections.length > 0"
+  >
+
+    <div
+      class="election-card"
+      *ngFor="let election of elections"
+      [routerLink]="['/election', election.id]"
+    >
+
+      <div class="top">
+
+        <div class="status">
+          {{ election.statut }}
+        </div>
+
+      </div>
+
+      <h2>
+        {{ election.title }}
+      </h2>
+
+      <p class="description">
+        {{ election.description }}
+      </p>
+
+      <div class="info">
+
+        <div class="info-item">
+
+          <span class="label">
+            Début
+          </span>
+
+          <span>
+            {{ election.dateDebut | date:'short' }}
+          </span>
+
+        </div>
+
+        <div class="info-item">
+
+          <span class="label">
+            Fin
+          </span>
+
+          <span>
+            {{ election.dateFin | date:'short' }}
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="footer">
+
+        <div class="meta">
+          {{ election.nombreCandidats }}
+          candidats
+        </div>
+
+        <div class="meta">
+          {{ election.nombreGagnants }}
+          gagnants
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 
 import { Election } from '../models/election.model';
 import { AdherentLite } from '../models/adherent-lite.model';
+import { ElectionPublic } from '../models/election-public.model';
+import { VoteRequest } from '../models/vote-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -96,6 +98,35 @@ export class ElectionService {
 
     return this.http.get<AdherentLite[]>(
       `${this.apiUrl}/${electionId}/eligible-adherents`
+    );
+  }
+
+  // PUBLIC ACTIVE ELECTIONS
+  getActiveElections():
+  Observable<ElectionPublic[]> {
+
+    return this.http.get<ElectionPublic[]>(
+      `${this.apiUrl}/actifs`
+    );
+  }
+
+  // PUBLIC ACTIVE ELECTION BY ID
+  getActiveElectionById(
+    id: number
+  ): Observable<ElectionPublic> {
+
+    return this.http.get<ElectionPublic>(
+      `${this.apiUrl}/actifs/${id}`
+    );
+  }
+
+  voter(
+    request: VoteRequest
+  ) {
+
+    return this.http.post(
+      'http://localhost:8080/api/votes',
+      request
     );
   }
 

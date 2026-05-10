@@ -1,0 +1,180 @@
+<div class="page">
+
+  <div *ngIf="loading" class="loading">
+    Chargement...
+  </div>
+
+  <div
+    *ngIf="!loading && election"
+    class="detail-card"
+  >
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+      <div>
+
+        <h1>
+          {{ election.title }}
+        </h1>
+
+        <p>
+          {{ election.description }}
+        </p>
+
+      </div>
+
+      <div class="status">
+        {{ election.statut }}
+      </div>
+
+    </div>
+
+    <!-- DATES -->
+
+    <div class="section">
+
+      <div class="info-grid">
+
+        <div class="info-box">
+
+          <span class="label">
+            Début
+          </span>
+
+          <span>
+            {{ election.dateDebut | date:'medium' }}
+          </span>
+
+        </div>
+
+        <div class="info-box">
+
+          <span class="label">
+            Fin
+          </span>
+
+          <span>
+            {{ election.dateFin | date:'medium' }}
+          </span>
+
+        </div>
+
+        <div class="info-box">
+
+          <span class="label">
+            Candidats
+          </span>
+
+          <span>
+            {{ election.nombreCandidats }}
+          </span>
+
+        </div>
+
+        <div class="info-box">
+
+          <span class="label">
+            Gagnants
+          </span>
+
+          <span>
+            {{ election.nombreGagnants }}
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- CANDIDATES -->
+
+    <div class="section">
+
+      <h2>
+        Candidats
+      </h2>
+
+      <div class="candidates">
+
+        <div
+            class="candidate-card"
+            *ngFor="let candidat of election.candidats"
+            (click)="toggleCandidate(candidat.id)"
+            [class.selected]="selectedCandidats.includes(candidat.id)"
+            >
+
+            <div class="candidate-avatar">
+
+                {{
+                candidat.prenom.charAt(0)
+                }}{{
+                candidat.nom.charAt(0)
+                }}
+
+            </div>
+
+            <div class="candidate-info">
+
+                <h3>
+                {{ candidat.prenom }}
+                {{ candidat.nom }}
+                </h3>
+
+                <span>
+                {{ candidat.matricule }}
+                </span>
+
+            </div>
+
+            </div>
+
+      </div>
+
+      <div class="vote-actions" *ngIf="!hasVoted">
+
+        <button
+            class="vote-btn"
+            (click)="submitVote()"
+            [disabled]="submitting"
+        >
+
+            {{
+            submitting
+                ? 'Vote en cours...'
+                : 'Voter'
+            }}
+
+        </button>
+
+        <div
+            class="success"
+            *ngIf="successMessage"
+        >
+            {{ successMessage }}
+        </div>
+
+        <div
+            class="error"
+            *ngIf="errorMessage"
+        >
+            {{ errorMessage }}
+        </div>
+
+        </div>
+
+        <div
+        class="already-voted"
+        *ngIf="hasVoted"
+        >
+            Vous avez déjà voté
+            dans cette élection.
+        </div>
+
+    </div>
+
+  </div>
+
+</div>
