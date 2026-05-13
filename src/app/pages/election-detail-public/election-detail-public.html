@@ -44,7 +44,7 @@
           </span>
 
           <span>
-            {{ election.dateDebut | date:'medium' }}
+            {{ election.dateDebut | date:'dd/MM/yyyy HH:mm' }}
           </span>
 
         </div>
@@ -56,7 +56,7 @@
           </span>
 
           <span>
-            {{ election.dateFin | date:'medium' }}
+            {{ election.dateFin | date:'dd/MM/yyyy HH:mm' }}
           </span>
 
         </div>
@@ -100,78 +100,105 @@
       <div class="candidates">
 
         <div
-            class="candidate-card"
-            *ngFor="let candidat of election.candidats"
-            (click)="toggleCandidate(candidat.id)"
-            [class.selected]="selectedCandidats.includes(candidat.id)"
-            >
+          class="candidate-card"
+          *ngFor="let candidat of election.candidats"
+          (click)="toggleCandidate(candidat.id)"
+          [class.selected]="selectedCandidats.includes(candidat.id)"
+        >
 
-            <div class="candidate-avatar">
+          <!-- LEFT -->
 
-                {{
-                candidat.prenom.charAt(0)
-                }}{{
-                candidat.nom.charAt(0)
-                }}
+          <div class="candidate-left">
 
-            </div>
+            <img
+              class="candidate-avatar"
+              [src]="
+                'http://localhost:8080/api/user/photo/'
+                + candidat.matricule
+              "
+              (error)="
+                $event.target.src =
+                'assets/default-pfp.jpg'
+              "
+              alt="Photo candidat"
+            />
 
             <div class="candidate-info">
 
-                <h3>
+              <h3>
                 {{ candidat.prenom }}
                 {{ candidat.nom }}
-                </h3>
+              </h3>
 
-                <span>
-                {{ candidat.matricule }}
-                </span>
-
-            </div>
+              <span>
+                {{ candidat.departement }}
+              </span>
 
             </div>
+
+          </div>
+
+          <!-- CHECK -->
+
+          <div
+            class="candidate-check"
+            *ngIf="selectedCandidats.includes(candidat.id)"
+          >
+            ✓
+          </div>
+
+        </div>
 
       </div>
 
-      <div class="vote-actions" *ngIf="!hasVoted">
+      <!-- ACTIONS -->
+
+      <div
+        class="vote-actions"
+        *ngIf="!hasVoted"
+      >
 
         <button
-            class="vote-btn"
-            (click)="submitVote()"
-            [disabled]="submitting"
+          class="vote-btn"
+          (click)="submitVote()"
+          [disabled]="submitting"
         >
 
-            {{
-            submitting
-                ? 'Vote en cours...'
-                : 'Voter'
-            }}
+          {{
+          submitting
+            ? 'Vote en cours...'
+            : 'Voter'
+          }}
 
         </button>
 
         <div
-            class="success"
-            *ngIf="successMessage"
+          class="success"
+          *ngIf="successMessage"
         >
-            {{ successMessage }}
+          {{ successMessage }}
         </div>
 
         <div
-            class="error"
-            *ngIf="errorMessage"
+          class="error"
+          *ngIf="errorMessage"
         >
-            {{ errorMessage }}
+          {{ errorMessage }}
         </div>
 
-        </div>
+      </div>
 
-        <div
+      <!-- ALREADY VOTED -->
+
+      <div
         class="already-voted"
         *ngIf="hasVoted"
-        >
-            Vous avez déjà voté
-            dans cette élection.
-        </div>
+      >
+
+        Vous avez déjà voté
+        dans cette élection.
+
+      </div>
 
     </div>
 

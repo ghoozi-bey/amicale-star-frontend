@@ -79,7 +79,20 @@
 
       <button
         class="stats-btn"
-        disabled
+        (click)="goToStats()"
+      >
+        📊 Voir statistiques
+      </button>
+
+    </ng-container>
+
+    <!-- ===== FINALISEE ===== -->
+
+    <ng-container *ngIf="election.statut === 'FINALISEE'">
+
+      <button
+        class="stats-btn"
+        (click)="goToStats()"
       >
         📊 Voir statistiques
       </button>

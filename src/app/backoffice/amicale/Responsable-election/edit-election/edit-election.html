@@ -234,95 +234,178 @@
 
   <!-- ===== CANDIDATS ===== -->
 
-  <div class="candidat-container">
+  <div class="candidats">
 
-    <!-- AVAILABLE USERS -->
+    <label>
+      Gestion des candidats
+    </label>
 
-    <div class="list">
+    <div class="counter">
 
-      <h3>
-        Utilisateurs disponibles
-      </h3>
-
-      <div
-        *ngIf="availableUsers.length === 0"
-        class="empty"
-      >
-        Aucun utilisateur disponible
-      </div>
-
-      <div
-        *ngFor="let a of availableUsers"
-        class="user-row"
-      >
-
-        <div class="user-info">
-
-          <strong>
-            {{ a.prenom }} {{ a.nom }}
-          </strong>
-
-          <small>
-            {{ a.departement }}
-            —
-            {{ a.role }}
-          </small>
-
-        </div>
-
-        <button
-          type="button"
-          class="add-btn"
-          (click)="addCandidat(a.matricule)"
-        >
-          ➕
-        </button>
-
-      </div>
+      {{ selectedCandidats.length }}
+      /
+      {{ form.value.nombreCandidats }}
+      candidats sélectionnés
 
     </div>
 
-    <!-- SELECTED CANDIDATES -->
+    <div class="candidate-grid">
 
-    <div class="list">
+      <!-- AVAILABLE -->
 
-      <h3>
-        Candidats sélectionnés
-      </h3>
+      <div class="candidate-column">
 
-      <div
-        *ngIf="selectedUsers.length === 0"
-        class="empty"
-      >
-        Aucun candidat sélectionné
-      </div>
+        <div class="column-header">
 
-      <div
-        *ngFor="let a of selectedUsers"
-        class="user-row selected"
-      >
+          <h3>
+            Disponibles
+          </h3>
 
-        <div class="user-info">
-
-          <strong>
-            {{ a.prenom }} {{ a.nom }}
-          </strong>
-
-          <small>
-            {{ a.departement }}
-            —
-            {{ a.role }}
-          </small>
+          <span>
+            {{ availableUsers.length }}
+          </span>
 
         </div>
 
-        <button
-          type="button"
-          class="remove-btn"
-          (click)="removeCandidat(a.matricule)"
-        >
-          ❌
-        </button>
+        <div class="candidate-list">
+
+          <div
+            *ngIf="availableUsers.length === 0"
+            class="empty-state"
+          >
+            Aucun utilisateur disponible
+          </div>
+
+          <div
+            *ngFor="let a of availableUsers"
+            class="candidate-item"
+          >
+
+            <!-- LEFT -->
+
+            <div class="candidate-left">
+
+              <img
+                class="candidate-avatar"
+
+                [src]="
+                  'http://localhost:8080/api/user/photo/'
+                  + a.matricule
+                "
+
+                (error)="
+                  $event.target.src =
+                  'assets/default-pfp.jpg'
+                "
+              >
+
+              <div class="candidate-info">
+
+                <h3>
+                  {{ a.prenom }}
+                  {{ a.nom }}
+                </h3>
+
+                <span>
+                  {{ a.departement }}
+                </span>
+
+              </div>
+
+            </div>
+
+            <!-- ACTION -->
+
+            <button
+              type="button"
+              class="circle-btn add-btn"
+              (click)="addCandidat(a.matricule)"
+            >
+              +
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- SELECTED -->
+
+      <div class="candidate-column">
+
+        <div class="column-header">
+
+          <h3>
+            Sélectionnés
+          </h3>
+
+          <span>
+            {{ selectedUsers.length }}
+          </span>
+
+        </div>
+
+        <div class="candidate-list">
+
+          <div
+            *ngIf="selectedUsers.length === 0"
+            class="empty-state"
+          >
+            Aucun candidat sélectionné
+          </div>
+
+          <div
+            *ngFor="let a of selectedUsers"
+            class="candidate-item selected"
+          >
+
+            <!-- LEFT -->
+
+            <div class="candidate-left">
+
+              <img
+                class="candidate-avatar"
+
+                [src]="
+                  'http://localhost:8080/api/user/photo/'
+                  + a.matricule
+                "
+
+                (error)="
+                  $event.target.src =
+                  'assets/default-pfp.jpg'
+                "
+              >
+
+              <div class="candidate-info">
+
+                <h3>
+                  {{ a.prenom }}
+                  {{ a.nom }}
+                </h3>
+
+                <span>
+                  {{ a.departement }}
+                </span>
+
+              </div>
+
+            </div>
+
+            <!-- ACTION -->
+
+            <button
+              type="button"
+              class="circle-btn remove-btn"
+              (click)="removeCandidat(a.matricule)"
+            >
+              ×
+            </button>
+
+          </div>
+
+        </div>
 
       </div>
 

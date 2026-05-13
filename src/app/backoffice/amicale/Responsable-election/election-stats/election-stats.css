@@ -1,0 +1,314 @@
+/* =========================
+   PAGE
+========================= */
+
+.page {
+
+  min-height: 100vh;
+
+  padding: 40px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #f8fbff 0%,
+      #eef4ff 100%
+    );
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.loading {
+
+  max-width: 500px;
+
+  margin: 80px auto;
+
+  background: white;
+
+  padding: 40px;
+
+  border-radius: 24px;
+
+  text-align: center;
+
+  color: #64748b;
+
+  font-size: 16px;
+
+  border: 1px solid #e2e8f0;
+
+  box-shadow:
+    0 12px 30px rgba(15,23,42,0.06);
+}
+
+/* =========================
+   CARD
+========================= */
+
+.stats-card {
+
+  max-width: 900px;
+
+  margin: auto;
+
+  background:
+    rgba(255,255,255,0.95);
+
+  backdrop-filter: blur(10px);
+
+  border-radius: 30px;
+
+  padding: 36px;
+
+  border: 1px solid rgba(226,232,240,0.8);
+
+  box-shadow:
+    0 20px 60px rgba(15,23,42,0.08);
+}
+
+/* =========================
+   TITLE
+========================= */
+
+.stats-card h1 {
+
+  margin: 0 0 32px 0;
+
+  font-size: 34px;
+
+  font-weight: 800;
+
+  color: #0f172a;
+
+  letter-spacing: -1px;
+
+  text-align: center;
+}
+
+/* =========================
+   CANDIDATE ROW
+========================= */
+
+.candidate {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 22px;
+
+  margin-bottom: 18px;
+
+  border-radius: 24px;
+
+  background: white;
+
+  border: 1px solid #e2e8f0;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+
+  box-shadow:
+    0 8px 24px rgba(15,23,42,0.05);
+}
+
+/* =========================
+   HOVER
+========================= */
+
+.candidate:hover {
+
+  transform: translateY(-3px);
+
+  border-color: #93c5fd;
+
+  box-shadow:
+    0 16px 35px rgba(37,99,235,0.10);
+}
+
+/* =========================
+   TOP 1
+========================= */
+
+.candidate:first-child {
+
+  background:
+    linear-gradient(
+      135deg,
+      #eff6ff,
+      #dbeafe
+    );
+
+  border: 2px solid #60a5fa;
+
+  box-shadow:
+    0 18px 40px rgba(37,99,235,0.16);
+}
+
+/* =========================
+   LEFT
+========================= */
+
+.left {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+}
+
+/* =========================
+   RANK
+========================= */
+
+.rank {
+
+  width: 56px;
+
+  height: 56px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #3b82f6
+    );
+
+  color: white;
+
+  font-size: 18px;
+
+  font-weight: 800;
+
+  flex-shrink: 0;
+
+  box-shadow:
+    0 10px 22px rgba(37,99,235,0.22);
+}
+
+/* =========================
+   INFO
+========================= */
+
+.left h3 {
+
+  margin: 0;
+
+  font-size: 20px;
+
+  font-weight: 800;
+
+  color: #0f172a;
+}
+
+.left span {
+
+  display: inline-block;
+
+  margin-top: 6px;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.5px;
+
+  color: #2563eb;
+}
+
+/* =========================
+   RIGHT
+========================= */
+
+.right {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: 6px;
+}
+
+.right strong {
+
+  font-size: 24px;
+
+  font-weight: 800;
+
+  color: #0f172a;
+}
+
+.right span {
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  color: #2563eb;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+  .page {
+
+    padding: 20px;
+  }
+
+  .stats-card {
+
+    padding: 24px;
+  }
+
+  .stats-card h1 {
+
+    font-size: 28px;
+  }
+
+  .candidate {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .right {
+
+    align-items: flex-start;
+  }
+
+  .left h3 {
+
+    font-size: 18px;
+  }
+
+  .right strong {
+
+    font-size: 20px;
+  }
+}

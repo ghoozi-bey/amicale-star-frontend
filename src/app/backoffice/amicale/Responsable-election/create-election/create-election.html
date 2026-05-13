@@ -205,7 +205,9 @@
 
   <div class="candidats">
 
-    <label>Candidats</label>
+    <label>
+      Candidats
+    </label>
 
     <div class="counter">
 
@@ -216,31 +218,72 @@
 
     </div>
 
-    <select
-      multiple
-      [(ngModel)]="selectedCandidats"
-      [ngModelOptions]="{ standalone: true }"
-    >
+    <div class="candidate-list">
 
-      <option
+      <div
+        class="candidate-item"
+
         *ngFor="let a of adherents"
-        [value]="a.matricule"
+
+        (click)="toggleCandidate(a.matricule)"
+
+        [class.selected]="
+          selectedCandidats.includes(
+            a.matricule
+          )
+        "
       >
 
-        {{ a.prenom }}
-        {{ a.nom }}
-        —
-        {{ a.departement }}
-        —
-        {{ a.role }}
+        <!-- LEFT -->
 
-      </option>
+        <div class="candidate-left">
 
-    </select>
+          <img
+            class="candidate-avatar"
 
-    <small>
-      Maintenez CTRL pour sélectionner plusieurs candidats
-    </small>
+            [src]="
+              'http://localhost:8080/api/user/photo/'
+              + a.matricule
+            "
+
+            (error)="
+              $event.target.src =
+              'assets/default-pfp.jpg'
+            "
+          >
+
+          <div class="candidate-info">
+
+            <h3>
+              {{ a.prenom }}
+              {{ a.nom }}
+            </h3>
+
+            <span>
+              {{ a.departement }}
+            </span>
+
+          </div>
+
+        </div>
+
+        <!-- CHECK -->
+
+        <div
+          class="candidate-check"
+
+          *ngIf="
+            selectedCandidats.includes(
+              a.matricule
+            )
+          "
+        >
+          ✓
+        </div>
+
+      </div>
+
+    </div>
 
   </div>
 

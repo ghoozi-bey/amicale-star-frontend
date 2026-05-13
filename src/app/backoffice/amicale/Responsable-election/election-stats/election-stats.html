@@ -1,0 +1,62 @@
+<div class="page">
+
+  <div
+    *ngIf="loading"
+    class="loading"
+  >
+    Chargement...
+  </div>
+
+  <div
+    *ngIf="!loading"
+    class="stats-card"
+  >
+
+    <h1>
+      Résultats de l’élection
+    </h1>
+
+    <div
+      class="candidate"
+      *ngFor="let s of stats; let i = index"
+    >
+
+      <div class="left">
+
+        <div class="rank">
+          #{{ i + 1 }}
+        </div>
+
+        <div>
+
+          <h3>
+            {{ s.prenom }}
+            {{ s.nom }}
+          </h3>
+
+          <span>
+            {{ s.departement }}
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="right">
+
+        <strong>
+          {{ s.votes }}
+          votes
+        </strong>
+
+        <span>
+          {{ getPercentage(s.votes) }}%
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

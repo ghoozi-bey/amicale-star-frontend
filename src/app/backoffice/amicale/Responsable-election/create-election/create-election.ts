@@ -179,6 +179,43 @@ export class CreateElection implements OnInit{
     }
   }
 
+  toggleCandidate(
+    matricule: string
+  ): void {
+
+    const max =
+      this.form.value.nombreCandidats || 0;
+
+    const exists =
+      this.selectedCandidats.includes(
+        matricule
+      );
+
+    // REMOVE
+    if (exists) {
+
+      this.selectedCandidats =
+        this.selectedCandidats.filter(
+          m => m !== matricule
+        );
+
+      return;
+    }
+
+    // LIMIT
+    if (
+      this.selectedCandidats.length >= max
+    ) {
+
+      return;
+    }
+
+    // ADD
+    this.selectedCandidats.push(
+      matricule
+    );
+  }
+
   // ================= SUBMIT =================
 
   onSubmit(): void {

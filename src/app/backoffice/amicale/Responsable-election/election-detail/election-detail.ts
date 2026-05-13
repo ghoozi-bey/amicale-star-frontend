@@ -219,6 +219,11 @@ export class ElectionDetail implements OnInit {
 
   goToStats() {
 
+    this.router.navigate([
+      '/gestion-election',
+      this.election.id,
+      'stats'
+    ]);
   }
 
 }

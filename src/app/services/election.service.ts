@@ -130,8 +130,13 @@ export class ElectionService {
     );
   }
 
-  goToStats() {
+  getElectionStats(
+    electionId: number
+  ) {
 
+    return this.http.get<any[]>(
+      `${this.apiUrl}/${electionId}/stats`
+    );
   }
 
 }

@@ -9,4 +9,6 @@ export interface Candidat {
   prenom: string;
 
   matricule: string;
+
+  departement: string;
 }

@@ -12,6 +12,7 @@ import { ElectionDetail } from './backoffice/amicale/Responsable-election/electi
 import { EditElection } from './backoffice/amicale/Responsable-election/edit-election/edit-election';
 import { Elections } from './pages/elections/elections';
 import { ElectionDetailPublic } from './pages/election-detail-public/election-detail-public';
+import { ElectionStats } from './backoffice/amicale/Responsable-election/election-stats/election-stats';
 
 export const routes: Routes = [
 
@@ -204,6 +205,10 @@ export const routes: Routes = [
         path: 'election/:id',
         component: ElectionDetailPublic
       },
+      {
+        path: 'gestion-election/:id/stats',
+        component: ElectionStats
+      }
 
     ]
   },

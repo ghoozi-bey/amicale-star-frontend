@@ -118,9 +118,11 @@ export class EditElection implements OnInit {
 
         next: (res: any) => {
 
-          // PRELOAD CANDIDATS
+          // FIX HERE
           this.selectedCandidats =
-            res.candidats || [];
+            (res.candidats || []).map(
+              (c: any) => c.matricule
+            );
 
           this.form.patchValue({
 

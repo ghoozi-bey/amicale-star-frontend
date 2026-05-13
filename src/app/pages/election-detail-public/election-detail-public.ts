@@ -178,11 +178,26 @@ implements OnInit {
 
           console.error(err);
 
-          this.errorMessage =
-            err.error
-            || 'Une erreur est survenue';
+          if (typeof err.error === 'string') {
+
+            this.errorMessage = err.error;
+
+          } else if (err.error?.message) {
+
+            this.errorMessage = err.error.message;
+
+          } else if (err.error?.error) {
+
+            this.errorMessage = err.error.error;
+
+          } else {
+
+            this.errorMessage =
+              'Une erreur est survenue';
+          }
 
           this.submitting = false;
+
           this.cdr.detectChanges();
         }
 
