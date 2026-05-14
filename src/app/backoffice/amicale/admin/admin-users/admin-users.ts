@@ -28,6 +28,12 @@ export class AdminUsersComponent {
 
     filteredUsers: any[] = [];
 
+    currentPage = 0;
+    pageSize = 10;
+
+    totalPages = 0;
+    totalElements = 0;
+
     constructor(
         private http: HttpClient,
         private authService: AuthService,
@@ -41,23 +47,66 @@ export class AdminUsersComponent {
     }
 
     loadUsers() {
-        this.http.get<any[]>(this.api, {
-            headers: { Authorization: 'Bearer ' + this.authService.getToken() }
-        }).subscribe({
-            next: (data) => {
-                this.users = data.map((user: any) => ({
-                ...user,
-                typeAdherent: (user.typeAdherent || user.type_adherent || user.role || '')
+        this.http.get<any>(
+            `${this.api}?page=${this.currentPage}&size=${this.pageSize}`,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.authService.getToken()
+                }
+            }
+
+        ).subscribe({
+
+            next: (res) => {
+
+                this.users = res.content.map((user: any) => ({
+                    ...user,
+
+                    typeAdherent: (
+                        user.typeAdherent ||
+                        user.type_adherent ||
+                        user.role ||
+                        ''
+                    )
+
                     .replace('ROLE_', '')
                     .toUpperCase()
-            }));
+                }));
 
-            this.filteredUsers = [...this.users];
-            console.log(this.users);
-            this.cdr.detectChanges(); // forces UI update
+                this.filteredUsers = [...this.users];
+
+                this.totalPages = res.totalPages;
+                this.totalElements = res.totalElements;
+
+                console.log(this.users);
+
+                this.cdr.detectChanges();
+
             },
-            error: (err) => console.error('Erreur chargement users', err)
+
+            error: (err) =>
+                console.error('Erreur chargement users', err)
+
         });
+
+    }
+
+    nextPage() {
+        if (this.currentPage < this.totalPages - 1) {
+
+            this.currentPage++;
+            this.loadUsers();
+
+        }
+    }
+
+    previousPage() {
+        if (this.currentPage > 0) {
+
+            this.currentPage--;
+            this.loadUsers();
+
+        }
     }
 
     deleteUser(matricule: string) {

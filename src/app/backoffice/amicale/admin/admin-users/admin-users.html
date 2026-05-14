@@ -71,4 +71,52 @@
 
   </div>
 
+  <!-- PAGINATION -->
+  <div class="pagination-wrapper">
+
+    <div class="pagination-bar">
+
+      <!-- PREVIOUS -->
+      <button
+        type="button"
+        class="pagination-btn"
+        (click)="previousPage()"
+        [disabled]="currentPage === 0">
+
+        ← Previous
+
+      </button>
+
+      <!-- INFO -->
+      <div class="pagination-counter">
+
+        <span class="pagination-current">
+          {{ currentPage + 1 }}
+        </span>
+
+        <span class="pagination-slash">
+          /
+        </span>
+
+        <span class="pagination-total">
+          {{ totalPages }}
+        </span>
+
+      </div>
+
+      <!-- NEXT -->
+      <button
+        type="button"
+        class="pagination-btn"
+        (click)="nextPage()"
+        [disabled]="currentPage >= totalPages - 1">
+
+        Next →
+
+      </button>
+
+    </div>
+
+  </div>
+
 </div>

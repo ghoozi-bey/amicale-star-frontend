@@ -25,12 +25,19 @@
 
 /* ===== Grid ===== */
 .grid {
-  max-width: 1200px;
+
+  max-width: 1500px;
+
   margin: auto;
 
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 30px;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(40px, 450px));
+
+  justify-content: center;
+
+  gap: 28px;
 }
 
 /* ===== Card ===== */
@@ -44,6 +51,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  width: 100%;
 
   transition: all 0.25s ease;
   cursor: pointer;

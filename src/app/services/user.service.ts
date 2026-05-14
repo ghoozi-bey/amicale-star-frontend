@@ -9,8 +9,12 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getAll() {
-    return this.http.get(this.api);
+  getAll(page: number, size: number) {
+
+    return this.http.get<any>(
+      `${this.api}?page=${page}&size=${size}`
+    );
+
   }
 
   create(data: any) {

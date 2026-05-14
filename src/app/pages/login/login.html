@@ -1,19 +1,77 @@
 <div class="login-container">
-  <div class="logo">
-  <img src="assets/kk.svg" alt="STAR">
-</div>
 
+  <!-- LOGO -->
+  <div class="logo">
+
+    <img
+      src="assets/kk.svg"
+      alt="STAR">
+
+  </div>
+
+  <!-- LOGIN BOX -->
   <div class="login-box">
 
-    <h2>Connexion</h2>
+    <h2>
+      Connexion
+    </h2>
 
-    <label>Email</label>
-    <input type="text" [(ngModel)]="user.email">
+    <p class="subtitle">
+      Connectez-vous à votre compte
+    </p>
 
-    <label>Mot de passe</label>
-    <input type="password" [(ngModel)]="user.password">
 
-    <button (click)="login()">Se connecter</button>
+    <!-- EMAIL -->
+    <label>
+      Email
+    </label>
+
+    <input
+      type="email"
+      [(ngModel)]="user.email"
+      (input)="clearError()"
+      [class.input-error]="errorMessage"
+      placeholder="Entrer votre email">
+
+    <!-- PASSWORD -->
+    <label>
+      Mot de passe
+    </label>
+
+    <input
+      type="password"
+      [(ngModel)]="user.password"
+      (input)="clearError()"
+      [class.input-error]="errorMessage"
+      placeholder="Entrer votre mot de passe">
+
+    <!-- BUTTON -->
+    <button
+      (click)="login()"
+      [disabled]="loading">
+
+      {{ loading ? 'Connexion...' : 'Se connecter' }}
+
+    </button>
+
+    <!-- ERROR AREA -->
+    <div class="error-wrapper">
+
+      <div
+        class="error-box"
+        [class.show]="errorMessage">
+
+        <span class="material-icons error-icon">
+          error
+        </span>
+
+        <span>
+          {{ errorMessage }}
+        </span>
+
+      </div>
+
+    </div>
 
   </div>
 

@@ -26,30 +26,54 @@ export class AuthService {
   photo$ = this.photoSubject.asObservable();
 
   // ✅ LOGIN
-  login(data: any): Observable<string> {
-    return this.http.post(
+  login(data: any): Observable<any> {
+
+    return this.http.post<any>(
       `${this.api}/login`,
-      data,
-      { responseType: 'text' }
+      data
     ).pipe(
-      tap((token: string) => {
 
-        localStorage.setItem("token", token);
+      tap((res: any) => {
 
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        // NO TOKEN = ERROR RESPONSE
+        if (!res?.token) return;
 
+        // TOKEN
+        localStorage.setItem(
+          "token",
+          res.token
+        );
+
+        // DECODE JWT
+        const payload = JSON.parse(
+          atob(res.token.split('.')[1])
+        );
+
+        // ROLE
         if (payload.role) {
-          localStorage.setItem("role", payload.role);
+
+          localStorage.setItem(
+            "role",
+            payload.role
+          );
+
         }
 
+        // USER STATE
         this.userSubject.next({
+
           nom: payload.nom || "",
+
           prenom: payload.prenom || "",
+
           email: payload.sub || ""
+
         });
 
       })
+
     );
+
   }
 
   // ✅ TOKEN
