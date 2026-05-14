@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { EvenementService } from '../../services/evenement';
 import { LoadingService } from '../../services/loading.service';
 import { Router } from '@angular/router';
+import { ElectionService } from '../../services/election.service';
+import { SondageService } from '../../services/sondage.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,7 +16,9 @@ import { Router } from '@angular/router';
 export class DashboardComponent {
 
   evenements: any[] = [];
-  evenementsActifs: any[] = []; // 🔥 ajout
+  evenementsActifs: any[] = [];
+  activeElections: any[] = [];
+  activeSondages: any[] = [];
 
   selectedEvent: any = null;
 
@@ -24,10 +28,14 @@ export class DashboardComponent {
   constructor(
     private evenementService: EvenementService,
     private loadingService: LoadingService,
+    private electionService:ElectionService,
+    private sondageService:SondageService,
     private router: Router,
     private cd: ChangeDetectorRef
   ) {
     this.loadEvenements();
+    this.loadActiveElections();
+    this.loadActiveSondages();
   }
 
   loadEvenements(): void {
@@ -60,6 +68,46 @@ export class DashboardComponent {
       },
       error: () => this.loadingService.hide()
     });
+  }
+
+  loadActiveElections(): void {
+
+    this.electionService
+      .getActiveElections()
+      .subscribe({
+
+        next: (data) => {
+
+          this.activeElections = data;
+
+          this.cd.detectChanges();
+        },
+
+        error: (err) => {
+
+          console.log(err);
+        }
+      });
+  }
+
+  loadActiveSondages(): void {
+
+    this.sondageService
+      .getActiveSondages()
+      .subscribe({
+
+        next: (data) => {
+
+          this.activeSondages = data;
+
+          this.cd.detectChanges();
+        },
+
+        error: (err) => {
+
+          console.log(err);
+        }
+      });
   }
 
   onImageLoad(): void {

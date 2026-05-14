@@ -2,26 +2,42 @@
 
   <!-- ===== HEADER ===== -->
   <div class="header">
-    <h2>Créer un sondage</h2>
-    <p class="subtitle">Ajoutez des questions et configurez votre sondage</p>
+    <h2>
+      <span class="material-icons icon">poll</span>
+      Créer un sondage
+    </h2>
+
+    <p class="subtitle">
+      <span class="material-icons icon">edit_note</span>
+      Ajoutez des questions et configurez votre sondage
+    </p>
   </div>
 
   <!-- ===== SONDAGE INFO ===== -->
   <div class="sondage-header">
 
-    <label>Titre *</label>
+    <label>
+      <span class="material-icons icon">title</span>
+      Titre *
+    </label>
+
     <input 
       formControlName="title" 
       placeholder="Ex: Satisfaction des membres"
       [class.invalid]="form.get('title')?.invalid && form.get('title')?.touched"
     />
+
     <div class="field-error" *ngIf="form.get('title')?.touched && form.get('title')?.errors">
       <span *ngIf="form.get('title')?.errors?.['required']">
         Le titre est obligatoire
       </span>
     </div>
 
-    <label>Description</label>
+    <label>
+      <span class="material-icons icon">description</span>
+      Description
+    </label>
+
     <textarea 
       formControlName="description" 
       placeholder="Décrivez le sondage..."
@@ -33,35 +49,50 @@
   <div class="date-group">
 
     <div>
-      <label>Date début *</label>
+
+      <label>
+        <span class="material-icons icon">event</span>
+        Date début *
+      </label>
+
       <input 
         type="datetime-local" 
         formControlName="dateDebut"
         [class.invalid]="form.get('dateDebut')?.invalid && form.get('dateDebut')?.touched"
       />
+
       <div class="field-error" *ngIf="form.get('dateDebut')?.touched && form.get('dateDebut')?.errors">
         <span *ngIf="form.get('dateDebut')?.errors?.['required']">
           La date de début est obligatoire
         </span>
       </div>
+
       <div class="field-error"
           *ngIf="form.get('dateDebut')?.errors?.['tooEarly']">
         La date de début doit être à partir de demain
       </div>
+
     </div>
 
     <div>
-      <label>Date fin *</label>
+
+      <label>
+        <span class="material-icons icon">schedule</span>
+        Date fin *
+      </label>
+
       <input 
         type="datetime-local" 
         formControlName="dateFin"
         [class.invalid]="form.get('dateFin')?.invalid && form.get('dateFin')?.touched"
       />
+
       <div class="field-error" *ngIf="form.get('dateFin')?.touched && form.get('dateFin')?.errors">
         <span *ngIf="form.get('dateFin')?.errors?.['required']">
           La date de fin est obligatoire
         </span>
       </div>
+
     </div>
 
   </div>
@@ -69,7 +100,10 @@
   <!-- DATE LOGIC ERROR -->
   <div class="field-error"
       *ngIf="form.get('dateDebut')?.errors?.['invalidDate'] || form.get('dateFin')?.errors?.['invalidDate']">
+
+    <span class="material-icons icon">warning</span>
     La date de début doit être avant la date de fin
+
   </div>
 
   <!-- ===== QUESTIONS ===== -->
@@ -83,8 +117,16 @@
 
       <!-- Header -->
       <div class="question-header">
-        <span>Question {{ i + 1 }}</span>
-        <button type="button" class="delete-btn" (click)="removeQuestion(i)">✖</button>
+
+        <span>
+          <span class="material-icons icon">help</span>
+          Question {{ i + 1 }}
+        </span>
+
+        <button type="button" class="delete-btn" (click)="removeQuestion(i)">
+          <span class="material-icons icon">close</span>
+        </button>
+
       </div>
 
       <!-- Question -->
@@ -93,10 +135,13 @@
         placeholder="Tapez votre question..."
         [class.invalid]="q.get('text')?.invalid && q.get('text')?.touched"
       />
+
       <div class="field-error" *ngIf="q.get('text')?.touched && q.get('text')?.errors">
+
         <span *ngIf="q.get('text')?.errors?.['required']">
           La question est obligatoire
         </span>
+
       </div>
 
       <!-- Type -->
@@ -108,10 +153,12 @@
 
       <!-- Required -->
       <div class="required-toggle">
+
         <label>
           <input type="checkbox" formControlName="required" />
           Question obligatoire
         </label>
+
       </div>
 
       <!-- Choices -->
@@ -121,6 +168,7 @@
           *ngFor="let c of getChoix(i).controls; let j = index"
           class="choice-row"
         >
+
           <input 
             [formControlName]="j" 
             placeholder="Choix..."
@@ -131,15 +179,19 @@
             class="delete-btn" 
             (click)="removeChoice(i, j)"
           >
-            ✖
+            <span class="material-icons icon">close</span>
           </button>
+
         </div>
 
         <!-- CHOICES ERROR -->
         <div class="field-error"
             *ngIf="getChoix(i).controls.some(c => c.touched) 
                     && getChoix(i).controls.filter(c => c.value?.trim() !== '').length < 2">
+
+          <span class="material-icons icon">warning</span>
           Ajoutez au moins 2 choix valides
+
         </div>
 
         <button 
@@ -147,7 +199,10 @@
           class="add-choice-btn" 
           (click)="addChoice(i)"
         >
-          ➕ Ajouter un choix
+
+          <span class="material-icons icon">add</span>
+          Ajouter un choix
+
         </button>
 
       </div>
@@ -162,7 +217,10 @@
     class="add-question-btn" 
     (click)="addQuestion()"
   >
-    ➕ Ajouter une question
+
+    <span class="material-icons icon">playlist_add</span>
+    Ajouter une question
+
   </button>
 
   <!-- ===== SUBMIT ===== -->
@@ -170,17 +228,29 @@
     type="submit" 
     class="submit-btn"
   >
+
+    <span class="material-icons icon">
+      {{ isLoading ? 'hourglass_top' : 'how_to_vote' }}
+    </span>
+
     {{ isLoading ? 'Création...' : 'Créer le sondage' }}
+
   </button>
 
   <!-- GLOBAL ERROR -->
   <div *ngIf="errorMessage" class="error-msg">
+
+    <span class="material-icons icon">error</span>
     {{ errorMessage }}
+
   </div>
 
   <!-- SUCCESS -->
   <div *ngIf="successMessage" class="success-msg">
+
+    <span class="material-icons icon">check_circle</span>
     {{ successMessage }}
+
   </div>
 
 </form>

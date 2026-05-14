@@ -26,15 +26,12 @@ export class LoginComponent {
 
     next: (res: any) => {
 
-      // ✅ TOKEN (si existe)
+      // TOKEN
       if (res?.token) {
         localStorage.setItem('token', res.token);
       }
 
-      // 🔥 TEST FORCÉ (IMPORTANT)
-      localStorage.setItem('matricule', 'STAR123455');
-
-      // ✅ REDIRECTION
+      // REDIRECTION
       this.router.navigate(['/dashboard']);
     },
 

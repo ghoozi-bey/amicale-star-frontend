@@ -1,5 +1,8 @@
 <div *ngIf="loading">
+
+  <span class="material-icons icon">hourglass_top</span>
   Chargement...
+
 </div>
 
 <div
@@ -21,21 +24,30 @@
         class="edit-btn"
         [routerLink]="['/gestion-election/edit', election.id]"
       >
-        ✏️ Modifier
+
+        <span class="material-icons icon">edit</span>
+        Modifier
+
       </button>
 
       <button
         class="publish-btn"
         (click)="publishElection()"
       >
-        🚀 Publier
+
+        <span class="material-icons icon">publish</span>
+        Publier
+
       </button>
 
       <button
         class="reject-btn"
         (click)="rejectElection()"
       >
-        ⛔ Rejeter
+
+        <span class="material-icons icon">cancel</span>
+        Rejeter
+
       </button>
 
     </ng-container>
@@ -48,7 +60,10 @@
         class="unpublish-btn"
         (click)="unpublishElection()"
       >
-        ❌ Annuler publication
+
+        <span class="material-icons icon">unpublished</span>
+        Annuler publication
+
       </button>
 
     </ng-container>
@@ -61,7 +76,10 @@
         class="stats-btn"
         (click)="goToStats()"
       >
-        📊 Voir statistiques
+
+        <span class="material-icons icon">analytics</span>
+        Voir statistiques
+
       </button>
 
     </ng-container>
@@ -72,16 +90,27 @@
 
       <button
         class="role-btn"
-        disabled
+
+        [routerLink]="[
+          '/gestion-election',
+          election.id,
+          'attribuer-roles'
+        ]"
       >
-        🏆 Accorder rôles
+
+        <span class="material-icons icon">emoji_events</span>
+        Attribuer rôles
+
       </button>
 
       <button
         class="stats-btn"
         (click)="goToStats()"
       >
-        📊 Voir statistiques
+
+        <span class="material-icons icon">analytics</span>
+        Voir statistiques
+
       </button>
 
     </ng-container>
@@ -94,7 +123,10 @@
         class="stats-btn"
         (click)="goToStats()"
       >
-        📊 Voir statistiques
+
+        <span class="material-icons icon">analytics</span>
+        Voir statistiques
+
       </button>
 
     </ng-container>
@@ -107,7 +139,10 @@
         class="delete-btn"
         (click)="deleteElection()"
       >
-        🗑️ Supprimer
+
+        <span class="material-icons icon">delete</span>
+        Supprimer
+
       </button>
 
     </ng-container>
@@ -120,7 +155,10 @@
     class="success-msg"
     *ngIf="successMessage"
   >
+
+    <span class="material-icons icon">check_circle</span>
     {{ successMessage }}
+
   </div>
 
   <!-- ERROR -->
@@ -129,15 +167,24 @@
     class="error-msg"
     *ngIf="errorMessage"
   >
+
+    <span class="material-icons icon">error</span>
     {{ errorMessage }}
+
   </div>
 
   <h2>
+
+    <span class="material-icons icon">how_to_vote</span>
     {{ election.title }}
+
   </h2>
 
   <p class="description">
+
+    <span class="material-icons icon">description</span>
     {{ election.description }}
+
   </p>
 
   <div class="numbers">
@@ -149,7 +196,10 @@
       </span>
 
       <span class="number-label">
+
+        <span class="material-icons icon">groups</span>
         candidats max
+
       </span>
 
     </div>
@@ -161,7 +211,10 @@
       </span>
 
       <span class="number-label">
+
+        <span class="material-icons icon">military_tech</span>
         gagnants
+
       </span>
 
     </div>
@@ -173,7 +226,10 @@
       </span>
 
       <span class="number-label">
+
+        <span class="material-icons icon">check_circle</span>
         sélectionnés
+
       </span>
 
     </div>
@@ -183,18 +239,28 @@
   <div class="dates">
 
     <p>
+
+      <span class="material-icons icon">event</span>
+
       Début:
       {{ election.dateDebut | date:'dd/MM/yyyy HH:mm' }}
+
     </p>
 
     <p>
+
+      <span class="material-icons icon">schedule</span>
+
       Fin:
       {{ election.dateFin | date:'dd/MM/yyyy HH:mm' }}
+
     </p>
 
   </div>
 
   <div class="creator">
+
+    <span class="material-icons icon">person</span>
 
     Créée par
     {{ election.createdByPrenom }}

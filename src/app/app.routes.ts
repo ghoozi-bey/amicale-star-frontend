@@ -13,6 +13,7 @@ import { EditElection } from './backoffice/amicale/Responsable-election/edit-ele
 import { Elections } from './pages/elections/elections';
 import { ElectionDetailPublic } from './pages/election-detail-public/election-detail-public';
 import { ElectionStats } from './backoffice/amicale/Responsable-election/election-stats/election-stats';
+import { AttribuerRoles } from './backoffice/amicale/Responsable-election/attribuer-roles/attribuer-roles';
 
 export const routes: Routes = [
 
@@ -196,6 +197,13 @@ export const routes: Routes = [
       {
         path: 'gestion-election/edit/:id',
         component: EditElection
+      },
+      {
+        path:
+          'gestion-election/:id/attribuer-roles',
+
+        component:
+          AttribuerRoles
       },
       {
         path: 'elections',

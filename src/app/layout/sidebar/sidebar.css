@@ -3,14 +3,65 @@
 .sidebar {
   width: 240px;
   background: #f8f9fa;
+
   height: calc(100vh - 70px);
+
   padding: 20px 12px;
+
   border-radius: 14px;
   border: 1px solid #e4e6e8;
+
   box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+
   margin: 10px;
+
   overflow-y: auto;
+  overflow-x: hidden;
+
   flex-shrink: 0;
+
+  transition:
+    width 0.3s ease,
+    padding 0.3s ease;
+}
+
+/* ===== COLLAPSED ===== */
+
+.sidebar.collapsed {
+  width: 85px;
+  padding: 20px 8px;
+}
+
+/* ===== TOGGLE BUTTON ===== */
+
+.toggle-btn {
+  width: 100%;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  background: transparent;
+  border: none;
+
+  margin-bottom: 18px;
+  padding: 4px;
+
+  cursor: pointer;
+}
+
+.toggle-btn .material-icons {
+  font-size: 24px;
+  color: #6b7280;
+
+  transition:
+    transform 0.25s ease,
+    color 0.25s ease;
+}
+
+.toggle-btn:hover .material-icons {
+  color: #2e7d32;
+  transform: scale(1.1);
 }
 
 /* ===== PROFILE ===== */
@@ -19,22 +70,34 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
   text-align: center;
+
   margin-bottom: 25px;
   padding: 14px;
+
   border-radius: 12px;
+
   cursor: pointer;
-  transition: background 0.25s ease;
+
+  transition:
+    background 0.25s ease,
+    padding 0.25s ease;
 }
 
 .user-profile .avatar {
   width: 72px;
   height: 72px;
+
   border-radius: 50%;
   object-fit: cover;
+
   margin-bottom: 10px;
+
   border: 3px solid #ffffff;
+
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease;
@@ -53,7 +116,10 @@
   font-weight: 600;
   font-size: 14px;
   color: #2c2c2c;
-  transition: color 0.25s ease;
+
+  transition:
+    color 0.25s ease,
+    opacity 0.2s ease;
 }
 
 .user-profile:hover .name {
@@ -88,7 +154,8 @@
 
   transition:
     background-color 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 /* ===== HOVER ===== */
@@ -97,6 +164,8 @@
 .menu-button:hover {
   background: #eceff1;
   color: #1f2937;
+
+  transform: translateX(2px);
 }
 
 /* ===== ACTIVE ===== */
@@ -104,7 +173,9 @@
 .sidebar a.active {
   background: #2e7d32;
   color: white;
+
   font-weight: 600;
+
   box-shadow: 0 4px 10px rgba(46,125,50,0.22);
 }
 
@@ -112,7 +183,9 @@
 
 .submenu {
   list-style: none;
+
   padding-left: 12px;
+
   margin-top: 6px;
   margin-bottom: 10px;
 
@@ -155,6 +228,7 @@
 .submenu li a.active {
   background: #c8e6c9;
   color: #1b5e20;
+
   font-weight: 600;
 }
 
@@ -169,4 +243,87 @@
 .sidebar-item .material-icons {
   font-size: 20px;
   flex-shrink: 0;
+}
+
+/* ===== LINK TEXT ===== */
+
+.link-text {
+  white-space: nowrap;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+}
+
+/* ===== COLLAPSED MODE ===== */
+
+.sidebar.collapsed .link-text,
+.sidebar.collapsed .name {
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+  overflow: hidden;
+}
+
+/* center everything */
+
+.sidebar.collapsed .sidebar-item,
+.sidebar.collapsed .menu-button {
+  justify-content: center;
+  padding: 12px;
+}
+
+.sidebar.collapsed .user-profile {
+  padding: 8px;
+}
+
+.sidebar.collapsed .submenu {
+  display: none;
+}
+
+/* avatar smaller */
+
+.sidebar.collapsed .avatar {
+  width: 52px;
+  height: 52px;
+  margin-bottom: 0;
+}
+
+/* toggle alignment */
+
+.sidebar.collapsed .toggle-btn {
+  justify-content: center;
+}
+
+/* ===== SCROLLBAR ===== */
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 20px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+
+  .sidebar {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 70px;
+  }
+
+  .sidebar.collapsed {
+    width: 0;
+    padding: 0;
+    border: none;
+    overflow: hidden;
+  }
 }

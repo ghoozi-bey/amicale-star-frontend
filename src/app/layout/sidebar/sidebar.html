@@ -1,4 +1,13 @@
-<div class="sidebar">
+<div class="sidebar" [class.collapsed]="sidebarCollapsed">
+
+  <!-- TOGGLE -->
+  <button class="toggle-btn" (click)="toggleSidebar()">
+
+    <span class="material-icons">
+      {{ sidebarCollapsed ? 'menu' : 'menu_open' }}
+    </span>
+
+  </button>
 
   <!-- Profil -->
   <div class="user-profile" (click)="goToProfile()">
@@ -7,121 +16,314 @@
       [src]="photoUrlWithCache"
       class="avatar">
 
-      <ng-template #defaultImg>
-        <img src="assets/default-pfp.jpg" class="avatar">
-      </ng-template>
+    <ng-template #defaultImg>
+      <img src="assets/default-pfp.jpg" class="avatar">
+    </ng-template>
 
     <ng-container *ngIf="user$ | async as user; else noUser">
-      <span class="name">
+
+      <span class="name" *ngIf="!sidebarCollapsed">
         {{ user.prenom }} {{ user.nom }}
       </span>
+
     </ng-container>
 
     <ng-template #noUser>
-      <span class="name">Utilisateur</span>
+
+      <span class="name" *ngIf="!sidebarCollapsed">
+        Utilisateur
+      </span>
+
     </ng-template>
 
   </div>
 
   <!-- PUBLIC -->
-  <a routerLink="/dashboard" routerLinkActive="active" class="sidebar-item">
+
+  <a routerLink="/dashboard"
+     routerLinkActive="active"
+     class="sidebar-item">
+
     <span class="material-icons">dashboard</span>
-    Dashboard
+
+    <span class="link-text" *ngIf="!sidebarCollapsed">
+      Dashboard
+    </span>
+
   </a>
 
-  <a routerLink="/mes-evenements" routerLinkActive="active" class="sidebar-item">
+  <a routerLink="/mes-evenements"
+     routerLinkActive="active"
+     class="sidebar-item">
+
     <span class="material-icons">event</span>
-    Mes Inscriptions
+
+    <span class="link-text" *ngIf="!sidebarCollapsed">
+      Mes Inscriptions
+    </span>
+
   </a>
 
-  <a routerLink="/sondages" routerLinkActive="active" class="sidebar-item">
+  <a routerLink="/sondages"
+     routerLinkActive="active"
+     class="sidebar-item">
+
     <span class="material-icons">poll</span>
-    Sondages
+
+    <span class="link-text" *ngIf="!sidebarCollapsed">
+      Sondages
+    </span>
+
   </a>
 
-  <a routerLink="/elections" routerLinkActive="active" class="sidebar-item">
+  <a routerLink="/elections"
+     routerLinkActive="active"
+     class="sidebar-item">
+
     <span class="material-icons">how_to_vote</span>
-    Élections
+
+    <span class="link-text" *ngIf="!sidebarCollapsed">
+      Élections
+    </span>
+
   </a>
 
   <!-- MEMBRE AMICALE -->
-  <div *ngIf="hasRole('MEMBRE_AMICALE')">
+
+  <div *ngIf="hasRole('MEMBRE_AMICALE')" class="menu-group">
 
     <button (click)="toggleEvents()" class="menu-button sidebar-item">
+
       <span class="material-icons">settings</span>
-      Gestion événements
+
+      <span class="link-text" *ngIf="!sidebarCollapsed">
+        Gestion événements
+      </span>
+
+      <span
+        *ngIf="!sidebarCollapsed"
+        class="material-icons submenu-arrow">
+
+        {{ showEventsMenu ? 'expand_less' : 'expand_more' }}
+
+      </span>
+
     </button>
 
-    <!-- 🔥 FIX: *ngIf au lieu de hidden -->
     <ul *ngIf="showEventsMenu" class="submenu">
+
       <li>
-        <a routerLink="/gestion-evenements" routerLinkActive="active" class="sidebar-item">
-          Ajouter événement
+
+        <a routerLink="/gestion-evenements"
+           routerLinkActive="active"
+           class="sidebar-item">
+
+          <span class="material-icons">add_circle</span>
+
+          <span>
+            Ajouter événement
+          </span>
+
         </a>
+
       </li>
+
       <li>
-        <a routerLink="/mes-evenements-amicale" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="sidebar-item">
-          Mes événements
+
+        <a routerLink="/mes-evenements-amicale"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="sidebar-item">
+
+          <span class="material-icons">event_available</span>
+
+          <span>
+            Mes événements
+          </span>
+
         </a>
+
       </li>
+
     </ul>
 
+    <!-- SONDAGES -->
+
     <button (click)="toggleSondages()" class="menu-button sidebar-item">
+
       <span class="material-icons">bar_chart</span>
-      Gestion sondages
+
+      <span class="link-text" *ngIf="!sidebarCollapsed">
+        Gestion sondages
+      </span>
+
+      <span
+        *ngIf="!sidebarCollapsed"
+        class="material-icons submenu-arrow">
+
+        {{ showSondagesMenu ? 'expand_less' : 'expand_more' }}
+
+      </span>
+
     </button>
 
     <ul *ngIf="showSondagesMenu" class="submenu">
+
       <li>
-        <a routerLink="/gestion-sondages/create" routerLinkActive="active">
-          Créer sondage
+
+        <a routerLink="/gestion-sondages/create"
+           routerLinkActive="active"
+           class="sidebar-item">
+
+          <span class="material-icons">add_chart</span>
+
+          <span>
+            Créer sondage
+          </span>
+
         </a>
+
       </li>
+
       <li>
-        <a routerLink="/gestion-sondages" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          Liste sondages
+
+        <a routerLink="/gestion-sondages"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="sidebar-item">
+
+          <span class="material-icons">format_list_bulleted</span>
+
+          <span>
+            Liste sondages
+          </span>
+
         </a>
+
       </li>
+
     </ul>
 
   </div>
 
   <!-- RESPONSABLE -->
-  <div *ngIf="hasRole('RESPONSABLE_ELECTION')">
+
+  <div *ngIf="hasRole('RESPONSABLE_ELECTION')" class="menu-group">
+
     <button (click)="toggleElections()" class="menu-button sidebar-item">
+
       <span class="material-icons">how_to_vote</span>
-      Gestion élections
+
+      <span class="link-text" *ngIf="!sidebarCollapsed">
+        Gestion élections
+      </span>
+
+      <span
+        *ngIf="!sidebarCollapsed"
+        class="material-icons submenu-arrow">
+
+        {{ showElectionsMenu ? 'expand_less' : 'expand_more' }}
+
+      </span>
+
     </button>
 
     <ul *ngIf="showElectionsMenu" class="submenu">
+
       <li>
-        <a routerLink="/gestion-election/create" routerLinkActive="active"> Créer </a>
+
+        <a routerLink="/gestion-election/create"
+           routerLinkActive="active"
+           class="sidebar-item">
+
+          <span class="material-icons">add_task</span>
+
+          <span>
+            Créer
+          </span>
+
+        </a>
+
       </li>
+
       <li>
-        <a routerLink="/gestion-election" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"> Liste </a>
+
+        <a routerLink="/gestion-election"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="sidebar-item">
+
+          <span class="material-icons">ballot</span>
+
+          <span>
+            Liste
+          </span>
+
+        </a>
+
       </li>
+
     </ul>
+
   </div>
 
   <!-- ADMIN -->
-  <div *ngIf="hasRole('ADMIN')">
+
+  <div *ngIf="hasRole('ADMIN')" class="menu-group">
 
     <button (click)="toggleUsers()" class="menu-button sidebar-item">
+
       <span class="material-icons">people</span>
-      Gestion utilisateurs
+
+      <span class="link-text" *ngIf="!sidebarCollapsed">
+        Gestion utilisateurs
+      </span>
+
+      <span
+        *ngIf="!sidebarCollapsed"
+        class="material-icons submenu-arrow">
+
+        {{ showUsersMenu ? 'expand_less' : 'expand_more' }}
+
+      </span>
+
     </button>
 
     <ul *ngIf="showUsersMenu" class="submenu">
+
       <li>
-        <a routerLink="/admin-create-user" routerLinkActive="active" class="sidebar-item">
-          Créer
+
+        <a routerLink="/admin-create-user"
+           routerLinkActive="active"
+           class="sidebar-item">
+
+          <span class="material-icons">person_add</span>
+
+          <span>
+            Créer
+          </span>
+
         </a>
+
       </li>
+
       <li>
-        <a routerLink="/admin-users" routerLinkActive="active" class="sidebar-item" [routerLinkActiveOptions]="{ exact: true }">
-          Liste
+
+        <a routerLink="/admin-users"
+           routerLinkActive="active"
+           class="sidebar-item"
+           [routerLinkActiveOptions]="{ exact: true }">
+
+          <span class="material-icons">groups</span>
+
+          <span>
+            Liste
+          </span>
+
         </a>
+
       </li>
+
     </ul>
 
   </div>

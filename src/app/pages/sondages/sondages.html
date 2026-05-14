@@ -26,8 +26,15 @@
       </p>
 
       <div class="dates">
-        <span>📅 {{ s.dateDebut | date:'short' }}</span>
-        <span>⏳ {{ s.dateFin | date:'short' }}</span>
+        <span>
+          <span class="material-icons icon">event</span>
+          {{ s.dateDebut | date:'short' }}
+        </span>
+
+        <span>
+          <span class="material-icons icon">hourglass_top</span>
+          {{ s.dateFin | date:'short' }}
+        </span>
       </div>
 
       <button (click)="openSondage(s.id); $event.stopPropagation()">

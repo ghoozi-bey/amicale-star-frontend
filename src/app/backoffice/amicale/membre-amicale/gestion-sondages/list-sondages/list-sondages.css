@@ -144,3 +144,23 @@
 .create-btn:active {
   transform: scale(0.96);
 }
+
+.icon {
+  font-size: 18px;
+  vertical-align: middle;
+}
+
+h2,
+.create-btn,
+.card-footer span,
+div[ngif] {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-info {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

@@ -1,21 +1,30 @@
-<h2>📊 Mes sondages</h2>
+<h2>
+  <span class="material-icons icon">poll</span>
+  Mes sondages
+</h2>
 
 <button routerLink="/gestion-sondages/create" class="create-btn">
-  ➕ Créer un sondage
+  <span class="material-icons icon">add_circle</span>
+  Créer un sondage
 </button>
 
 <hr>
 
 <!-- LOADING -->
-<div *ngIf="loading">Chargement...</div>
+<div *ngIf="loading">
+  <span class="material-icons icon">hourglass_top</span>
+  Chargement...
+</div>
 
 <!-- EMPTY -->
 <div *ngIf="!loading && sondages.length === 0">
+  <span class="material-icons icon">inbox</span>
   Aucun sondage trouvé
 </div>
 
 <!-- LIST -->
 <div class="sondage-grid">
+
   <div 
     *ngFor="let s of sondages" 
     class="sondage-card"
@@ -24,9 +33,11 @@
 
     <!-- TOP BAR -->
     <div class="card-top">
+
       <span class="status" [ngClass]="'status-' + s.statut">
         {{ formatStatus(s.statut) }}
       </span>
+
     </div>
 
     <!-- TITLE -->
@@ -37,10 +48,16 @@
       {{ s.description }}
     </p>
 
-    <!-- FOOTER (NEW) -->
+    <!-- FOOTER -->
     <div class="card-footer">
-      <span>📝 {{ s.questions?.length || 0 }} questions</span>
+
+      <span class="footer-info">
+        <span class="material-icons icon">quiz</span>
+        {{ s.questions?.length || 0 }} questions
+      </span>
+
     </div>
 
   </div>
+
 </div>

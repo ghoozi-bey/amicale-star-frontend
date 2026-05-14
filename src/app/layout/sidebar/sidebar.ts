@@ -31,6 +31,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   photoUrlWithCache: string | null = null;
 
+  sidebarCollapsed = false;
+
   private profileListener!: () => void;
 
   constructor(
@@ -60,6 +62,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     window.removeEventListener('profileUpdated', this.profileListener);
+  }
+
+  toggleSidebar() {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
   loadProfilePhoto(forceRefresh: boolean = false) {

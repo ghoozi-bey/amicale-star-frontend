@@ -404,6 +404,45 @@ h2 {
   text-align: center;
 }
 
+/* ICONS */
+.icon {
+  font-size: 18px;
+  vertical-align: middle;
+  color: inherit;
+}
+
+/* FLEX ALIGNMENTS */
+h2,
+.description,
+.actions button,
+.success-msg,
+.error-msg,
+.number-label,
+.dates p,
+.creator,
+div[ngif] {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* BUTTON ICONS */
+.actions button .icon {
+  font-size: 18px;
+}
+
+/* NUMBER LABELS */
+.number-label {
+  justify-content: center;
+}
+
+/* DATES */
+.dates {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 /* ===== RESPONSIVE ===== */
 
 @media (max-width: 900px) {

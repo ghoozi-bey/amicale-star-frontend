@@ -139,4 +139,28 @@ export class ElectionService {
     );
   }
 
+  getElectionWinners(id: number) {
+
+    return this.http.get<any[]>(
+      `${this.apiUrl}/${id}/winners`
+    );
+  }
+
+  attribuerRoles(
+    id: number,
+    payload: any[]
+  ) {
+
+    return this.http.post(
+      `${this.apiUrl}/${id}/attribuer-roles`,
+      payload
+    );
+  }
+
+  getTypeEvenements() {
+
+    return this.http.get<any[]>(
+      `${this.apiUrl}/types-evenements`
+    );
+  }
 }

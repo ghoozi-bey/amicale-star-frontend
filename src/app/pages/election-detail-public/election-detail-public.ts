@@ -150,6 +150,14 @@ implements OnInit {
       return;
     }
 
+    const confirmed = confirm(
+      'Votre vote est définitif et ne pourra plus être modifié. Voulez-vous continuer ?'
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
     this.submitting = true;
 
     const payload : VoteRequest = {
@@ -170,8 +178,16 @@ implements OnInit {
             'Vote enregistré avec succès';
 
           this.submitting = false;
-          this.hasVoted = true;
+
           this.cdr.detectChanges();
+
+          setTimeout(() => {
+
+            this.hasVoted = true;
+
+            this.cdr.detectChanges();
+
+          }, 5000);
         },
 
         error: (err) => {

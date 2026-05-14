@@ -1,0 +1,92 @@
+<div *ngIf="loading">
+  Chargement...
+</div>
+
+<div
+  *ngIf="!loading"
+  class="page"
+>
+
+  <h2>
+    Attribution des rôles
+  </h2>
+
+  <div
+    *ngFor="let w of winners"
+    class="winner-card"
+  >
+
+    <div class="left">
+
+      <img
+        [src]="
+          'http://localhost:8080/api/user/photo/'
+          + w.matricule
+        "
+
+        class="avatar"
+
+        (error)="
+            $event.target.src =
+            'assets/default-pfp.jpg'
+        "
+      >
+
+      <div>
+
+        <h3>
+          {{ w.prenom }}
+          {{ w.nom }}
+        </h3>
+
+        <span>
+          {{ w.departement }}
+        </span>
+
+      </div>
+
+    </div>
+
+    <select
+      [(ngModel)]="w.typeEvenementId"
+    >
+
+      <option
+        [ngValue]="null"
+        disabled
+      >
+        Sélectionner
+      </option>
+
+      <option
+        *ngFor="let t of types"
+        [ngValue]="t.id"
+      >
+        {{ t.nom }}
+      </option>
+
+    </select>
+
+  </div>
+
+  <button
+    (click)="submit()"
+  >
+    Finaliser l'élection
+  </button>
+
+  <div
+    *ngIf="successMessage"
+    class="success"
+  >
+    {{ successMessage }}
+  </div>
+
+  <div
+    *ngIf="errorMessage"
+    class="error"
+  >
+    {{ errorMessage }}
+  </div>
+
+</div>

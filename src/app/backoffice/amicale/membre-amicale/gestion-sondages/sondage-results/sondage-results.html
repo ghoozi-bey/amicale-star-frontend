@@ -1,6 +1,9 @@
 <div class="container" *ngIf="!loading">
 
-  <h2>Résultats du sondage</h2>
+  <h2>
+    <span class="material-icons icon">analytics</span>
+    Résultats du sondage
+  </h2>
 
   <!-- TABS -->
   <div class="tabs">
@@ -9,14 +12,18 @@
       [class.active]="activeTab === 'stats'"
       (click)="activeTab = 'stats'">
 
+      <span class="material-icons icon">bar_chart</span>
       Statistiques
+
     </button>
 
     <button
       [class.active]="activeTab === 'participations'"
       (click)="activeTab = 'participations'">
 
+      <span class="material-icons icon">groups</span>
       Participations
+
     </button>
 
   </div>
@@ -28,14 +35,22 @@
   <div *ngIf="activeTab === 'stats'">
 
     <div class="total-box">
-        Total participants : {{ stats?.totalParticipants }}
+
+      <span class="material-icons icon">people</span>
+      Total participants : {{ stats?.totalParticipants }}
+
     </div>
 
     <div
       class="question-card"
       *ngFor="let q of stats?.questions">
 
-      <h4>{{ q.questionText }}</h4>
+      <h4>
+
+        <span class="material-icons icon">help</span>
+        {{ q.questionText }}
+
+      </h4>
 
       <!-- Questions with choices -->
       <div *ngIf="q.choix.length > 0">
@@ -44,13 +59,18 @@
           class="choice"
           *ngFor="let c of q.choix">
 
-          <span>
+          <span class="choice-label">
+
+            <span class="material-icons icon">radio_button_checked</span>
             {{ c.label }}
+
           </span>
 
           <span>
+
             {{ c.percentage }}%
             ({{ c.count }} votes)
+
           </span>
 
         </div>
@@ -61,6 +81,10 @@
         *ngIf="q.choix.length > 0"
         class="chart-btn"
         (click)="toggleChart(q.questionId)">
+
+        <span class="material-icons icon">
+          {{ openedCharts[q.questionId] ? 'visibility_off' : 'bar_chart' }}
+        </span>
 
         {{
             openedCharts[q.questionId]
@@ -74,6 +98,10 @@
         *ngIf="q.choix.length > 0"
         class="pie-btn"
         (click)="togglePieChart(q.questionId)">
+
+        <span class="material-icons icon">
+          {{ openedPieCharts[q.questionId] ? 'visibility_off' : 'pie_chart' }}
+        </span>
 
         {{
             openedPieCharts[q.questionId]
@@ -102,13 +130,17 @@
       </div>
 
       <!-- Open question -->
-        <div
+      <div
         *ngIf="q.choix.length === 0"
         class="open-question-section">
 
         <button
             class="open-btn"
             (click)="toggleOpenQuestion(q.questionId)">
+
+            <span class="material-icons icon">
+              {{ openedQuestions[q.questionId] ? 'visibility_off' : 'visibility' }}
+            </span>
 
             {{
             openedQuestions[q.questionId]
@@ -125,30 +157,36 @@
             <!-- HAS RESPONSES -->
             <div *ngIf="getOpenResponses(q.questionText).length > 0">
 
-            <div
-                class="response-card"
-                *ngFor="let r of getOpenResponses(q.questionText)">
+              <div
+                  class="response-card"
+                  *ngFor="let r of getOpenResponses(q.questionText)">
 
-                <strong>{{ r.nom + ' ' + r.prenom }}</strong>
+                  <strong>
 
-                <p>{{ r.reponse }}</p>
+                    <span class="material-icons icon">person</span>
+                    {{ r.nom + ' ' + r.prenom }}
 
-            </div>
+                  </strong>
+
+                  <p>{{ r.reponse }}</p>
+
+              </div>
 
             </div>
 
             <!-- NO RESPONSES -->
             <div
-            *ngIf="getOpenResponses(q.questionText).length === 0"
-            class="no-response">
+              *ngIf="getOpenResponses(q.questionText).length === 0"
+              class="no-response">
 
-            Aucune réponse pour cette question.
+              <span class="material-icons icon">info</span>
+              Aucune réponse pour cette question.
 
             </div>
 
         </div>
 
-        </div>
+      </div>
 
     </div>
 
@@ -166,15 +204,30 @@
 
       <div class="participant-header">
 
-        <h3>{{ p.nom + ' ' + p.prenom }}</h3>
+        <h3>
 
-        <p>{{ p.email }}</p>
+          <span class="material-icons icon">person</span>
+          {{ p.nom + ' ' + p.prenom }}
+
+        </h3>
+
+        <p>
+
+          <span class="material-icons icon">mail</span>
+          {{ p.email }}
+
+        </p>
 
       </div>
 
       <div *ngFor="let q of stats?.questions">
 
-        <strong>{{ q.questionText }}</strong>
+        <strong>
+
+          <span class="material-icons icon">quiz</span>
+          {{ q.questionText }}
+
+        </strong>
 
         <!-- HAS ANSWERS -->
         <ul
@@ -185,7 +238,8 @@
                 let r of getParticipantResponses(p, q.questionText)
             ">
 
-            {{ r }}
+              <span class="material-icons icon">check_circle</span>
+              {{ r }}
 
             </li>
 
@@ -196,11 +250,12 @@
             *ngIf="getParticipantResponses(p, q.questionText).length === 0"
             class="no-answer">
 
+            <span class="material-icons icon">remove_circle</span>
             Pas de réponse
 
         </div>
 
-        </div>
+      </div>
 
     </div>
 

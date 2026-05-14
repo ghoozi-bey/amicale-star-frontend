@@ -1,4 +1,7 @@
-<div *ngIf="!sondage">Chargement...</div>
+<div *ngIf="!sondage">
+  <span class="material-icons icon">hourglass_top</span>
+  Chargement...
+</div>
 
 <div *ngIf="sondage" class="detail-container">
 
@@ -6,8 +9,17 @@
   <div class="sondage-header">
 
     <div class="header-left">
-      <h2>{{ sondage.title }}</h2>
-      <p class="desc">{{ sondage.description }}</p>
+
+      <h2>
+        <span class="material-icons icon">poll</span>
+        {{ sondage.title }}
+      </h2>
+
+      <p class="desc">
+        <span class="material-icons icon">description</span>
+        {{ sondage.description }}
+      </p>
+
     </div>
 
     <div class="header-right">
@@ -17,8 +29,17 @@
       </span>
 
       <div class="dates">
-        <span>📅 Début: {{ sondage.dateDebut | date:'dd/MM/yyyy, HH:mm' }}</span>
-        <span>⏳ Fin: {{ sondage.dateFin | date:'dd/MM/yyyy, HH:mm' }}</span>
+
+        <span>
+          <span class="material-icons icon">event</span>
+          Début: {{ sondage.dateDebut | date:'dd/MM/yyyy, HH:mm' }}
+        </span>
+
+        <span>
+          <span class="material-icons icon">schedule</span>
+          Fin: {{ sondage.dateFin | date:'dd/MM/yyyy, HH:mm' }}
+        </span>
+
       </div>
 
     </div>
@@ -34,14 +55,20 @@
       *ngIf="sondage?.statut === 'BROUILLON'"
       class="publish-btn"
       (click)="publish()">
+
+      <span class="material-icons icon">publish</span>
       Publier
+
     </button>
 
     <button 
       *ngIf="sondage?.statut === 'BROUILLON'"
       class="reject-btn"
       (click)="reject()">
+
+      <span class="material-icons icon">cancel</span>
       Rejeter
+
     </button>
 
     <!-- PUBLISHED actions -->
@@ -49,7 +76,10 @@
       *ngIf="sondage?.statut === 'PUBLISHED'"
       class="unpublish-btn"
       (click)="unpublish()">
+
+      <span class="material-icons icon">unpublished</span>
       Annuler publication
+
     </button>
 
     <!-- EDIT -->
@@ -57,7 +87,10 @@
       *ngIf="canEdit()"
       (click)="onEdit()"
       class="edit-btn">
+
+      <span class="material-icons icon">edit</span>
       Modifier
+
     </button>
 
     <!-- REJECTED actions -->
@@ -65,27 +98,38 @@
       *ngIf="sondage.statut === 'REJECTED'"
       class="delete-btn"
       (click)="deleteSondage()">
+
+      <span class="material-icons icon">delete</span>
       Supprimer
+
     </button>
 
-    
+    <!-- RESULTS -->
     <button
       *ngIf="sondage?.statut === 'ACTIF' || sondage?.statut === 'TERMINE'"
       class="stats-btn"
       (click)="viewResults()">
+
+      <span class="material-icons icon">analytics</span>
       Voir résultats
+
     </button>
 
   </div>
 
   <div *ngIf="successMessage" class="success-msg">
+
+    <span class="material-icons icon">check_circle</span>
     {{ successMessage }}
+
   </div>
 
   <div *ngIf="errorMessage" class="error-msg">
-    {{ errorMessage }}
-  </div>
 
+    <span class="material-icons icon">error</span>
+    {{ errorMessage }}
+
+  </div>
 
   <hr>
 
@@ -93,27 +137,44 @@
   <div *ngFor="let q of sondage?.questions" class="question">
 
     <h4>
-      {{ q.text }} 
-      <span class="question-type">({{ formatType(q.type) }})</span>
-      <span *ngIf="q.required" class="required"> *</span>
+
+      <span class="material-icons icon">help</span>
+
+      {{ q.text }}
+
+      <span class="question-type">
+        ({{ formatType(q.type) }})
+      </span>
+
+      <span *ngIf="q.required" class="required">
+        *
+      </span>
+
     </h4>
 
     <!-- SINGLE -->
     <div *ngIf="q.type === 'CHOIX_UNIQUE'" class="choices">
+
       <div *ngFor="let c of q?.choixList" class="choice selectable">
+
         <span class="circle"></span>
         {{ c.label }}
+
       </div>
+
     </div>
 
     <!-- MULTIPLE -->
     <div *ngIf="q.type === 'CHOIX_MULTIPLE'" class="choices">
+
       <div *ngFor="let c of q?.choixList" class="choice selectable">
+
         <span class="checkbox"></span>
         {{ c.label }}
+
       </div>
+
     </div>
-    
 
   </div>
 

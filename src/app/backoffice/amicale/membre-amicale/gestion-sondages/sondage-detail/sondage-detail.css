@@ -309,6 +309,44 @@
   font-style: italic;
 }
 
+/* ICONS */
+.icon {
+  font-size: 18px;
+  vertical-align: middle;
+  color: inherit;
+}
+
+/* FLEX ALIGNMENTS */
+h2,
+.desc,
+.dates span,
+.actions button,
+.success-msg,
+.error-msg,
+.question h4,
+div[ngif] {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* DATES */
+.dates {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* QUESTION TITLE */
+.question h4 {
+  font-weight: 600;
+}
+
+/* BUTTON ICON SPACING */
+.actions button .icon {
+  font-size: 18px;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
   .sondage-header {

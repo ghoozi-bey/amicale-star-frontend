@@ -429,3 +429,47 @@ h2 {
 
   border-radius: 12px;
 }
+
+/* ICONS */
+.icon {
+  font-size: 18px;
+  vertical-align: middle;
+  color: inherit;
+}
+
+/* FLEX ALIGNMENTS */
+h2,
+.tabs button,
+.total-box,
+.choice-label,
+.chart-btn,
+.pie-btn,
+.open-btn,
+.response-card strong,
+.participant-header h3,
+.participant-header p,
+.no-response,
+.no-answer,
+li,
+strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* QUESTION TITLES */
+.question-card h4 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* LIST ITEMS */
+li {
+  margin-bottom: 6px;
+}
+
+/* CHOICE LABEL */
+.choice-label {
+  font-weight: 500;
+}
