@@ -1,9 +1,16 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup
+} from '@angular/forms';
+
 import { HttpClient } from '@angular/common/http';
+
 import { AuthService } from '../../services/auth.service';
 import { LoadingService } from '../../services/loading.service';
+
 import heic2any from 'heic2any';
 
 @Component({
@@ -13,23 +20,26 @@ import heic2any from 'heic2any';
   templateUrl: './profile.html',
   styleUrls: ['./profile.css']
 })
+
 export class ProfileComponent implements OnInit {
 
   form!: FormGroup;
+
   loading = false;
 
   userPhoto: string | null = null;
   selectedFile: File | null = null;
   preview: string | null = null;
+
   avatarVersion: number = Date.now();
 
-  // 🔥 FIX SUPPRESSION
   removePhotoFlag = false;
 
   showCurrent = false;
   showNew = false;
 
   successMessage = '';
+  errorMessage = '';
 
   constructor(
     private fb: FormBuilder,
@@ -39,6 +49,7 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
     this.form = this.fb.group({
       nom: [''],
       prenom: [''],
@@ -57,9 +68,8 @@ export class ProfileComponent implements OnInit {
 
     this.http.get<any>('http://localhost:8080/api/user/profile')
       .subscribe({
-        next: (data) => {
 
-          console.log("PROFILE DATA:", data);
+        next: (data) => {
 
           this.form.patchValue({
             nom: data?.nom ?? '',
@@ -75,14 +85,19 @@ export class ProfileComponent implements OnInit {
           });
 
           if (data?.hasPhoto && data?.photoUrl) {
-            this.userPhoto = data.photoUrl + '?t=' + Date.now();
+
+            this.userPhoto =
+              data.photoUrl + '?t=' + Date.now();
+
           } else {
+
             this.userPhoto = null;
           }
+
           this.authService.setUserPhoto(this.userPhoto);
 
           this.preview = null;
-          this.removePhotoFlag = false; // 🔥 RESET
+          this.removePhotoFlag = false;
 
           queueMicrotask(() => this.loadingService.hide());
         },
@@ -104,34 +119,47 @@ export class ProfileComponent implements OnInit {
   async onFileSelected(event: any) {
 
     const file = event.target.files[0];
+
     if (!file) return;
 
     if (!file.type.startsWith('image/')) return;
+
     if (file.size > 2 * 1024 * 1024) return;
 
-    if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
+    if (
+      file.type === 'image/heic' ||
+      file.name.toLowerCase().endsWith('.heic')
+    ) {
+
       try {
+
         const blob = await heic2any({
           blob: file,
           toType: 'image/jpeg',
           quality: 0.8
         });
 
-        this.selectedFile = new File([blob as Blob], 'converted.jpg', {
-          type: 'image/jpeg'
-        });
+        this.selectedFile = new File(
+          [blob as Blob],
+          'converted.jpg',
+          {
+            type: 'image/jpeg'
+          }
+        );
 
       } catch {
         return;
       }
+
     } else {
+
       this.selectedFile = file;
     }
 
-    // 🔥 si nouvelle image → annule suppression
     this.removePhotoFlag = false;
 
     const reader = new FileReader();
+
     reader.onload = () => {
       this.preview = reader.result as string;
     };
@@ -139,13 +167,16 @@ export class ProfileComponent implements OnInit {
     if (this.selectedFile) {
       reader.readAsDataURL(this.selectedFile);
     }
-    // 🔥 IMPORTANT : reset input
+
     event.target.value = '';
   }
 
   update() {
 
     if (!this.form.valid) return;
+
+    this.successMessage = '';
+    this.errorMessage = '';
 
     const formData = new FormData();
 
@@ -154,59 +185,96 @@ export class ProfileComponent implements OnInit {
     formData.append('email', this.form.value.email || '');
     formData.append('telephone', this.form.value.telephone || '');
 
-    if (this.form.value.currentPassword) {
-      formData.append('currentPassword', this.form.value.currentPassword);
+    // passwords
+
+    if (this.form.value.currentPassword?.trim()) {
+
+      formData.append(
+        'currentPassword',
+        this.form.value.currentPassword.trim()
+      );
     }
 
-    if (this.form.value.newPassword) {
-      formData.append('newPassword', this.form.value.newPassword);
+    if (this.form.value.newPassword?.trim()) {
+
+      formData.append(
+        'newPassword',
+        this.form.value.newPassword.trim()
+      );
     }
 
-    // 🔥 PRIORITÉ SUPPRESSION
+    // delete photo
+
     if (this.removePhotoFlag) {
-      formData.append('removePhoto', this.removePhotoFlag ? 'true' : 'false');
+
+      formData.append('removePhoto', 'true');
     }
 
-    // 🔥 upload image
+    // upload photo
+
     else if (this.selectedFile) {
-      formData.append('photoProfil', this.selectedFile);
+
+      formData.append(
+        'photoProfil',
+        this.selectedFile
+      );
     }
 
     queueMicrotask(() => this.loadingService.show());
 
-    this.http.put('http://localhost:8080/api/user/profile', formData, {
-      observe: 'response'
-    })
+    this.http.put(
+      'http://localhost:8080/api/user/profile',
+      formData,
+      {
+        observe: 'response',
+        responseType: 'text'
+      }
+    )
     .subscribe({
 
       next: (res) => {
 
         queueMicrotask(() => this.loadingService.hide());
 
+        // success only if REAL 200
+
         if (res.status === 200) {
 
-          this.successMessage = "Profil modifié avec succès ✅";
+          this.successMessage =
+            'Profil modifié avec succès ✅';
 
           setTimeout(() => {
             this.successMessage = '';
           }, 3000);
+
+          // clear password fields
 
           this.form.patchValue({
             currentPassword: '',
             newPassword: ''
           });
 
+          // reset temp values
+
           this.selectedFile = null;
           this.removePhotoFlag = false;
+
+          // update navbar/sidebar user
 
           this.authService.updateUser({
             nom: this.form.value.nom,
             prenom: this.form.value.prenom
           });
 
+          // reload profile
+
           this.loadProfile();
 
-          window.dispatchEvent(new Event('profileUpdated'));
+          // notify app
+
+          window.dispatchEvent(
+            new Event('profileUpdated')
+          );
         }
       },
 
@@ -214,36 +282,38 @@ export class ProfileComponent implements OnInit {
 
         queueMicrotask(() => this.loadingService.hide());
 
-        if (err.status === 200) {
+        console.log('REAL ERROR:', err);
 
-          this.authService.updateUser({
-            nom: this.form.value.nom,
-            prenom: this.form.value.prenom
-          });
+        // backend message
 
-          this.loadProfile();
-          return;
-        }
+        this.errorMessage =
 
-        console.log("REAL ERROR:", err);
-        alert("Erreur serveur réelle");
-      },
+          typeof err.error === 'string'
 
-      complete: () => {
-        queueMicrotask(() => this.loadingService.hide());
+            ? err.error
+
+            : err.error?.message ||
+
+              err.error?.error ||
+
+              'Erreur serveur';
+
+        setTimeout(() => {
+          this.errorMessage = '';
+        }, 5000);
       }
 
     });
   }
 
   removePhoto(event: Event) {
+
     event.stopPropagation();
 
     this.preview = null;
     this.userPhoto = null;
     this.selectedFile = null;
 
-    // 🔥 TRIGGER BACKEND DELETE
     this.removePhotoFlag = true;
   }
 
@@ -252,13 +322,15 @@ export class ProfileComponent implements OnInit {
   }
 
   getAvatarUrl(): string {
-  if (this.preview) return this.preview;
 
-  if (this.userPhoto) {
-    return this.userPhoto + '?v=' + this.avatarVersion;
+    if (this.preview) {
+      return this.preview;
+    }
+
+    if (this.userPhoto) {
+      return this.userPhoto + '?v=' + this.avatarVersion;
+    }
+
+    return 'assets/default-pfp.jpg';
   }
-
-  return 'assets/default-pfp.jpg';
-}
-
 }

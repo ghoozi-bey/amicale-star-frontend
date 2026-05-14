@@ -1,75 +1,165 @@
 <!-- 🔥 LOADER -->
 <div *ngIf="loadingService.loading$ | async" class="loading-overlay">
+
   <div class="spinner"></div>
+
 </div>
 
 <!-- PAGE -->
- 
+
 <div class="profile-container">
 
-  <h2>Modifier mon profil</h2>
+  <h2>
 
-  <div *ngIf="successMessage" class="success-box">
-    {{ successMessage }}
-  </div>
+    <span class="material-icons icon">person</span>
+    Modifier mon profil
+
+  </h2>
 
   <!-- AVATAR -->
+
   <div class="avatar-container">
+
     <div class="avatar-wrapper">
 
       <div 
         class="avatar"
-        [style.background-image]="'url(' + getAvatarUrl() + ')'"
-      >
+        [style.background-image]="'url(' + getAvatarUrl() + ')'">
 
         <span 
           class="delete-icon"
           *ngIf="userPhoto && !preview"
           (click)="removePhoto($event)">
-          🗑
+
+          <span class="material-icons">delete</span>
+
         </span>
 
         <span class="camera">
-          {{ preview || userPhoto ? '✏️' : '📷' }}
+
+          <span class="material-icons">
+            {{ preview || userPhoto ? 'edit' : 'photo_camera' }}
+          </span>
+
         </span>
 
         <input 
           #fileInput
           type="file"
           (change)="onFileSelected($event)"
-          class="file-input"
-        >
+          class="file-input">
+
       </div>
+
     </div>
+
   </div>
 
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 
-    <label>Nom</label>
+    <label>
+
+      <span class="material-icons icon">badge</span>
+      Nom
+
+    </label>
+
     <input type="text" formControlName="nom">
 
-    <label>Prénom</label>
+    <label>
+
+      <span class="material-icons icon">person</span>
+      Prénom
+
+    </label>
+
     <input type="text" formControlName="prenom">
 
-    <label>Email</label>
+    <label>
+
+      <span class="material-icons icon">mail</span>
+      Email
+
+    </label>
+
     <input type="email" formControlName="email">
 
-    <label>Téléphone</label>
+    <label>
+
+      <span class="material-icons icon">call</span>
+      Téléphone
+
+    </label>
+
     <input type="text" formControlName="telephone">
 
-    <label>Mot de passe actuel</label>
+    <label>
+
+      <span class="material-icons icon">lock</span>
+      Mot de passe actuel
+
+    </label>
+
     <div class="password-field">
-      <input [type]="showCurrent ? 'text' : 'password'" formControlName="currentPassword">
-      <span (click)="toggleCurrent()" class="eye">👁</span>
+
+      <input
+        [type]="showCurrent ? 'text' : 'password'"
+        formControlName="currentPassword">
+
+      <span (click)="toggleCurrent()" class="eye">
+
+        <span class="material-icons">
+          {{ showCurrent ? 'visibility_off' : 'visibility' }}
+        </span>
+
+      </span>
+
     </div>
 
-    <label>Nouveau mot de passe</label>
+    <label>
+
+      <span class="material-icons icon">lock_reset</span>
+      Nouveau mot de passe
+
+    </label>
+
     <div class="password-field">
-      <input [type]="showNew ? 'text' : 'password'" formControlName="newPassword">
-      <span (click)="toggleNew()" class="eye">👁</span>
+
+      <input
+        [type]="showNew ? 'text' : 'password'"
+        formControlName="newPassword">
+
+      <span (click)="toggleNew()" class="eye">
+
+        <span class="material-icons">
+          {{ showNew ? 'visibility_off' : 'visibility' }}
+        </span>
+
+      </span>
+
     </div>
 
-    <button type="submit">Modifier</button>
+    <button type="submit">
+
+      <span class="material-icons icon">save</span>
+      Modifier
+
+    </button>
+
+    <div *ngIf="successMessage" class="success-box">
+
+      <span class="material-icons icon">check_circle</span>
+      {{ successMessage }}
+
+    </div>
+
+    <div *ngIf="errorMessage" class="error-box">
+
+      <span class="material-icons icon">error</span>
+      {{ errorMessage }}
+
+    </div>
 
   </form>
+
 </div>
