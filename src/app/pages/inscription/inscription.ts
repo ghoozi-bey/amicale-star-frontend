@@ -9,31 +9,36 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-inscription',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  styleUrls: ['./inscription.css'],
-  templateUrl: './inscription.html'
+  templateUrl: './inscription.html',
+  styleUrls: ['./inscription.css']
 })
 export class InscriptionComponent implements OnInit {
 
   eventId!: number;
 
+  maxFileSize = 5 * 1024 * 1024;
+
+  adherentFileError = false;
+  wifeFileError = false;
+  childrenFileErrors: boolean[] = [];
+
+  adherentFile: File | null = null;
+
   nbPlaces: number = 0;
   isLoading = false;
-  avance: number = 0;
-modePaiementAvance: string = '';
-nombreMois: number = 1;
-dateDebutPaiement: string = '';
-modePaiementEcheance: string = '';
-  
 
-  // 🔥 PASSEPORT LOGIC
+  avance: number = 0;
+  modePaiementAvance: string = '';
+  nombreMois: number = 1;
+  dateDebutPaiement: string = '';
+  modePaiementEcheance: string = '';
+
   isPassportRequired: boolean = false;
 
-  modePaiement: string = 'VIREMENT';
-
-  // ✅ MODAL
   showModal = false;
-  modalMessage = "";
+  modalMessage = '';
   isSuccess = true;
+
   event: any = {};
 
   user: any = {
@@ -44,8 +49,6 @@ modePaiementEcheance: string = '';
     matricule: '',
     cin: ''
   };
-
-  adherentFile: File | null = null;
 
   hasWife = false;
   hasChildren = false;
@@ -60,6 +63,7 @@ modePaiementEcheance: string = '';
   };
 
   nbEnfants = 1;
+
   children: any[] = [];
 
   constructor(
@@ -71,10 +75,13 @@ modePaiementEcheance: string = '';
   ) {}
 
   ngOnInit(): void {
+
     this.eventId = Number(this.route.snapshot.paramMap.get('id'));
 
     this.userService.getProfile().subscribe({
+
       next: (data: any) => {
+
         this.user = data;
         this.cdr.detectChanges();
       }
@@ -82,76 +89,151 @@ modePaiementEcheance: string = '';
 
     this.updateChildren();
     this.loadNbPlaces();
-    this.loadEventDetails(); // 🔥 IMPORTANT
+    this.loadEventDetails();
   }
 
   // =========================
-  // 🔥 LOAD EVENT (LOGIQUE FIX)
+  // LOAD EVENT
   // =========================
   loadEventDetails() {
-  this.eventService.getEvenementById(this.eventId).subscribe({
-    next: (event: any) => {
 
-      this.event = event; // 🔥 LA LIGNE QUI MANQUE
+    this.eventService.getEvenementById(this.eventId).subscribe({
 
-      console.log("EVENT LOADED =", event); // 🔥 DEBUG
+      next: (event: any) => {
 
-      const typeId = event.typeEvenementId;
-      const isInternational = event.isInternational === true;
+        this.event = event;
 
-      const isVoyage = typeId === 2;
-      const isOmraHaj = typeId === 1;
+        const typeId = event.typeEvenementId;
+        const isInternational = event.isInternational === true;
 
-      this.isPassportRequired =
-        isOmraHaj || (isVoyage && isInternational);
+        const isVoyage = typeId === 2;
+        const isOmraHaj = typeId === 1;
 
-      this.cdr.detectChanges();
-    },
-    error: (err) => {
-      console.error("Erreur chargement event", err);
-    }
-  });
-}
+        this.isPassportRequired =
+          isOmraHaj || (isVoyage && isInternational);
+
+        this.cdr.detectChanges();
+      },
+
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
 
   // =========================
-  // LOAD PLACES
+  // LOAD NB PLACES
   // =========================
   loadNbPlaces() {
+
     this.eventService.getNbPlaces(this.eventId).subscribe({
+
       next: (data) => {
+
         this.zone.run(() => {
+
           this.nbPlaces = data;
           this.cdr.detectChanges();
         });
       },
+
       error: () => {
         this.nbPlaces = 0;
       }
     });
   }
 
+  // =========================
+  // UPDATE CHILDREN
+  // =========================
   updateChildren() {
+
+    // ✅ Sauvegarder anciens enfants
+    const oldChildren = [...this.children];
+
     this.children = [];
+
     for (let i = 0; i < this.nbEnfants; i++) {
+
       this.children.push({
-        nom: '',
-        prenom: '',
-        dateNaissance: '',
-        file: null
+
+        nom: oldChildren[i]?.nom || '',
+        prenom: oldChildren[i]?.prenom || '',
+        dateNaissance: oldChildren[i]?.dateNaissance || '',
+
+        // ✅ IMPORTANT
+        file: oldChildren[i]?.file || null
       });
     }
   }
 
+  // =========================
+  // ADHERENT FILE
+  // =========================
   onAdherentFileChange(event: any) {
+
     const file = event.target.files[0];
-    if (file) this.adherentFile = file;
+
+    if (!file) return;
+
+    if (file.size > this.maxFileSize) {
+
+      this.adherentFileError = true;
+      return;
+    }
+
+    this.adherentFileError = false;
+
+    this.adherentFile = file;
   }
 
+  // =========================
+  // WIFE / CHILD FILE
+  // =========================
   onFileChange(event: any, type: string, index?: number) {
+
     const file = event.target.files[0];
 
-    if (type === 'wife') this.wife.file = file;
-    if (type === 'child' && index !== undefined) this.children[index].file = file;
+    if (!file) return;
+
+    // =========================
+    // WIFE
+    // =========================
+    if (type === 'wife') {
+
+      if (file.size > this.maxFileSize) {
+
+        this.wifeFileError = true;
+        return;
+      }
+
+      this.wifeFileError = false;
+
+      this.wife.file = file;
+    }
+
+    // =========================
+    // CHILD
+    // =========================
+    if (type === 'child') {
+
+      if (file.size > this.maxFileSize) {
+
+        if (index !== undefined) {
+          this.childrenFileErrors[index] = true;
+        }
+
+        return;
+      }
+
+      if (index !== undefined) {
+        this.childrenFileErrors[index] = false;
+      }
+
+      if (index !== undefined) {
+        this.children[index].file = file;
+      }
+    }
   }
 
   // =========================
@@ -159,233 +241,266 @@ modePaiementEcheance: string = '';
   // =========================
   inscrire(): void {
 
-  if (this.isLoading) return;
+    console.log("ADHERENT FILE =", this.adherentFile);
+    console.log("WIFE FILE =", this.wife.file);
+    console.log("CHILDREN =", this.children);
 
-  if (this.nbPlaces === 0) {
-    this.modalMessage = "Événement complet ❌";
-    this.isSuccess = false;
-    this.showModal = true;
-    return;
-  }
+    if (this.isLoading) return;
 
-  if (this.isPassportRequired && !this.adherentFile) {
-    this.modalMessage = "Passeport obligatoire ❌";
-    this.isSuccess = false;
-    this.showModal = true;
-    return;
-  }
+    // =========================
+    // EVENT COMPLET
+    // =========================
+    if (this.nbPlaces === 0) {
 
-  // 🔥 NOUVELLE VALIDATION (IMPORTANT)
-  if (!this.modePaiement) {
-    this.modalMessage = "Choisir mode paiement échéancier ❌";
-    this.isSuccess = false;
-    this.showModal = true;
-    return;
-  }
+      this.modalMessage = "Événement complet ❌";
+      this.isSuccess = false;
+      this.showModal = true;
+      return;
+    }
 
-  if (this.avance > 0 && !this.modePaiementAvance) {
-    this.modalMessage = "Choisir mode paiement avance ❌";
-    this.isSuccess = false;
-    this.showModal = true;
-    return;
-  }
+    // =========================
+    // PASSEPORT ADHERENT
+    // =========================
+    if (this.isPassportRequired && !this.adherentFile) {
 
-  this.isLoading = true;
+      this.modalMessage = "Passeport adhérent obligatoire ❌";
+      this.isSuccess = false;
+      this.showModal = true;
+      return;
+    }
 
-  const formData = new FormData();
+    // =========================
+    // PASSEPORT CONJOINT
+    // =========================
+    if (this.hasWife && !this.wife.file) {
 
-  const data = {
+      this.modalMessage = "Passeport conjoint obligatoire ❌";
+      this.isSuccess = false;
+      this.showModal = true;
+      return;
+    }
 
-    matricule: this.user.matricule,
-    evenementId: this.eventId,
+    // =========================
+    // PASSEPORT ENFANTS
+    // =========================
+    if (this.hasChildren) {
 
-    // 🔥 CORRECTION ICI (IMPORTANT)
-    modePaiementEcheance: this.modePaiement, // <-- ancien modePaiement devient échéancier
+      for (let i = 0; i < this.children.length; i++) {
 
-    // 🔥 PRIX
-    prixTotal: this.calculatePrix(),
+        if (!this.children[i].file) {
 
-    // 🔥 PAIEMENT
-    avance: this.avance,
-    modePaiementAvance: this.modePaiementAvance,
-    nombreMois: this.nombreMois,
-    dateDebutPaiement: this.dateDebutPaiement,
+          this.modalMessage =
+            `Passeport enfant ${i + 1} obligatoire ❌`;
 
-    // 👩 conjoint
-    conjoint: this.hasWife ? {
-      nom: this.wife.nom,
-      prenom: this.wife.prenom,
-      dateNaissance: this.wife.dateNaissance,
-      cin: this.wife.cin,
-      telephone: this.wife.telephone
-    } : null,
+          this.isSuccess = false;
+          this.showModal = true;
+          return;
+        }
+      }
+    }
 
-    // 👶 enfants
-    enfants: this.hasChildren ? this.children.map(c => ({
-      nom: c.nom,
-      prenom: c.prenom,
-      dateNaissance: c.dateNaissance
-    })) : []
-  };
+    // =========================
+    // MODE PAIEMENT
+    // =========================
+    if (!this.modePaiementEcheance) {
 
-  console.log("🔥 DATA INSCRIPTION =", data);
+      this.modalMessage =
+        "Choisir mode paiement échéancier ❌";
 
-  formData.append("data", new Blob(
-    [JSON.stringify(data)],
-    { type: "application/json" }
-  ));
+      this.isSuccess = false;
+      this.showModal = true;
+      return;
+    }
 
-  // 🔥 fichiers
-  if (this.adherentFile) {
-    formData.append("adherentFile", this.adherentFile);
-  }
+    // =========================
+    // MODE AVANCE
+    // =========================
+    if (this.avance > 0 && !this.modePaiementAvance) {
 
-  if (this.hasWife && this.wife.file) {
-    formData.append("conjointFile", this.wife.file);
-  }
+      this.modalMessage =
+        "Choisir mode paiement avance ❌";
 
-  if (this.hasChildren) {
-    this.children.forEach(c => {
-      if (c.file) formData.append("enfantsFiles", c.file);
-    });
-  }
+      this.isSuccess = false;
+      this.showModal = true;
+      return;
+    }
 
-  this.eventService.createInscription(formData).subscribe({
+    this.isLoading = true;
+
+    const formData = new FormData();
+
+    const data = {
+
+      matricule: this.user.matricule,
+
+      evenementId: this.eventId,
+
+      modePaiementEcheance:
+        this.modePaiementEcheance,
+
+      prixTotal: this.calculatePrix(),
+
+      avance: this.avance,
+
+      modePaiementAvance:
+        this.modePaiementAvance,
+
+      nombreMois: this.nombreMois,
+
+      dateDebutPaiement:
+        this.dateDebutPaiement,
+
+      conjoint: this.hasWife ? {
+
+        nom: this.wife.nom,
+        prenom: this.wife.prenom,
+        dateNaissance: this.wife.dateNaissance,
+        cin: this.wife.cin,
+        telephone: this.wife.telephone
+
+      } : null,
+
+      enfants: this.hasChildren ?
+
+        this.children.map(c => ({
+
+          nom: c.nom,
+          prenom: c.prenom,
+          dateNaissance: c.dateNaissance
+
+        }))
+
+        : []
+    };
+
+    formData.append(
+
+      "data",
+
+      new Blob(
+        [JSON.stringify(data)],
+        { type: "application/json" }
+      )
+    );
+
+    // =========================
+    // FILE ADHERENT
+    // =========================
+    if (this.adherentFile) {
+
+      formData.append(
+        "adherentFile",
+        this.adherentFile
+      );
+    }
+
+    // =========================
+    // FILE CONJOINT
+    // =========================
+    if (this.hasWife && this.wife.file) {
+
+      formData.append(
+        "conjointFile",
+        this.wife.file
+      );
+    }
+
+    // =========================
+    // FILE ENFANTS
+    // =========================
+    if (this.hasChildren) {
+
+      this.children.forEach(c => {
+
+        if (c.file) {
+
+          formData.append(
+            "enfantsFiles",
+            c.file
+          );
+        }
+      });
+    }
+
+    // =========================
+    // CREATE INSCRIPTION
+    // =========================
+    this.eventService
+  .createInscription(formData)
+  .subscribe({
+
     next: () => {
+
       this.zone.run(() => {
-        this.modalMessage = "Inscription réussie ✅";
+
+        this.modalMessage =
+          "Inscription réussie ✅";
+
         this.isSuccess = true;
         this.showModal = true;
 
         this.loadNbPlaces();
 
         this.isLoading = false;
+
         this.cdr.detectChanges();
       });
     },
+
     error: (err) => {
+
       this.zone.run(() => {
+
         console.error(err);
 
-        let message = "Erreur lors de l'inscription ❌";
+        let message =
+          "Erreur lors de l'inscription ❌";
 
         if (typeof err?.error === 'string') {
           message = err.error;
-        } else if (err?.error?.message) {
+        }
+
+        else if (err?.error?.message) {
           message = err.error.message;
-        } else if (err?.message) {
+        }
+
+        else if (err?.message) {
           message = err.message;
         }
 
         this.modalMessage = message;
+
         this.isSuccess = false;
         this.showModal = true;
 
         this.isLoading = false;
+
         this.cdr.detectChanges();
       });
     }
   });
-}
-
-  onWifeChange() {
-    if (!this.hasWife) {
-      this.hasChildren = false;
-      this.children = [];
-    }
-  }
-  getAge(date: string): number {
-  if (!date) return 0;
-
-  const birth = new Date(date);
-  const today = new Date();
-
-  let age = today.getFullYear() - birth.getFullYear();
-  const m = today.getMonth() - birth.getMonth();
-
-  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-    age--;
   }
 
-  return age;
-}
-  getRemiseMessage(child: any): string {
+  // =========================
+  // CALCUL PRIX
+  // =========================
+  calculatePrix(): number {
 
-  if (!child.dateNaissance || !this.event) return '';
+    let total = this.event?.prix || 0;
 
-  const age = this.getAge(child.dateNaissance);
+    if (this.hasWife) {
 
-  if (this.event.remiseEnfant12Active && age <= 12) {
-    return `✔ Remise ${this.event.remiseEnfant12Pourcentage}% (moins de 12 ans)`;
-  }
-
-  if (this.event.remiseEnfant18Active && age <= 18) {
-    return `✔ Remise ${this.event.remiseEnfant18Pourcentage}% (moins de 18 ans)`;
-  }
-
-  return '';
-}
-getRemiseCouple(): string {
-
-  if (!this.event || !this.hasWife) return '';
-
-  if (this.event.remiseCoupleActive) {
-    return `✔ Remise couple ${this.event.remiseCouplePourcentage}% appliquée`;
-  }
-
-  return '';
-}calculatePrix(): number {
-
-  if (!this.event) return 0;
-
-  let prix = Number(this.event?.prix) || 0;
-
-  // 👥 nombre de personnes
-  let nbPersonnes = 1;
-
-  if (this.hasWife) nbPersonnes += 1;
-  if (this.hasChildren) nbPersonnes += this.children.length;
-
-  let total = prix * nbPersonnes;
-
-  // =====================
-  // 👶 REMISE ENFANTS
-  // =====================
-  this.children.forEach(child => {
-
-    if (!child.dateNaissance) return;
-
-    const age = this.getAge(child.dateNaissance);
-
-    if (this.event.remiseEnfant12Active && age <= 12) {
-      total -= prix * (this.event.remiseEnfant12Pourcentage / 100);
+      total +=
+        this.event?.prixConjoint || 0;
     }
 
-    else if (this.event.remiseEnfant18Active && age <= 18) {
-      total -= prix * (this.event.remiseEnfant18Pourcentage / 100);
+    if (this.hasChildren) {
+
+      total +=
+        this.nbEnfants *
+        (this.event?.prixEnfant || 0);
     }
 
-  });
-
-  // =====================
-  // 👩 REMISE COUPLE
-  // =====================
-  if (this.hasWife && this.event.remiseCoupleActive) {
-    total -= prix * (this.event.remiseCouplePourcentage / 100);
+    return total;
   }
-
-  return total < 0 ? 0 : total;
-}
-isPaiementComplexe(): boolean {
-  if (!this.event) return false;
-
-  const typeId = this.event.typeEvenement?.id;
-
-  return (
-    typeId === 1 ||
-    typeId === 2 ||
-    this.event.isInternational === true
-  );
-}
-  
 }

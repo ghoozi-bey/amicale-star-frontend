@@ -50,9 +50,14 @@
     <!-- 🔥 PASSEPORT ADHERENT -->
     <div class="form-group full" *ngIf="isPassportRequired">
       <label>Passeport Adhérent (PDF obligatoire)</label>
-      <input type="file" accept="application/pdf"
-             (change)="onAdherentFileChange($event)">
+      <input type="file"
+       [class.error-border]="adherentFileError"
+       accept="application/pdf"
+       (change)="onAdherentFileChange($event)">
     </div>
+    <div class="error-text" *ngIf="adherentFileError">
+  Fichier dépasse 5 MB
+</div>
     <div class="form-group">
   <label>Mode paiement des échéances</label>
   <select [(ngModel)]="modePaiementEcheance">
@@ -62,7 +67,7 @@
   </select>
 </div>
 
-    <div *ngIf="isPaiementComplexe()">
+    <div>
 
   <h3>Paiement avance</h3>
 
@@ -153,6 +158,9 @@
             <input type="file" accept="application/pdf"
                    (change)="onFileChange($event,'wife')">
           </div>
+          <div class="error-text" *ngIf="wifeFileError">
+  Fichier dépasse 5 MB
+</div>
 
         </div>
 
@@ -197,6 +205,9 @@
               <input type="file" accept="application/pdf"
                      (change)="onFileChange($event,'child',i)">
             </div>
+            <div class="error-text" *ngIf="childrenFileErrors[i]">
+  Fichier dépasse 5 MB
+</div>
 
           </div>
 
@@ -210,7 +221,14 @@
     <!-- BUTTON -->
     <button 
       (click)="inscrire()"
-      [disabled]="!modePaiementEcheance || nbPlaces === 0 || isLoading"
+      [disabled]="
+adherentFileError ||
+wifeFileError ||
+childrenFileErrors.includes(true) ||
+!modePaiementEcheance ||
+nbPlaces === 0 ||
+isLoading
+"
     >
       {{ isLoading ? 'Envoi en cours...' : 'Confirmer inscription' }}
     </button>
