@@ -26,6 +26,13 @@
         class="avatar"
         [style.background-image]="'url(' + getAvatarUrl() + ')'">
 
+        <div
+          class="avatar-preview-layer"
+          (click)="openImagePreview()">
+        </div>
+
+        <!-- DELETE -->
+
         <span 
           class="delete-icon"
           *ngIf="userPhoto && !preview"
@@ -35,13 +42,19 @@
 
         </span>
 
-        <span class="camera">
+        <!-- EDIT -->
+
+        <span 
+          class="camera"
+          (click)="fileInput.click(); $event.stopPropagation()">
 
           <span class="material-icons">
             {{ preview || userPhoto ? 'edit' : 'photo_camera' }}
           </span>
 
         </span>
+
+        <!-- INPUT -->
 
         <input 
           #fileInput
@@ -58,40 +71,86 @@
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 
     <label>
-
       <span class="material-icons icon">badge</span>
       Nom
-
     </label>
 
     <input type="text" formControlName="nom">
 
-    <label>
+    <div class="field-error"
+        *ngIf="form.get('nom')?.touched &&
+                form.get('nom')?.errors?.['pattern']">
 
+      Le nom doit contenir uniquement des lettres
+
+    </div>
+
+
+    <label>
       <span class="material-icons icon">person</span>
       Prénom
-
     </label>
 
     <input type="text" formControlName="prenom">
 
-    <label>
+    <div class="field-error"
+        *ngIf="form.get('prenom')?.touched &&
+                form.get('prenom')?.errors?.['pattern']">
 
+      Le prénom doit contenir uniquement des lettres
+
+    </div>
+
+    <div class="field-error"
+        *ngIf="validationErrors.prenom">
+
+      {{ validationErrors.prenom }}
+
+    </div>
+
+    <label>
       <span class="material-icons icon">mail</span>
       Email
-
     </label>
 
     <input type="email" formControlName="email">
 
-    <label>
+    <div class="field-error"
+        *ngIf="form.get('email')?.touched &&
+                form.get('email')?.errors?.['email']">
 
+      Email invalide
+
+    </div>
+
+    <div class="field-error"
+        *ngIf="validationErrors.email">
+
+      {{ validationErrors.email }}
+
+    </div>
+
+    <label>
       <span class="material-icons icon">call</span>
       Téléphone
-
     </label>
 
     <input type="text" formControlName="telephone">
+
+    <div class="field-error"
+        *ngIf="form.get('telephone')?.touched &&
+                form.get('telephone')?.errors?.['pattern']">
+
+      Le téléphone doit contenir exactement 8 chiffres
+
+    </div>
+
+    <div class="field-error"
+        *ngIf="validationErrors.telephone">
+
+      {{ validationErrors.telephone }}
+
+    </div>
 
     <label>
 
@@ -116,6 +175,13 @@
 
     </div>
 
+    <div class="field-error"
+        *ngIf="validationErrors.currentPassword">
+
+      {{ validationErrors.currentPassword }}
+
+    </div>
+
     <label>
 
       <span class="material-icons icon">lock_reset</span>
@@ -136,6 +202,21 @@
         </span>
 
       </span>
+
+    </div>
+
+    <div class="field-error"
+        *ngIf="form.get('newPassword')?.touched &&
+                form.get('newPassword')?.errors?.['minlength']">
+
+      Le mot de passe doit contenir au moins 6 caractères
+
+    </div>
+
+    <div class="field-error"
+        *ngIf="validationErrors.newPassword">
+
+      {{ validationErrors.newPassword }}
 
     </div>
 

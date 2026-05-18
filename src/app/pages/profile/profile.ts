@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
   FormBuilder,
-  FormGroup
+  FormGroup,
+  Validators
 } from '@angular/forms';
 
 import { HttpClient } from '@angular/common/http';
@@ -38,6 +39,8 @@ export class ProfileComponent implements OnInit {
   showCurrent = false;
   showNew = false;
 
+  validationErrors: any = {};
+
   successMessage = '';
   errorMessage = '';
 
@@ -51,12 +54,43 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
 
     this.form = this.fb.group({
-      nom: [''],
-      prenom: [''],
-      email: [''],
-      telephone: [''],
+
+      nom: [
+        '',
+        [
+          Validators.pattern(/^[a-zA-ZÀ-ÿ\s]+$/)
+        ]
+      ],
+
+      prenom: [
+        '',
+        [
+          Validators.pattern(/^[a-zA-ZÀ-ÿ\s]+$/)
+        ]
+      ],
+
+      email: [
+        '',
+        [
+          Validators.email
+        ]
+      ],
+
+      telephone: [
+        '',
+        [
+          Validators.pattern(/^\d{8}$/)
+        ]
+      ],
+
       currentPassword: [''],
-      newPassword: ['']
+
+      newPassword: [
+        '',
+        [
+          Validators.minLength(6)
+        ]
+      ]
     });
 
     this.loadProfile();
@@ -173,19 +207,53 @@ export class ProfileComponent implements OnInit {
 
   update() {
 
-    if (!this.form.valid) return;
+    if (this.form.invalid) {
 
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.validationErrors = {};
     this.successMessage = '';
     this.errorMessage = '';
 
     const formData = new FormData();
 
-    formData.append('nom', this.form.value.nom || '');
-    formData.append('prenom', this.form.value.prenom || '');
-    formData.append('email', this.form.value.email || '');
-    formData.append('telephone', this.form.value.telephone || '');
+    // ================= INFOS =================
 
-    // passwords
+    if (this.form.value.nom?.trim()) {
+
+      formData.append(
+        'nom',
+        this.form.value.nom.trim()
+      );
+    }
+
+    if (this.form.value.prenom?.trim()) {
+
+      formData.append(
+        'prenom',
+        this.form.value.prenom.trim()
+      );
+    }
+
+    if (this.form.value.email?.trim()) {
+
+      formData.append(
+        'email',
+        this.form.value.email.trim()
+      );
+    }
+
+    if (this.form.value.telephone?.trim()) {
+
+      formData.append(
+        'telephone',
+        this.form.value.telephone.trim()
+      );
+    }
+
+    // ================= PASSWORDS =================
 
     if (this.form.value.currentPassword?.trim()) {
 
@@ -203,14 +271,14 @@ export class ProfileComponent implements OnInit {
       );
     }
 
-    // delete photo
+    // ================= DELETE PHOTO =================
 
     if (this.removePhotoFlag) {
 
       formData.append('removePhoto', 'true');
     }
 
-    // upload photo
+    // ================= UPLOAD PHOTO =================
 
     else if (this.selectedFile) {
 
@@ -226,56 +294,51 @@ export class ProfileComponent implements OnInit {
       'http://localhost:8080/api/user/profile',
       formData,
       {
-        observe: 'response',
-        responseType: 'text'
+        observe: 'response'
       }
     )
     .subscribe({
 
-      next: (res) => {
+      next: (res: any) => {
 
         queueMicrotask(() => this.loadingService.hide());
 
-        // success only if REAL 200
+        this.successMessage =
+          res.body?.message ||
+          'Profil modifié avec succès ✅';
 
-        if (res.status === 200) {
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
 
-          this.successMessage =
-            'Profil modifié avec succès ✅';
+        // ================= RESET PASSWORDS =================
 
-          setTimeout(() => {
-            this.successMessage = '';
-          }, 3000);
+        this.form.patchValue({
+          currentPassword: '',
+          newPassword: ''
+        });
 
-          // clear password fields
+        // ================= RESET TEMP VALUES =================
 
-          this.form.patchValue({
-            currentPassword: '',
-            newPassword: ''
-          });
+        this.selectedFile = null;
+        this.removePhotoFlag = false;
 
-          // reset temp values
+        // ================= UPDATE USER =================
 
-          this.selectedFile = null;
-          this.removePhotoFlag = false;
+        this.authService.updateUser({
+          nom: this.form.value.nom,
+          prenom: this.form.value.prenom
+        });
 
-          // update navbar/sidebar user
+        // ================= RELOAD =================
 
-          this.authService.updateUser({
-            nom: this.form.value.nom,
-            prenom: this.form.value.prenom
-          });
+        this.loadProfile();
 
-          // reload profile
+        // ================= NOTIFY =================
 
-          this.loadProfile();
-
-          // notify app
-
-          window.dispatchEvent(
-            new Event('profileUpdated')
-          );
-        }
+        window.dispatchEvent(
+          new Event('profileUpdated')
+        );
       },
 
       error: (err) => {
@@ -284,19 +347,25 @@ export class ProfileComponent implements OnInit {
 
         console.log('REAL ERROR:', err);
 
-        // backend message
+        // ================= BACKEND VALIDATION =================
+
+        if (
+          err.status === 400 &&
+          typeof err.error === 'object'
+        ) {
+
+          this.validationErrors = err.error;
+
+          return;
+        }
+
+        // ================= GENERIC ERROR =================
 
         this.errorMessage =
 
-          typeof err.error === 'string'
-
-            ? err.error
-
-            : err.error?.message ||
-
-              err.error?.error ||
-
-              'Erreur serveur';
+          err.error?.message ||
+          err.error?.error ||
+          'Erreur serveur';
 
         setTimeout(() => {
           this.errorMessage = '';
@@ -333,4 +402,24 @@ export class ProfileComponent implements OnInit {
 
     return 'assets/default-pfp.jpg';
   }
+
+  openFilePicker(event: Event, input: HTMLInputElement) {
+
+    event.stopPropagation();
+
+    input.click();
+  }
+
+  openImagePreview() {
+
+    if (!this.preview && !this.userPhoto) {
+      return;
+    }
+
+    window.open(
+      this.preview || this.userPhoto || '',
+      '_blank'
+    );
+  }
+
 }
