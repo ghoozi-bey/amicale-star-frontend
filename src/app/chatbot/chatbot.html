@@ -22,13 +22,13 @@
 
     <div *ngFor="let msg of messages">
 
-      <!-- ✅ MESSAGE TEXTE -->
+      <!-- MESSAGE TEXTE -->
       <div *ngIf="msg.type === 'text'"
            [ngClass]="msg.sender === 'user' ? 'user-msg' : 'bot-msg'">
         {{ msg.text }}
       </div>
 
-      <!-- ✅ CARTES EVENEMENTS -->
+      <!-- CARTES EVENEMENTS -->
       <div *ngIf="msg.type === 'events'" class="events-container">
 
   <div *ngFor="let event of msg.events"

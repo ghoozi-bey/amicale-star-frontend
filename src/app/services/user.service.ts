@@ -29,7 +29,7 @@ export class UserService {
     return this.http.put('http://localhost:8080/api/user/profile', data);
   }
 
-  // ✅ AJOUT
+  // AJOUT
   getProfile() {
     return this.http.get('http://localhost:8080/api/user/profile');
   }

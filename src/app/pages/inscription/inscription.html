@@ -47,7 +47,7 @@
     <!-- INSCRIPTION -->
     <h2>Détails inscription</h2>
 
-    <!-- 🔥 PASSEPORT ADHERENT -->
+    <!-- PASSEPORT ADHERENT -->
     <div class="form-group full" *ngIf="isPassportRequired">
       <label>Passeport Adhérent (PDF obligatoire)</label>
       <input type="file"
@@ -152,7 +152,7 @@
             <input [(ngModel)]="wife.telephone">
           </div>
 
-          <!-- 🔥 PASSEPORT ÉPOUSE -->
+          <!-- PASSEPORT ÉPOUSE -->
           <div class="form-group full" *ngIf="isPassportRequired">
             <label>Passeport (PDF obligatoire)</label>
             <input type="file" accept="application/pdf"
@@ -199,7 +199,7 @@
               <input type="date" [(ngModel)]="child.dateNaissance">
             </div>
 
-            <!-- 🔥 PASSEPORT ENFANT -->
+            <!--  PASSEPORT ENFANT -->
             <div class="form-group full" *ngIf="isPassportRequired">
               <label>Passeport (PDF obligatoire)</label>
               <input type="file" accept="application/pdf"

@@ -148,7 +148,7 @@ export class InscriptionComponent implements OnInit {
   // =========================
   updateChildren() {
 
-    // ✅ Sauvegarder anciens enfants
+    //  Sauvegarder anciens enfants
     const oldChildren = [...this.children];
 
     this.children = [];
@@ -161,7 +161,7 @@ export class InscriptionComponent implements OnInit {
         prenom: oldChildren[i]?.prenom || '',
         dateNaissance: oldChildren[i]?.dateNaissance || '',
 
-        // ✅ IMPORTANT
+        
         file: oldChildren[i]?.file || null
       });
     }

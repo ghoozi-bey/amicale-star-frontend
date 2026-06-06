@@ -27,7 +27,7 @@ export class EventsComponent implements OnInit {
     this.loadEvents();
   }
 
-  // 🔥 VERSION SÉCURISÉE
+
   loadEvents() {
     this.loading = true;
 
@@ -35,7 +35,7 @@ export class EventsComponent implements OnInit {
       next: (data: any[]) => {
 
         this.events = (data || []).map((i: any) => ({
-          id: i.evenementId,        // 🔥 venant de InscriptionDTO
+          id: i.evenementId,        
           titre: i.titre,
           statut: i.statut,
 

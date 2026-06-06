@@ -34,7 +34,7 @@ export const routes: Routes = [
     component: LayoutComponent,
     canActivate: [authGuard],
 
-    // 🔥 important pour refresh
+    // refresh
     runGuardsAndResolvers: 'always',
 
     children: [

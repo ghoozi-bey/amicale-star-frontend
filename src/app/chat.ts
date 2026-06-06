@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 /**
- * 🔥 Type de réponse du backend
+ * Type de réponse du backend
  */
 export interface ChatResponse {
   type: 'text' | 'events';
@@ -21,7 +21,7 @@ export class ChatService {
   constructor(private http: HttpClient) {}
 
   /**
-   * 🔥 Envoi message au chatbot
+   * Envoi message au chatbot
    */
   sendMessage(msg: string): Observable<ChatResponse> {
     return this.http.post<ChatResponse>(this.API_URL, msg);

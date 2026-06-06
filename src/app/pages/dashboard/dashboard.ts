@@ -51,12 +51,12 @@ export class DashboardComponent {
 
         this.evenements = events;
 
-        // 🔥 FILTRAGE IMPORTANT
+        // FILTRAGE 
         this.evenementsActifs = events.filter(
           (e: any) => e.statut === 'ACTIF'
         );
 
-        // 🔥 utiliser seulement les actifs pour images
+        
         this.totalImages = this.evenementsActifs.length;
         this.loadedImages = 0;
 

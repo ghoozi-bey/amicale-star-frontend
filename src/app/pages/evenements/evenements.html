@@ -1,10 +1,10 @@
-<!-- 🔄 LOADING -->
+<!-- LOADING -->
 <div *ngIf="loading" class="loading-container">
   <div class="spinner"></div>
   <p>Chargement des événements...</p>
 </div>
 
-<!-- 📦 DATA -->
+<!-- DATA -->
 <div *ngIf="!loading && events.length > 0" class="events-container">
 
   <div class="event-card"
@@ -44,7 +44,7 @@
 
 </div>
 
-<!-- ❌ EMPTY -->
+<!--  EMPTY -->
 <div *ngIf="!loading && events.length === 0" class="empty-container">
   <div class="empty-icon">📭</div>
   <h2>Aucun événement</h2>

@@ -13,7 +13,7 @@ import { filter } from 'rxjs/operators';
   imports: [
     CommonModule,
     RouterOutlet,
-    ChatbotComponent // 🔥 AJOUT ICI
+    ChatbotComponent
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
@@ -31,9 +31,9 @@ export class App {
     .pipe(filter(event => event instanceof NavigationEnd))
     .subscribe((event: NavigationEnd) => {
 
-      const url = event.urlAfterRedirects; // 🔥 IMPORTANT
+      const url = event.urlAfterRedirects; 
 
-      // 🔥 plus robuste
+      
       this.showChatbot = !url.includes('/login');
 
     });

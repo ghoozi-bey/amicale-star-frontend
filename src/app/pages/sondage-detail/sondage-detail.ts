@@ -305,7 +305,7 @@ export class SondageDetailComponent implements OnInit {
 
           // MULTIPLE
           else if (type === 'MULTIPLE') {
-            this.responses[a.questionId] = a.choixIds || []; // ✅ ALWAYS array
+            this.responses[a.questionId] = a.choixIds || []; // ALWAYS array
           }
 
         });

@@ -9,7 +9,7 @@ export class LoadingService {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
 
-  // 🔥 compteur pour gérer plusieurs requêtes/images
+  //  compteur pour gérer plusieurs requêtes/images
   private requestCount = 0;
 
   show() {
@@ -20,14 +20,15 @@ export class LoadingService {
   hide() {
     this.requestCount--;
 
-    // 🔥 évite bug (negative)
+    //  évite bug (negative)
     if (this.requestCount <= 0) {
       this.requestCount = 0;
       this.loadingSubject.next(false);
     }
   }
 
-  // 🔥 reset total (utile si bug ou navigation)
+  // 
+  // reset total (utile si bug ou navigation)
   reset() {
     this.requestCount = 0;
     this.loadingSubject.next(false);
